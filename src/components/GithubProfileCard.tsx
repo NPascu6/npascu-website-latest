@@ -58,6 +58,7 @@ const GithubProfileCard = () => {
                     </a>
                 </p>
             </div>
+            
             <div className="flex justify-center items-center">
                 <div className="text-center mt-2">
                     <a
