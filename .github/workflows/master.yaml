@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - main
+
+
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+          
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: npm install
+
+
+      - name: 🔨 Build Project
+        env:
+          REACT_APP_API_BASE_URI: ${{ secrets.REACT_APP_API_BASE_URI }}
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+
+        run: npm run build-production
+
+      - name: 📂 Sync files pascu.io
+        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: 92.205.1.205
+          username: ${{ secrets.ftp_username_1 }}
+          password: ${{ secrets.ftp_password_1 }}
+          port: 21
+          local-dir: ./build/
+          server-dir: /public_html/
+          timeout: 3600000

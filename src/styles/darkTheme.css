@@ -1,0 +1,60 @@
+.dark-theme {
+    color: #ffffff;
+    background-color: #1a1d24;
+}
+
+.dark-theme #side-bar {
+    background-color: #ffffff;
+    color: #1a1d24;
+}
+
+.dark-theme table {
+    color: #ffffff;
+    background-color: #1a1d24;
+    padding: 1em
+}
+
+.dark-theme .footer {
+    color: #ffffff;
+    background-color: #1a1d24;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+    background-color: #8888;
+    border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background-color: black;
+}
+
+.dark-theme ::-webkit-scrollbar {
+    width: 4px;
+    background: #413b3b;
+}
+
+#siteseal {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.dark-theme #selected-photo {
+    border: 1px solid #ffffff;
+    background-color: #1a1d24;
+}
+
+.dark-theme #photo-canvas-details {
+    background-color: #1a1d24;
+    color: #ffffff;
+}
+
+.dark-theme #photo-canvas-details select {
+    background-color: #1a1d24;
+    color: #ffffff;
+}
+
+.dark-theme #product-basket {
+    color: #1a1d24;
+}
