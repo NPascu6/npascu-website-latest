@@ -41,4 +41,3 @@ jobs:
           local-dir: ./build/
           server-dir: /public_html/
           timeout: 3600000
-          
