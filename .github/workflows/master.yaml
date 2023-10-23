@@ -30,7 +30,7 @@ jobs:
         run: yarn run build-production
 
       - name: 📂 Sync files pascu.io
-        uses: SamKirkland/FTP-Deploy-Action@4.3.2
+        uses: SamKirkland/FTP-Deploy-Action@4.3.4
         with:
           server: 92.205.1.205
           username: ${{ secrets.ftp_username_1 }}
