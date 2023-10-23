@@ -21,15 +21,14 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install packages
-        run: npm install
+        run: yarn install
 
 
       - name: 🔨 Build Project
         env:
           REACT_APP_API_BASE_URI: ${{ secrets.REACT_APP_API_BASE_URI }}
-          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
 
-        run: npm run build-production
+        run: yarn run build-production
 
       - name: 📂 Sync files pascu.io
         uses: SamKirkland/FTP-Deploy-Action@4.3.2
