@@ -1,74 +1,57 @@
+import { useEffect } from "react";
 import EducationCard from "../components/EducationAndTraining";
 import { AmarisCard, CognizantCard, CovarioCard, DVSECard, FintamaCard, ItSupportTechnicianCard } from "../components/ExperienceCards";
 import GithubProfileCard from "../components/GithubProfileCard";
 import YoutubeVideoLink from "../components/YoutubeVideoLink";
 import CollapsibleSection from "../components/common/CollapsableSection";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/store";
+import { fetchGithubUserProfile } from "../store/thunks/appThunk";
+import HighlightedRepos from "../components/HighlightedRepos";
 
 const MainPage = () => {
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        let active = true;
+
+        if (active)
+            dispatch(fetchGithubUserProfile());
+
+        return () => {
+            active = false;
+        }
+    }, [dispatch])
+
     return (
         <div>
             <GithubProfileCard />
             <div>
-                <CollapsibleSection title={'Highlighted Repos'}>
-                    <div className="m-2 mx-4 border-2 p-4 text-center">
-                        <p>
-                            <a
-                                rel="noopener noreferrer"
-                                href="https://github.com/NPascu6/react-app-starter-with-drawer-typescript"
-                                className={` font-bold`}
-                            >
-                                This web app.
-                            </a>
-                        </p>
-                        <p>
-                            <a
-                                rel="noopener noreferrer"
-                                href="https://github.com/NPascu6/ASP_.NET_Starter_API"
-                                className={` font-bold`}
-                            >
-                                .NET Core 6 API
-                            </a>
-                        </p>
-                        <p>
-                            <a
-                                rel="noopener noreferrer"
-                                href="https://github.com/NPascu6/npascu_net_api_v2"
-                                className={` font-bold`}
-                            >
-                                .NET Core API (npascu_api_v2)
-                            </a>
-                        </p>
-                    </div>
-                </CollapsibleSection>
-                <CollapsibleSection title="Current job">
-                    <FintamaCard />
-                </CollapsibleSection>
-
-                <CollapsibleSection title={"TL / Senior Dev - React / .NET / Azure"}>
-                    <CovarioCard />
-                </CollapsibleSection>
-                <CollapsibleSection title="Consultant .NET / Vue">
-                    <AmarisCard />
-
-                </CollapsibleSection>
-                <CollapsibleSection title="Mobile / BE Dev">
-                    <CognizantCard />
-
-                </CollapsibleSection>
-                <CollapsibleSection title="First Dev Job">
-                    <DVSECard />
-
-                </CollapsibleSection>
-                <CollapsibleSection title="Support Techinician">
-                    <ItSupportTechnicianCard />
-
-                </CollapsibleSection>
-
                 <CollapsibleSection title="Education">
                     <EducationCard />
                 </CollapsibleSection>
-
-                <CollapsibleSection title="Trading App">
+                <CollapsibleSection title={'Highlighted Github Repos'}>
+                    <HighlightedRepos />
+                </CollapsibleSection>
+                <CollapsibleSection title="Current employment (Fintama)">
+                    <FintamaCard />
+                </CollapsibleSection>
+                <CollapsibleSection title={"TL / Senior Developer (Covario)"}>
+                    <CovarioCard />
+                </CollapsibleSection>
+                <CollapsibleSection title="IT Consultant (Amaris)">
+                    <AmarisCard />
+                </CollapsibleSection>
+                <CollapsibleSection title="Mobile / BE Developer (Cognizant)">
+                    <CognizantCard />
+                </CollapsibleSection>
+                <CollapsibleSection title="First Developer Job (DVSE.ro)">
+                    <DVSECard />
+                </CollapsibleSection>
+                <CollapsibleSection title="Support Techinician">
+                    <ItSupportTechnicianCard />
+                </CollapsibleSection>
+                <CollapsibleSection title="Trading App (Crypto trading platform)">
                     <YoutubeVideoLink />
                 </CollapsibleSection>
             </div>

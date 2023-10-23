@@ -7,22 +7,22 @@ const Sidebar = ({ toggle, setToggle }: any) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('renmder')
-        if (toggle) {
+        let active = true;
+
+        if (active) {
+            console.log('Render side toggle')
             setIsOpen(toggle);
-        }
-        else {
-            setIsOpen(false);
         }
 
         return () => {
+            active = false;
             setIsOpen(false);
         }
     }, [toggle])
 
     useEffect(() => {
         function handleClickOutside(event: any) {
-            if (event.target.id !== 'side-bar' && !event.target.classList.includes('side-bar-class')) {
+            if (event.target.id !== 'side-bar' && !event.target.classList.contains('side-bar-class')) {
                 setIsOpen(false);
                 setToggle(false);
             }
