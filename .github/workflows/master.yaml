@@ -23,7 +23,6 @@ jobs:
       - name: Install packages
         run: yarn install
 
-
       - name: 🔨 Build Project
         env:
           REACT_APP_API_BASE_URI: ${{ secrets.REACT_APP_API_BASE_URI }}
