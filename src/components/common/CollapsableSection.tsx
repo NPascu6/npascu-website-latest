@@ -16,7 +16,7 @@ function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
     };
 
     return (
-        <div className="rounded border m-2 select-none border">
+        <div className="border m-2 select-none border">
             <div className="p-2 flex space-between cursor-pointer" onClick={toggleSection}>
                 <div className='w-full text-md font-bold text-center'>{title}</div>
                 <div > {isOpen ? <ChevronUp /> : <ChevronDown />}</div>

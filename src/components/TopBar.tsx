@@ -21,7 +21,7 @@ const TopBar = () => {
     }
 
 
-    return <div id={'top-bar'} className='flex flex-row md:flex-row md:items-center p-2 border-b-2 '>
+    return <div id={'top-bar'} className='flex flex-row md:flex-row md:items-center p-2 border-b '>
         <Sidebar toggle={toggleSiderbar} setToggle={setToggleSidebar} />
         <div className='flex flex-grow justify-start items-center'>
             <img className='w-8 h-8 md:w-10 md:h-10 mr-3' src={Favicon32} alt="favicon" onClick={() => setToggleSidebar(!toggleSiderbar)} />

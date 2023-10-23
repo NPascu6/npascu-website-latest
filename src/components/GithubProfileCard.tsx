@@ -22,8 +22,8 @@ const GithubProfileCard = () => {
     };
 
     return (
-        <div className={`border border-solid p-2 m-2`}>
-            <div className="text-center flex items-center justify-center">
+        <div className={`p-2 m-2`}>
+            <div className="text-start flex items-center justify-center">
                 <div className="mt-2 mx-4">
                     <p className={`text-md`}>{githubProfile?.name}</p>
                     <p className={`text-md`}>[{githubProfile?.login}]</p>
@@ -45,7 +45,6 @@ const GithubProfileCard = () => {
                 <div className="text-xl">Download CV</div>
                 <div><DownloadIcon /></div>
             </div>
-            <hr className={`border-t-2 border-solid p-1 mt-1`} />
             <div className="mt-1 mx-4 text-center">
                 <p className="text-md">
                     <a href="mailto:norbipascu92@gmail.com" className={`font-bold`}>
@@ -58,77 +57,47 @@ const GithubProfileCard = () => {
                     </a>
                 </p>
             </div>
-            
-            <div className="flex justify-center items-center">
-                <div className="text-center mt-2">
-                    <a
-                        href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`cursor-pointer flex justify-center items-center p-2`}>
-                        <div>
-                            <LinkedInIcon />
+            <div>
+                <div>
+                    <div className="flex justify-center items-center">
+                        <div className="text-center mt-2">
+                            <a
+                                href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`cursor-pointer flex justify-center items-center p-2`}>
+                                <div>
+                                    <LinkedInIcon />
+                                </div>
+                                <div className="ml-4 text-md text-center">
+                                    Linkedin
+                                </div>
+                            </a>
                         </div>
-                        <div className="ml-4 text-md text-center">
-                            Linkedin
+                        <div className="text-center mt-2">
+                            <a href={githubProfile?.html_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`cursor-pointer flex justify-center items-center p-2`}>
+                                <div>
+                                    <img alt="githu-icon" className="h-10 w-10" src={githubIcon} />
+                                </div>
+                                <div className="ml-4 text-md text-center">
+                                    GitHub
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div className="text-center mt-2">
-                    <a href={githubProfile?.html_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`cursor-pointer flex justify-center items-center p-2`}>
-                        <div>
-                            <img alt="githu-icon" className="h-10 w-10" src={githubIcon} />
-                        </div>
-                        <div className="ml-4 text-md text-center">
-                            GitHub
-                        </div>
-                    </a>
-                </div>
-            </div>
 
-            <div className="m-2 mx-4 border-2 p-4 text-center">
-                <div className="mx-4 text-sm mb-4">
-                    <p className={`text-center font-bold`}>Highlighted repos</p>
-                    <hr className={`border-t-2 border-solid p-1 mt-1`} />
+                    </div>
+                    <div className="text-center mt-4 flex items-center justify-center">
+                        <a href="https://www.facebook.com/norbi.pascu" target="_blank" rel="noopener noreferrer">
+                            <Facebook height={42} width={42} />
+                        </a>
+                        <a className="ml-4" href="https://www.instagram.com/norbipascu/?hl=en" target="_blank" rel="noopener noreferrer">
+                            <Instagram height={42} width={42} />
+                        </a>
+                    </div>
                 </div>
-                <p>
-                    <a
-                        rel="noopener noreferrer"
-                        href="https://github.com/NPascu6/react-app-starter-with-drawer-typescript"
-                        className={` font-bold`}
-                    >
-                        This web app.
-                    </a>
-                </p>
-                <p>
-                    <a
-                        rel="noopener noreferrer"
-                        href="https://github.com/NPascu6/ASP_.NET_Starter_API"
-                        className={` font-bold`}
-                    >
-                        .NET Core 6 API
-                    </a>
-                </p>
-                <p>
-                    <a
-                        rel="noopener noreferrer"
-                        href="https://github.com/NPascu6/npascu_net_api_v2"
-                        className={` font-bold`}
-                    >
-                        .NET Core API (npascu_api_v2)
-                    </a>
-                </p>
-            </div>
-            <div className="text-center mt-4 flex items-center justify-center">
-                <a href="https://www.facebook.com/norbi.pascu" target="_blank" rel="noopener noreferrer">
-                    <Facebook height={42} width={42} />
-                </a>
-                <a className="ml-4" href="https://www.instagram.com/norbipascu/?hl=en" target="_blank" rel="noopener noreferrer">
-                    <Instagram height={42} width={42} />
-                </a>
             </div>
         </div>
     );

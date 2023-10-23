@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from './store/reducers/appReducer';
 import { AppDispatch, RootState } from './store/store';
-import { RoutesSwitch } from './router/Routes';
+import { RoutesSwitch } from './router/Router';
 import Toaster from './components/common/Toaster';
 import TopBar from './components/TopBar';
 import { fetchGithubUserProfile } from './store/thunks/appThunk';
@@ -11,10 +11,11 @@ function App() {
   const dipatch = useDispatch()
   const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
   const { githubProfile } = useSelector((state: RootState) => state.app);
+  const [fetchingProfile, setFetchingProfile] = React.useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (githubProfile) return
+    if (githubProfile && fetchingProfile) return
     dispatch(fetchGithubUserProfile());
   }, [dispatch, githubProfile]);
 

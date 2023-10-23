@@ -216,7 +216,7 @@ export const DVSECard = () => {
             <h2 className="text-xl font-semibold">Web Developer</h2>
             <p className="text-sm ">06/2016 - 09/2018</p>
             <p className="text-sm ">DVSE GmbH - Targu Mures, Romania</p>
-            <p className="text-sm mt-2">
+            <div className="text-sm mt-2">
                 <span className="font-semibold">Responsibilities:</span>
                 <ul className="list-disc ml-8">
                     <li>Bug fixing and feature development for Web-Based Applications.</li>
@@ -224,7 +224,7 @@ export const DVSECard = () => {
                     <li>Creating and maintaining features within the .NET MVC framework, using Entity Framework and Knockout.js, and basic Angular.js features.</li>
                     <li>Implementing and maintaining new features with React.js and Redux, following the MVC/MVVM design pattern on back-end services.</li>
                 </ul>
-            </p>
+            </div>
         </div>
     );
 };
@@ -236,7 +236,7 @@ export const ItSupportTechnicianCard = () => {
             <h2 className="text-xl font-semibold">IT Support Technician</h2>
             <p className="text-sm ">06/2015 - 06/2016</p>
             <p className="text-sm ">New Vision Technologies Inc. - Targu Mures, Romania</p>
-            <p className="text-sm mt-2">
+            <div className="text-sm mt-2">
                 <span className="font-semibold">Responsibilities:</span>
                 <ul className="list-disc ml-8">
                     <li>Basic troubleshooting of applications and personalizing them to the specifications of the client.</li>
@@ -248,7 +248,7 @@ export const ItSupportTechnicianCard = () => {
                     <li>Basic DevOps for deploying and maintaining simple web applications.</li>
                     <li>Administrating 3COM phones.</li>
                 </ul>
-            </p>
+            </div>
         </div>
     );
 };
