@@ -13,7 +13,7 @@ const YoutubeVideoLink = () => {
     const windowSize = useWindowSize();
 
     return (
-        <div className="text-center border-2 m-2">
+        <div className="text-center border">
             <p className="text-2xl font-semibold m-4">
                 Explore a Crypto Trading Platform Created with Electron and React
             </p>

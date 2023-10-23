@@ -9,19 +9,23 @@ interface CollapsibleSectionpProps {
 }
 
 function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     const toggleSection = () => {
         setIsOpen(!isOpen);
     };
 
     return (
-        <div className="border m-2 select-none border">
-            <div className="p-2 flex space-between cursor-pointer" onClick={toggleSection}>
-                <div className='w-full text-md font-bold text-center'>{title}</div>
+        <div className="border select-none">
+            <div className="p-2 flex space-between cursor-pointer" style={{ marginBottom: isOpen ? '-2em' : 0 }} onClick={toggleSection}>
+                <div className='w-full text-md font-bold text-centFer'>
+                    <div className={isOpen ? 'border-b-2 w-2/3 pb-2' : 'w-full'}>{title}</div>
+                </div>
                 <div > {isOpen ? <ChevronUp /> : <ChevronDown />}</div>
             </div>
-            {isOpen && children}
+            <div className='card'>
+                {isOpen && children}
+            </div>
         </div>
     );
 }

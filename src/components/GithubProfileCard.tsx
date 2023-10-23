@@ -3,16 +3,13 @@ import { RootState } from "../store/store";
 import { _githubAvatarUrl } from "../_constant";
 import { useSelector } from 'react-redux';
 import DownloadIcon from "../assets/icons/DownloadIcon";
-import GithubDarkIcon from "../assets/png/github-mark.png";
-import GithubLightIcon from "../assets/png/github-mark-white.png";
-import LinkedInIcon from "../assets/icons/LinkedInDark";
+import LinkedInIcon from "../assets/icons/LinkedIn";
 import Facebook from "../assets/icons/Facebook";
 import Instagram from "../assets/icons/Instagram";
+import GitHub from "../assets/icons/Github";
 
 const GithubProfileCard = () => {
     const { githubProfile } = useSelector((state: RootState) => state.app);
-    const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
-    const githubIcon = !isDarkTheme ? GithubDarkIcon : GithubLightIcon;
 
     const onDownload = () => {
         const link = document.createElement("a");
@@ -22,7 +19,11 @@ const GithubProfileCard = () => {
     };
 
     return (
-        <div className={`p-2`}>
+        <div className={`p-2 lg:w-1/3 border rounded`}>
+            <div className="text-center flex justify-between border border-green-600 p-2" onClick={onDownload}>
+                <div className="text-xl text-green-600">Download CV</div>
+                <div><DownloadIcon color={'green'} /></div>
+            </div>
             <div className="text-start flex items-center justify-center">
                 <div className="mt-2 mx-4">
                     <p className={`text-md font-bold`}>{githubProfile?.name}</p>
@@ -50,33 +51,29 @@ const GithubProfileCard = () => {
                     className="rounded-full mx-auto mt-4 mr-4"
                 />
             </div>
-            <div className="text-center flex justify-between border border-green-600 m-2 p-2" onClick={onDownload}>
-                <div className="text-xl text-green-600">Download CV</div>
-                <div><DownloadIcon color={'green'} /></div>
-            </div>
             <div>
-                <div className="flex justify-center items-center w-full">
+                <div className="flex justify-center items-center w-full mt-2">
                     <div className="text-center w-full">
                         <a
                             href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`cursor-pointer flex justify-center items-center p-1`}>
+                            className={`cursor-pointer flex justify-center items-center w-full`}>
                             <div>
-                                <LinkedInIcon />
+                                <LinkedInIcon height={32} width={32} />
                             </div>
                             <div className="text-md text-center">
                                 Linkedin
                             </div>
                         </a>
                     </div>
-                    <div className="text-center w-full">
+                    <div className="text-center w-full mr-4">
                         <a href={githubProfile?.html_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`cursor-pointer flex justify-center items-center p-1 mr-4`}>
+                            className={`cursor-pointer flex justify-center items-center w-full`}>
                             <div>
-                                <img alt="githu-icon" className="h-11 w-11 mr-1" src={githubIcon} />
+                                <GitHub height={32} width={32} />
                             </div>
                             <div className="text-md text-center">
                                 GitHub
@@ -90,9 +87,9 @@ const GithubProfileCard = () => {
                             href="https://www.facebook.com/norbi.pascu"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`cursor-pointer flex justify-center items-center p-1`}>
+                            className={`cursor-pointer flex justify-center items-center w-full`}>
                             <div>
-                                <Facebook height={40} width={40} />
+                                <Facebook height={32} width={32} />
                             </div>
                             <div className="text-md text-center">
                                 Facebook
@@ -104,9 +101,9 @@ const GithubProfileCard = () => {
                             href="https://www.instagram.com/norbipascu/?hl=en"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`cursor-pointer flex justify-center items-center p-1`}>
+                            className={`cursor-pointer flex justify-center items-center w-full`}>
                             <div>
-                                <Instagram height={40} width={40} />
+                                <Instagram height={32} width={32} />
                             </div>
                             <div className="text-md text-center">
                                 Instagram

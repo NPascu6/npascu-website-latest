@@ -24,9 +24,11 @@ const MainPage = () => {
     }, [dispatch])
 
     return (
-        <div>
-            <GithubProfileCard />
-            <div>
+        <div className="p-4 md:p-10">
+            <div className="flex justify-center items-center">
+                <GithubProfileCard />
+            </div>
+            <div className="space-y-2 mt-2">
                 <CollapsibleSection title="Education">
                     <EducationCard />
                 </CollapsibleSection>
@@ -48,7 +50,7 @@ const MainPage = () => {
                 <CollapsibleSection title="First Developer Job (DVSE.ro)">
                     <DVSECard />
                 </CollapsibleSection>
-                <CollapsibleSection title="Support Techinician">
+                <CollapsibleSection title="Support Technician">
                     <ItSupportTechnicianCard />
                 </CollapsibleSection>
                 <CollapsibleSection title="Trading App (Crypto trading platform)">
