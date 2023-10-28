@@ -10,8 +10,8 @@ const TableHead = ({ columns }: TableHeadProps) => {
     return <thead style={{ display: 'block' }} className='border-b-2 select-none'>
         <tr style={{ display: 'flex' }}>
             {columns.map((column: ReusableColumn, index: number) => (
-                <th style={{ width: getCellWidth(columns, column), paddingLeft: `${0.2}em` }}
-                    className={`flex text-left pl-2 p-1 py-1 tooltip
+                !column.hidden && <th style={column.style ? column.style : { width: getCellWidth(columns, column), paddingLeft: `${0.2}em` }}
+                    className={`${column?.className ?? ""} flex text-left pl-2 p-1 py-1 tooltip
                     ${index > 0 ? "border-l-1" : (index === columns.length - 1) ? "border-r-2" : "border-r-1"} 
                     ${index < columns.length - 1 ? "border-r-2" : ""} 
                     border-sky-gray`}
@@ -25,7 +25,7 @@ const TableHead = ({ columns }: TableHeadProps) => {
                         }}>
                         {column.header}
                     </span>
-                    <div className='tooltiptext'>{column.header}</div>
+                    <span className='tooltiptext'>{column.header}</span>
                 </th>
             ))}
         </tr>

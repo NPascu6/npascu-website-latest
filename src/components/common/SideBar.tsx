@@ -45,15 +45,15 @@ const Sidebar = ({ toggle, setToggle }: any) => {
 
     return (
         <div
+            id='side-bar'
             className={`fixed top-0 left-0 w-38 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             {
                 routeDefinition.map((route, index) => {
                     return (
-                        <ul onClick={(e) => handleNavigateToRoute(e, route.path)}>
+                        <ul key={index} id={route.path} onClick={(e) => handleNavigateToRoute(e, route.path)}>
                             <div
-                                id={'side-bar'}
-                                className='flex items-center space-x-2 cursor-pointer  p-2'
-                                key={index}>
+                                className='side-bar-class flex items-center space-x-2 cursor-pointer  p-2'
+                            >
                                 <div>{route.icon}</div>
                                 <div>{route.title}</div>
                             </div>

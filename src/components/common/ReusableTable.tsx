@@ -17,7 +17,8 @@ interface TableProps {
     hasSearchBar?: boolean;
     title?: string
     changeNumberOfItemsPerPage?: any
-    itemsPerPage?: number
+    itemsPerPage?: number,
+    headerStyle?: any
 }
 
 const ReusableTable = ({

@@ -44,3 +44,12 @@
   color: #333;
   /* Text color for light theme */
 }
+
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}

@@ -16,7 +16,7 @@ const SearchBar = ({ setSerchTerm }: SearchBarProps) => {
     return (
         <div className="search-bar">
             <input
-                className="p-2 m-1 w-1/4 border-2 border-gray-200  focus:outline-none focus:border-blue-500"
+                className="p-2 m-1 border-2 border-gray-200  focus:outline-none focus:border-blue-500"
                 type="text"
                 placeholder="Search"
                 value={search}

@@ -8,7 +8,7 @@ export const dateFormater = (date: string) => {
 export const getCellWidth = (columns: ReusableColumn[], column: ReusableColumn) => {
     if (column.key === 'id') return '7%'
     if (columns.length > 0) {
-        return `${100 / columns.length + 1.5}%`
+        return `${100 / columns.length + 13.5}%`
     }
     return '100%'
 }

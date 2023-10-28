@@ -86,3 +86,20 @@
     background-color: #20242c;
     color: #ffffff;
 }
+
+.dark-theme .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333333;
+    /* Dark background color for tooltip */
+    color: #ffffff;
+    /* White text color for tooltip */
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+}

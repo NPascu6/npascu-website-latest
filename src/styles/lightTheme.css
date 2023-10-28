@@ -84,3 +84,20 @@
     background-color: rgb(247, 247, 247);
     color: #333333;
 }
+
+.light-theme .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #f8f8f8;
+    /* Light background color for tooltip */
+    color: #333333;
+    /* Dark text color for tooltip */
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+}
