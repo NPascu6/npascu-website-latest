@@ -16,14 +16,14 @@ function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
     };
 
     return (
-        <div className="border select-none">
-            <div className="p-2 flex space-between cursor-pointer" style={{ marginBottom: isOpen ? '-2em' : 0 }} onClick={toggleSection}>
-                <div className='w-full text-md font-bold text-centFer'>
-                    <div className={isOpen ? 'border-b-2 w-2/3 pb-2' : 'w-full'}>{title}</div>
+        <div className="select-none" id='collapsable-section'>
+            <div className="p-2 flex space-between cursor-pointer shadow-xl " onClick={toggleSection}>
+                <div className='w-full text-sm font-bold alig-center'>
+                    <div className={isOpen ? 'w-full' : 'w-full'}>{title}</div>
                 </div>
                 <div > {isOpen ? <ChevronUp /> : <ChevronDown />}</div>
             </div>
-            <div className='card'>
+            <div className="shadow-xl" id="collapsable-section-body" style={{ marginTop: isOpen ? '-1em' : '-0.5em' }}>
                 {isOpen && children}
             </div>
         </div>

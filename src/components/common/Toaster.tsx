@@ -20,7 +20,7 @@ const Toaster = ({ timeout = 1200 }) => {
         <div
             className={`fixed bottom-10 right-0 mb-4 mr-4 ${toaster.showToaster ? 'opacity-100 scale-100' : 'opacity-0 scale-95 hidden'
                 } transition-opacity duration-100 ease-in-out transform transition-transform duration-200 hover:scale-105`}>
-            <div className="bg-green-500 text-white rounded-md p-3 shadow-md">
+            <div className="bg-green-500 text-white -md p-3 shadow-md">
                 {toaster.toasterMessage}
             </div>
         </div>

@@ -1,6 +1,6 @@
 const CartBubble = ({ itemCount }: any) => {
     return (
-        <div className="absolute right-0 -mt-1 -mr-2 bg-red-500 text-white rounded-full px-2 py-1 text-xs">
+        <div className="absolute right-0 -mt-1 -mr-2 bg-red-500 text-white  px-2 py-1 text-xs">
             {itemCount}
         </div>
     );

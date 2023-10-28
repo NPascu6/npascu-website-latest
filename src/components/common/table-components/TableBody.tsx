@@ -37,7 +37,7 @@ const TableBody = ({ filteredItems, handleRowClick, columns }: TableBodyProps) =
             </tr>
         ))}
     </tbody> : <div style={{ display: 'block', minHeight: '12em', maxHeight: 'calc(100vh - 16em)', overflow: 'auto' }}>
-        <div className="flex items-center justify-center h-40 rounded-lg">
+        <div className="flex items-center justify-center h-40 ">
             <p className="text-xl text-gray-600">No data found</p>
         </div>
     </div>

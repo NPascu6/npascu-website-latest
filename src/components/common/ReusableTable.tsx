@@ -77,7 +77,7 @@ const ReusableTable = ({
     }, [searchTerm, data, paged])
 
     return (
-        <div className="border-2 flex-column m-2 p-2 rounded" style={{ minHeight: '10em' }}>
+        <div className="border-2 flex-column m-2 p-2 " style={{ minHeight: '10em' }}>
             {hasSearchBar && <SearchBar setSerchTerm={setSearchTerm} />}
             {title && <h1 className='text-xl font-bold mb-4'>{title}</h1>}
             {loading ? (

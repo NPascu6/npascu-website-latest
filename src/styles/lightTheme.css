@@ -56,3 +56,31 @@
     background-color: #ECEFF1;
     color: black
 }
+
+.light-theme #collapsable-section {
+    background-color: rgb(247, 247, 247);
+}
+
+.light-theme #collapsable-section #collapsable-section-header {
+    background-color: rgb(247, 247, 247);
+}
+
+.light-theme #collapsable-section #collapsable-section-body {
+    background-color: rgb(247, 247, 247);
+    padding: 0.1em;
+}
+
+.light-theme .card {
+    background-color: #ECEFF1;
+    color: #333333;
+}
+
+.light-theme #github-profile-card {
+    background-color: rgb(247, 247, 247);
+    color: #333333;
+}
+
+.light-theme #top-bar {
+    background-color: rgb(247, 247, 247);
+    color: #333333;
+}

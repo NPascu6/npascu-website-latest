@@ -22,17 +22,17 @@ const TableFooter = ({
     handleChangeItemsPerPage
 }: TableFooterProps) => {
     return (
-        <div className="flex p-1 footer justify-end rounded">
+        <div className="flex p-1 footer justify-end ">
             <div className="flex items-center select-none ">
                 <button
-                    className="mr-2 px-3 py-0.1 border rounded-lg"
+                    className="mr-2 px-3 py-0.1 border "
                     onClick={onFirstPage}
                     disabled={currentPage === 1}
                 >
                     First
                 </button>
                 <button
-                    className="mr-2 px-2 py-0.1 border rounded-lg"
+                    className="mr-2 px-2 py-0.1 border "
                     onClick={onPreviousPage}
                     disabled={currentPage === 1}
                 >
@@ -44,14 +44,14 @@ const TableFooter = ({
                     <span>{totalPages}</span>
                 </span>
                 <button
-                    className="ml-2 px-2 py-0.1 border rounded-lg"
+                    className="ml-2 px-2 py-0.1 border "
                     onClick={onNextPage}
                     disabled={currentPage === totalPages}
                 >
                     Next
                 </button>
                 <button
-                    className="ml-2 px-2 py-0.1 border rounded-lg"
+                    className="ml-2 px-2 py-0.1 border "
                     onClick={onLastPage}
                     disabled={currentPage === totalPages}
                 >
@@ -60,7 +60,7 @@ const TableFooter = ({
                 <select
                     value={itemsPerPage}
                     onChange={item => handleChangeItemsPerPage(item)}
-                    className="block m-1 w-full bg-white border border-gray-400 text-gray-700 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="block m-1 w-full bg-white border border-gray-400 text-gray-700  leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 >
                     {[5, 10, 15, 20, 25, 50].map((item) => (
                         <option key={item} value={item}>

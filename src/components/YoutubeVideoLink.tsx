@@ -13,7 +13,7 @@ const YoutubeVideoLink = () => {
     const windowSize = useWindowSize();
 
     return (
-        <div className="text-center border">
+        <div className="text-center shadow-xl card">
             <p className="text-2xl font-semibold m-4">
                 Explore a Crypto Trading Platform Created with Electron and React
             </p>
@@ -24,7 +24,7 @@ const YoutubeVideoLink = () => {
             <div className="flex flex-wrap justify-center items-center">
                 {videos.map((video, index) => (
                     <div
-                        className="m-1"
+                        className="m-1 shadow-xl p-4 "
                         key={index}
                         style={{
                             minWidth: windowSize.innerWidth < 500 ? '18em' : '20em',

@@ -58,3 +58,31 @@
 .dark-theme #product-basket {
     color: #1a1d24;
 }
+
+.dark-theme #collapsable-section {
+    background-color: #20242c
+}
+
+.dark-theme #collapsable-section #collapsable-section-header {
+    background-color: #20242c
+}
+
+.dark-theme #collapsable-section #collapsable-section-body {
+    background-color: #20242c;
+    padding: 0.1em;
+}
+
+.dark-theme .card {
+    background-color: #1a1d24;
+    color: #ffffff;
+}
+
+.dark-theme #github-profile-card {
+    background-color: #20242c;
+    color: #ffffff;
+}
+
+.dark-theme #top-bar {
+    background-color: #20242c;
+    color: #ffffff;
+}

@@ -15,17 +15,17 @@ export const routeDefinition: RouteDefinition[] = [
         icon: <MainIcon />
     },
     {
-        path: '/about',
-        component:  <AboutPage />,
-        exact: true,
-        title: 'About Page',
-        icon: <Info />
-    },
-    {
         path: '/demo-api',
         component: <DemoApiPage />,
         exact: true,
         title: 'Demo Api Page',
         icon: <DemoApiIcon />
+    },
+    {
+        path: '/about',
+        component: <AboutPage />,
+        exact: true,
+        title: 'About Page',
+        icon: <Info />
     }
 ]

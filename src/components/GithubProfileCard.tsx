@@ -19,7 +19,7 @@ const GithubProfileCard = () => {
     };
 
     return (
-        <div className={`p-2 lg:w-1/3 border rounded`}>
+        <div id="github-profile-card" className={`p-2 lg:w-1/3 shadow-xl`}>
             <div className="text-center flex justify-between border border-green-600 p-2" onClick={onDownload}>
                 <div className="text-xl text-green-600">Download CV</div>
                 <div><DownloadIcon color={'green'} /></div>
@@ -48,7 +48,7 @@ const GithubProfileCard = () => {
                         height: "6rem",
                         objectFit: "cover",
                     }}
-                    className="rounded-full mx-auto mt-4 mr-4"
+                    className=" mx-auto mt-4 mr-4"
                 />
             </div>
             <div>

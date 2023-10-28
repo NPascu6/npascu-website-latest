@@ -37,30 +37,31 @@ const Sidebar = ({ toggle, setToggle }: any) => {
         };
     }, [setIsOpen, setToggle]);
 
-    const handleNavigateToRoute = (path: string) => {
+    const handleNavigateToRoute = (event: React.MouseEvent<HTMLUListElement, MouseEvent>, path: string) => {
+        event.preventDefault();
+        event.stopPropagation();
         navigate(path);
     }
 
     return (
-        <div id={'side-bar'} className={`side-bar-class fixed top-0 left-0 h-full w-38 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-            {/* Sidebar content goes here */}
-            <div className="p-4">
-                <ul>
-                    {
-                        routeDefinition.map((route, index) => {
-                            return (
-                                <div
-                                    className='flex items-center space-x-2 cursor-pointer  p-2'
-                                    onClick={() => handleNavigateToRoute(route.path)}
-                                    key={index}>
-                                    <div>{route.icon}</div>
-                                    <div>{route.title}</div>
-                                </div>
-                            )
-                        })
-                    }
-                </ul>
-            </div>
+        <div
+            className={`fixed top-0 left-0 w-38 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            {
+                routeDefinition.map((route, index) => {
+                    return (
+                        <ul onClick={(e) => handleNavigateToRoute(e, route.path)}>
+                            <div
+                                id={'side-bar'}
+                                className='flex items-center space-x-2 cursor-pointer  p-2'
+                                key={index}>
+                                <div>{route.icon}</div>
+                                <div>{route.title}</div>
+                            </div>
+                            <hr className='border-b-1' />
+                        </ul>
+                    )
+                })
+            }
         </div>
     );
 };

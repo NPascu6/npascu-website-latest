@@ -1,5 +1,5 @@
 const HighlightedRepos = () => {
-    return <div className="m-2 mx-4 p-4 text-start">
+    return <div className="m-2 mx-4 p-4 text-start card">
         <p>
             <a
                 rel="noopener noreferrer"

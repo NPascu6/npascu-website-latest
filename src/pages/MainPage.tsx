@@ -24,11 +24,11 @@ const MainPage = () => {
     }, [dispatch])
 
     return (
-        <div className="p-4 md:p-10">
+        <div className="p-4 md:p-10" id="main-page">
             <div className="flex justify-center items-center">
                 <GithubProfileCard />
             </div>
-            <div className="space-y-2 mt-2">
+            <div className="space-y-2 mt-2" >
                 <CollapsibleSection title="Education">
                     <EducationCard />
                 </CollapsibleSection>
