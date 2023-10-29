@@ -18,7 +18,6 @@ interface TableProps {
     title?: string
     changeNumberOfItemsPerPage?: any
     itemsPerPage?: number,
-    headerStyle?: any
 }
 
 const ReusableTable = ({
@@ -78,7 +77,7 @@ const ReusableTable = ({
     }, [searchTerm, data, paged])
 
     return (
-        <div className="border-2 flex-column m-2 p-2 " style={{ minHeight: '10em' }}>
+        <div className="flex-column m-2 p-2" style={{ minHeight: '8em' }}>
             {hasSearchBar && <SearchBar setSerchTerm={setSearchTerm} />}
             {title && <h1 className='text-xl font-bold mb-4'>{title}</h1>}
             {loading ? (

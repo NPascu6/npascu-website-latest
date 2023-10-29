@@ -2,13 +2,13 @@ import React from "react";
 
 const EducationCard = () => {
     return (
-        <div className=" shadow-md p-6 m-4 card">
+        <div className="shadow-md p-6 m-3 card">
             <h2 className="text-xl font-semibold">EDUCATION AND TRAINING</h2>
             <div className="mt-2">
                 <h3 className="text-lg font-semibold">High School Diploma</h3>
                 <p className="text-sm text-gray-500">Colegiul National "Unirea" Targu Mures - Targu Mures, Romania</p>
             </div>
-            <div className="mt-4">
+            <div className="mt-2">
                 <h3 className="text-lg font-semibold">Bachelor of Science, Computer Science / Mathematics</h3>
                 <p className="text-sm text-gray-500">Institut National Des Sciences Appliquées De Toulouse - Toulouse, France</p>
                 <p className="text-sm mt-2">

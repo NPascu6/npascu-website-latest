@@ -1,29 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { routeDefinition } from '../../router/routeDefinition';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ toggle, setToggle }: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
 
     useEffect(() => {
-        let active = true;
-
-        if (active) {
-            console.log('Render side toggle')
-            setIsOpen(toggle);
-        }
-
-        return () => {
-            active = false;
-            setIsOpen(false);
-        }
+        console.log('Render side toggle')
+        setIsOpen(toggle);
     }, [toggle])
 
     useEffect(() => {
         function handleClickOutside(event: any) {
             if (event.target.id !== 'side-bar' && !event.target.classList.contains('side-bar-class')) {
-                setIsOpen(false);
                 setToggle(false);
             }
         }
@@ -35,27 +27,34 @@ const Sidebar = ({ toggle, setToggle }: any) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [setIsOpen, setToggle]);
+    }, [setToggle]);
 
     const handleNavigateToRoute = (event: React.MouseEvent<HTMLUListElement, MouseEvent>, path: string) => {
         event.preventDefault();
         event.stopPropagation();
         navigate(path);
+        setToggle(false);
     }
 
     return (
         <div
             id='side-bar'
-            className={`fixed top-0 left-0 w-38 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            className={`fixed top-12 left-2 w-38 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-80'}`}>
             {
                 routeDefinition.map((route, index) => {
                     return (
-                        <ul key={index} id={route.path} onClick={(e) => handleNavigateToRoute(e, route.path)}>
+                        <ul style={{
+                            minWidth: '8em',
+                            backgroundColor: location.pathname === route.path ? (isDarkTheme ? '#2d3748' : '#edf2f7') : '',
+                            color: location.pathname === route.path ? (isDarkTheme ? '#edf2f7' : '#2d3748') : ''
+                        }}
+                            key={index} id={route.path} onClick={(e) => handleNavigateToRoute(e, route.path)}>
                             <div
-                                className='side-bar-class flex items-center space-x-2 cursor-pointer  p-2'
+
+                                className='side-bar-class flex items-center space-x-2 cursor-pointer p-3'
                             >
-                                <div>{route.icon}</div>
-                                <div>{route.title}</div>
+                                <div style={{ color: location.pathname === route.path ? 'green' : 'inherit' }}>{route.icon}</div>
+                                <div style={{ color: location.pathname === route.path ? 'green' : 'inherit' }}>{route.title}</div>
                             </div>
                             <hr className='border-b-1' />
                         </ul>

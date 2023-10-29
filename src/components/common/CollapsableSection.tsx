@@ -16,7 +16,7 @@ function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
     };
 
     return (
-        <div className="select-none" id='collapsable-section'>
+        <div className="select-none mt-1" id='collapsable-section'>
             <div className="p-2 flex space-between cursor-pointer shadow-xl " onClick={toggleSection}>
                 <div className='w-full text-sm font-bold alig-center'>
                     <div className={isOpen ? 'w-full' : 'w-full'}>{title}</div>

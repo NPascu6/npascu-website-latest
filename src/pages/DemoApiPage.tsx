@@ -7,6 +7,7 @@ import React from 'react';
 import ReusableTable from '../components/common/ReusableTable';
 import { Item, Order, ReusableColumn, User } from '../models/common/common';
 import dayjs from 'dayjs';
+import CollapsibleSection from '../components/common/CollapsableSection';
 
 // Dummy data for Users
 export const usersData: User[] = [
@@ -157,8 +158,6 @@ const UsersTable = () => {
         <ReusableTable
             columns={columns}
             data={usersData}
-            // Include other props as needed
-            title="Users"
         />
     );
 };
@@ -179,8 +178,6 @@ const ItemsTable = () => {
         <ReusableTable
             columns={columns}
             data={itemsData}
-            // Include other props as needed
-            title="Items"
         />
     );
 };
@@ -199,18 +196,23 @@ const OrdersTable = () => {
         <ReusableTable
             columns={columns}
             data={ordersData}
-            // Include other props as needed
-            title="Orders"
         />
     );
 };
 
 const DemoApiPage = () => {
     return (
-        <div>
-            <UsersTable />
-            <ItemsTable />
-            <OrdersTable />
+        <div className='p-2'>
+            <CollapsibleSection title="Users">
+                <UsersTable />
+            </CollapsibleSection>
+            <CollapsibleSection title="Items">
+                <ItemsTable />
+            </CollapsibleSection>
+            <CollapsibleSection title="Orders">
+                <OrdersTable />
+            </CollapsibleSection>
+
         </div>
     );
 }

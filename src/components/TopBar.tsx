@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import ToggleSvgDark from '../assets/icons/ToggleSvgDark';
 import ToggleSvgLight from '../assets/icons/ToggleSvgLight';
 import Favicon32 from '../assets/favicon-32x32.png';
@@ -11,7 +11,7 @@ import Sidebar from './common/SideBar';
 const TopBar = () => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const dipatch = useDispatch()
-    const [toggleSiderbar, setToggleSidebar] = React.useState(false);
+    const [toggleSiderbar, setToggleSidebar] = React.useState<boolean>(false);
 
     const changeTheme = () => {
         const theme = isDarkTheme ? 'dark' : 'light';
@@ -20,13 +20,17 @@ const TopBar = () => {
         localStorage.setItem('isDarkTheme', !isDarkTheme ? 'true' : 'false');
     }
 
+    const handleToggleSidebar = (isOpen: boolean) => {
+        setToggleSidebar(isOpen);
+    }
 
-    return <div id={'top-bar'} className='flex flex-row md:flex-row md:items-center p-2 border-b '>
-        <Sidebar toggle={toggleSiderbar} setToggle={setToggleSidebar} />
+
+    return <div id={'top-bar'} className='flex flex-row md:flex-row md:items-center p-2'>
+        <Sidebar toggle={toggleSiderbar} setToggle={handleToggleSidebar} />
         <div className='flex flex-grow justify-start items-center'>
-            <img className='w-8 h-8 md:w-10 md:h-10 mr-3' src={Favicon32} alt="favicon" onClick={() => setToggleSidebar(!toggleSiderbar)} />
+            <img className='w-8 h-8 md:w-10 md:h-10 mr-3' src={Favicon32} alt="favicon" onClick={() => handleToggleSidebar(!toggleSiderbar)} />
             <div className='text-sm md:text-xl font-semibold'>
-                Welcome to my personal website...
+                Welcome to my website 🌞
             </div>
         </div>
         <div className='flex justify-end items-center'>
