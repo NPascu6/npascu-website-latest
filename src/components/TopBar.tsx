@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import ToggleSvgDark from '../assets/icons/ToggleSvgDark';
 import ToggleSvgLight from '../assets/icons/ToggleSvgLight';
 import Favicon32 from '../assets/favicon-32x32.png';
