@@ -6,10 +6,11 @@ import ChevronDown from "../../assets/icons/ChevronDown";
 interface CollapsibleSectionpProps {
     title: string,
     children: JsxElement | any
+    isCollapsed?: boolean
 }
 
-function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
-    const [isOpen, setIsOpen] = useState(true);
+function CollapsibleSection({ title, children, isCollapsed = false }: CollapsibleSectionpProps) {
+    const [isOpen, setIsOpen] = useState(isCollapsed);
 
     const toggleSection = () => {
         setIsOpen(!isOpen);

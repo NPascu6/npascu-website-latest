@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const theme = isDarkTheme ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', theme);
-    dipatch(setTheme(isDarkTheme))
+    dipatch(setTheme(!isDarkTheme))
   }, [dipatch])
 
   return (
