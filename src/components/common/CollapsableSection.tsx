@@ -25,7 +25,7 @@ function CollapsibleSection({ title, children, isCollapsed = false, subTitle = "
                     {(hideTitleOnOpen ? !isOpen && <div className={'pl-2'}>{title}</div> :
                         <div className={'pl-2'}>{title}</div>)
                     }
-                    <span className="font-normal text-xs pl-2">{subTitle}</span>
+                    {subTitle && <span className="font-normal text-xs pl-2">{subTitle}</span>}
                 </div>
                 <div > {isOpen ? <ChevronUp /> : <ChevronDown />}</div>
             </div>
