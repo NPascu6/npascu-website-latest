@@ -19,13 +19,13 @@ const GithubProfileCard = () => {
     };
 
     return (
-        <div id="github-profile-card" className={`p-2 lg:w-1/3 shadow-xl`}>
-            <div className="text-center flex justify-between border border-green-600 p-2" onClick={onDownload}>
-                <div className="text-xl text-green-600">Download CV</div>
+        <div id="github-profile-card" className={`p-1 lg:w-1/3 shadow-xl`}>
+            <div className="text-center flex justify-between border border-green-600 p-1" onClick={onDownload}>
+                <div className="text-md text-green-600">Download CV</div>
                 <div><DownloadIcon color={'green'} /></div>
             </div>
             <div className="text-start flex items-center justify-center">
-                <div className="mt-2 mx-4">
+                <div className="mt-2 mx-2">
                     <p className={`text-md font-bold`}>{githubProfile?.name}</p>
                     <p className={`text-sm`}>{`${githubProfile?.bio}Zurich`}</p>
                     <hr className="p-2 border-b-1" />

@@ -23,7 +23,7 @@ function App() {
   return (
     <div id='app' className={`${darkTheme ? 'dark' : 'light'}-theme app select-none`}>
       <TopBar />
-      <div style={{ maxHeight: 'calc(100dvh - 3.8em)', overflowY: 'auto' }}>
+      <div style={{ maxHeight: 'calc(100dvh - 3em)', overflowY: 'auto' }}>
         <RoutesSwitch />
       </div>
       <Toaster />

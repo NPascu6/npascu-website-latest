@@ -7,9 +7,11 @@ interface CollapsibleSectionpProps {
     title: string,
     children: JsxElement | any
     isCollapsed?: boolean
+    subTitle?: string
+    hideTitleOnOpen?: boolean
 }
 
-function CollapsibleSection({ title, children, isCollapsed = false }: CollapsibleSectionpProps) {
+function CollapsibleSection({ title, children, isCollapsed = false, subTitle = "", hideTitleOnOpen = false }: CollapsibleSectionpProps) {
     const [isOpen, setIsOpen] = useState(isCollapsed);
 
     const toggleSection = () => {
@@ -17,14 +19,17 @@ function CollapsibleSection({ title, children, isCollapsed = false }: Collapsibl
     };
 
     return (
-        <div className="select-none mt-1" id='collapsable-section'>
-            <div className="p-2 flex space-between cursor-pointer shadow-xl " onClick={toggleSection}>
+        <div className="select-none collapsable-section">
+            <div className={"flex space-between cursor-pointer shadow-xl p-1"} onClick={toggleSection}>
                 <div className='w-full text-sm font-bold alig-center'>
-                    <div className={isOpen ? 'w-full' : 'w-full'}>{title}</div>
+                    {(hideTitleOnOpen ? !isOpen && <div className={'pl-2'}>{title}</div> :
+                        <div className={'pl-2'}>{title}</div>)
+                    }
+                    <span className="font-normal text-xs pl-2">{subTitle}</span>
                 </div>
                 <div > {isOpen ? <ChevronUp /> : <ChevronDown />}</div>
             </div>
-            <div className="shadow-xl" id="collapsable-section-body" style={{ marginTop: isOpen ? '-1em' : '-0.5em' }}>
+            <div className="shadow-xl collapsable-section-body p-1" style={{ marginTop: isOpen ? !subTitle ? '-1em' : '-1em' : '-0.5em' }}>
                 {isOpen && children}
             </div>
         </div>

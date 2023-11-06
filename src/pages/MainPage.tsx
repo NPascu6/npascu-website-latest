@@ -35,25 +35,25 @@ const MainPage = () => {
                 <CollapsibleSection title={'Highlighted Github Repos'}>
                     <HighlightedRepos />
                 </CollapsibleSection>
-                <CollapsibleSection title="Current employment (Fintama), 02/2023 - current">
+                <CollapsibleSection title="Current employment (Fintama)" subTitle="02/2023 - current">
                     <FintamaCard />
                 </CollapsibleSection>
-                <CollapsibleSection title={"TL / Senior Developer (Covario), 03/2021 - 01/2023"}>
+                <CollapsibleSection title={"TL / Senior Developer (Covario)"} subTitle="03/2021 - 01/2023">
                     <CovarioCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="IT Consultant (Amaris), 04/2020 - 03/2021">
+                <CollapsibleSection title="IT Consultant (Amaris)" subTitle="04/2020 - 03/2021">
                     <AmarisCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="Mobile / BE Developer (Cognizant), 06/2019 - 04/2020">
+                <CollapsibleSection title="Mobile / BE Developer (Cognizant)" subTitle="06/2019 - 04/2020">
                     <CognizantCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="Software Development Engineer (BOSCH), 07/2018 - 06/2019">
+                <CollapsibleSection title="Software Development Engineer (BOSCH)" subTitle="07/2018 - 06/2019">
                     <BoschCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="First Developer Job (DVSE.ro), 06/2016 - 07/2018">
+                <CollapsibleSection title="First Developer Job (DVSE.ro)" subTitle="06/2016 - 07/2018">
                     <DVSECard />
                 </CollapsibleSection>
-                <CollapsibleSection title="Support Technician (NewV Technologies), 06/2015 - 06/2016">
+                <CollapsibleSection title="Support Technician (NewV Technologies)" subTitle="06/2015 - 06/2016">
                     <ItSupportTechnicianCard />
                 </CollapsibleSection>
                 <CollapsibleSection title="Trading App (Crypto trading platform)">

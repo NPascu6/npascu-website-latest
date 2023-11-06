@@ -57,17 +57,16 @@
     color: black
 }
 
-.light-theme #collapsable-section {
+.light-theme .collapsable-section {
     background-color: rgb(247, 247, 247);
 }
 
-.light-theme #collapsable-section #collapsable-section-header {
+.light-theme #collapsable-section .collapsable-section-header {
     background-color: rgb(247, 247, 247);
 }
 
-.light-theme #collapsable-section #collapsable-section-body {
+.light-theme .collapsable-section .collapsable-section-body {
     background-color: rgb(247, 247, 247);
-    padding: 0.1em;
 }
 
 .light-theme .card {

@@ -14,11 +14,11 @@ const YoutubeVideoLink = () => {
 
     return (
         <div className="text-center shadow-xl card">
-            <p className="text-2xl font-semibold m-4">
+            <p className="text-xl font-semibold m-4">
                 Explore a Crypto Trading Platform Created with Electron and React
             </p>
             <hr className="border-t-2 border-solid p-1 mt-3" />
-            <p className="text-xl font-semibold m-4">
+            <p className="text-md font-semibold m-2">
                 Click on the video to watch it on Youtube.
             </p>
             <div className="flex flex-wrap justify-center items-center">

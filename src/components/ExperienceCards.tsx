@@ -2,7 +2,7 @@ import React from "react";
 
 export const FintamaCard = () => {
     return (
-        <div className="shadow-xl p-6 m-4 card">
+        <div className="shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">Senior Software Developer</h2>
             <p className="">Fintama AG - Zurich, Switzerland</p>
             <p className="">External to Bank Julius Bar</p>
@@ -47,7 +47,7 @@ export const FintamaCard = () => {
 
 export const CovarioCard = () => {
     return (
-        <div className=" shadow-xl p-6 m-4 card">
+        <div className=" shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">Team Lead / Senior Software Developer</h2>
             <p className="">Covario AG - Zug, Switzerland</p>
             <ul className="list-disc ml-6 mt-4">
@@ -100,7 +100,7 @@ export const CovarioCard = () => {
 
 export const AmarisCard = () => {
     return (
-        <div className="shadow-xl p-6 m-4 card">
+        <div className="shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">Information Technology Consultant / Full Stack Developer</h2>
             <p className="">Amaris Consulting - Zurich, Switzerland</p>
             <ul className="list-disc ml-6 mt-4">
@@ -144,7 +144,7 @@ export const AmarisCard = () => {
 
 export const CognizantCard = () => {
     return (
-        <div className=" shadow-xl p-6 m-4 card">
+        <div className=" shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">Software Developer</h2>
             <p className="">Cognizant Softvision - Cluj Napoca, Romania</p>
             <ul className="list-disc ml-6 mt-4">
@@ -190,7 +190,7 @@ export const CognizantCard = () => {
 
 export const BoschCard = () => {
     return (
-        <div className=" shadow-xl p-6 m-4 card">
+        <div className=" shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">Software Development Engineer</h2>
             <p className="text-sm ">Bosch Automotive Service Solutions, LLC - Cluj Napoca, Romania</p>
             <p className="text-sm mt-2">
@@ -210,7 +210,7 @@ export const BoschCard = () => {
 
 export const DVSECard = () => {
     return (
-        <div className=" shadow-xl p-6 m-4 card">
+        <div className=" shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">Web Developer</h2>
             <p className="text-sm ">DVSE GmbH - Targu Mures, Romania</p>
             <div className="text-sm mt-2">
@@ -229,7 +229,7 @@ export const DVSECard = () => {
 
 export const ItSupportTechnicianCard = () => {
     return (
-        <div className=" shadow-xl p-6 m-4 card">
+        <div className=" shadow-xl p-3 m-2 card">
             <h2 className="text-xl font-semibold">IT Support Technician</h2>
             <p className="text-sm ">New Vision Technologies Inc. - Targu Mures, Romania</p>
             <div className="text-sm mt-2">

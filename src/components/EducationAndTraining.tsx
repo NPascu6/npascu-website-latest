@@ -2,7 +2,7 @@ import React from "react";
 
 const EducationCard = () => {
     return (
-        <div className="shadow-md p-6 m-3 card">
+        <div className="shadow-md p-2 m-3 card">
             <h2 className="text-xl font-semibold">EDUCATION AND TRAINING</h2>
             <div className="mt-2">
                 <h3 className="text-lg font-semibold">High School Diploma</h3>

@@ -13,16 +13,7 @@ const HighlightedRepos = () => {
                 - Created with React 18, Tailwind Css, Redux, React Router, and deployed to my personal GoDaddy domain, with github actions and FTP Deploy.
             </span>
         </p>
-        {/* <p>
-            <a
-                rel="noopener noreferrer"
-                target="_blank"
-                href="https://github.com/NPascu6/ASP_.NET_Starter_API"
-                className={` font-bold`}
-            >
-                .NET Core 6 API
-            </a>
-        </p> */}
+        <hr className="p-2 border-b-1" />
         <p>
             <a
                 rel="noopener noreferrer"
@@ -37,7 +28,7 @@ const HighlightedRepos = () => {
                 <span className="font-bold ml-2 cursor-pointer" onClick={() => window.open("https://npascu-api-v1.azurewebsites.net", "_blank")}>npascu-api-v1.azurewebsites.net</span>
             </span>
         </p>
-
+        <hr className="p-2 border-b-1" />
         <p>
             <a
                 rel="noopener noreferrer"
