@@ -7,8 +7,11 @@ const HighlightedRepos = () => {
                 href="https://github.com/NPascu6/npascu-website-latest"
                 className={` font-bold`}
             >
-                Current web app (react - tailwind.css).
+                Pascu.io
             </a>
+            <span>
+                - Created with React 18, Tailwind Css, Redux, React Router, and deployed to my personal GoDaddy domain, with github actions and FTP Deploy.
+            </span>
         </p>
         {/* <p>
             <a
@@ -24,11 +27,29 @@ const HighlightedRepos = () => {
             <a
                 rel="noopener noreferrer"
                 target="_blank"
-                href="https://github.com/NPascu6/npascu_net_api_v2"
+                href="https://github.com/NPascu6/npascu-api-v1"
                 className={`font-bold`}
             >
-                Personal API - (.NET Core 7.0)
+                Personal API
             </a>
+            <span>
+                - Created with .NET Core 7.0, Entity Framework Core, SQL Server, Swagger, JWT Authentication, and deployed to my personal azure container and application platform, which you can access by clicking:
+                <span className="font-bold ml-2 cursor-pointer" onClick={() => window.open("https://npascu-api-v1.azurewebsites.net", "_blank")}>npascu-api-v1.azurewebsites.net</span>
+            </span>
+        </p>
+
+        <p>
+            <a
+                rel="noopener noreferrer"
+                target="_blank"
+                className={`font-bold`}
+                href="https://github.com/NPascu6/andrei-mylenses.ch">
+                Andrei-Mylenses
+            </a>
+            <span>
+                - Created with React 18, Tailwind Css, Redux, React Router, and deployed to my personal GoDaddy domain, with github actions and FTP Deploy, which you can access my clicking:
+                <span className="font-bold ml-2 cursor-pointer" onClick={() => window.open("https://andrei-mylenses.ch", "_blank")}>andrei-mylenses.ch</span>
+            </span>
         </p>
     </div>
 }

@@ -6,16 +6,18 @@ import Toaster from './components/common/Toaster';
 import TopBar from './components/TopBar';
 import { RootState } from './store/store';
 
-const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+
 
 function App() {
   const dipatch = useDispatch()
   const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
   useEffect(() => {
-    const theme = isDarkTheme ? 'dark' : 'light';
+    const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+
+    const theme = !isDarkTheme ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', theme);
-    dipatch(setTheme(!isDarkTheme))
+    dipatch(setTheme(isDarkTheme))
   }, [dipatch])
 
   return (

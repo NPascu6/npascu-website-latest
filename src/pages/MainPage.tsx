@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import EducationCard from "../components/EducationAndTraining";
-import { AmarisCard, CognizantCard, CovarioCard, DVSECard, FintamaCard, ItSupportTechnicianCard } from "../components/ExperienceCards";
+import { AmarisCard, BoschCard, CognizantCard, CovarioCard, DVSECard, FintamaCard, ItSupportTechnicianCard } from "../components/ExperienceCards";
 import GithubProfileCard from "../components/GithubProfileCard";
 import YoutubeVideoLink from "../components/YoutubeVideoLink";
 import CollapsibleSection from "../components/common/CollapsableSection";
@@ -29,28 +29,31 @@ const MainPage = () => {
                 <GithubProfileCard />
             </div>
             <div className="space-y-2 mt-2" >
-                <CollapsibleSection title="Education">
+                <CollapsibleSection title="Education ">
                     <EducationCard />
                 </CollapsibleSection>
                 <CollapsibleSection title={'Highlighted Github Repos'}>
                     <HighlightedRepos />
                 </CollapsibleSection>
-                <CollapsibleSection title="Current employment (Fintama)">
+                <CollapsibleSection title="Current employment (Fintama), 02/2023 - current">
                     <FintamaCard />
                 </CollapsibleSection>
-                <CollapsibleSection title={"TL / Senior Developer (Covario)"}>
+                <CollapsibleSection title={"TL / Senior Developer (Covario), 03/2021 - 01/2023"}>
                     <CovarioCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="IT Consultant (Amaris)">
+                <CollapsibleSection title="IT Consultant (Amaris), 04/2020 - 03/2021">
                     <AmarisCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="Mobile / BE Developer (Cognizant)">
+                <CollapsibleSection title="Mobile / BE Developer (Cognizant), 06/2019 - 04/2020">
                     <CognizantCard />
                 </CollapsibleSection>
-                <CollapsibleSection title="First Developer Job (DVSE.ro)">
+                <CollapsibleSection title="Software Development Engineer (BOSCH), 07/2018 - 06/2019">
+                    <BoschCard />
+                </CollapsibleSection>
+                <CollapsibleSection title="First Developer Job (DVSE.ro), 06/2016 - 07/2018">
                     <DVSECard />
                 </CollapsibleSection>
-                <CollapsibleSection title="Support Technician">
+                <CollapsibleSection title="Support Technician (NewV Technologies), 06/2015 - 06/2016">
                     <ItSupportTechnicianCard />
                 </CollapsibleSection>
                 <CollapsibleSection title="Trading App (Crypto trading platform)">
