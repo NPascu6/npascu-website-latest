@@ -19,7 +19,7 @@ function CollapsibleSection({ title, children, isCollapsed = false, subTitle = "
     };
 
     return (
-        <div className="select-none collapsable-section">
+        <div className="select-none collapsable-section mt-1">
             <div className={"flex space-between cursor-pointer shadow-xl p-1"} onClick={toggleSection}>
                 <div className='w-full text-sm font-bold alig-center'>
                     {(hideTitleOnOpen ? !isOpen && <div className={'pl-2'}>{title}</div> :

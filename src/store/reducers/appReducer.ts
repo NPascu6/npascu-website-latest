@@ -7,6 +7,7 @@ interface AppState {
         toasterMessage: string;
     };
     githubProfile: any;
+    workPhotos: string[];
 
 }
 
@@ -17,6 +18,7 @@ const initialState: AppState = {
         toasterMessage: '',
     },
     githubProfile: null,
+    workPhotos: []
 };
 
 const appSlice = createSlice({
@@ -36,8 +38,12 @@ const appSlice = createSlice({
             state.githubProfile = action.payload
             console.log('Set github profile:', action.payload)
         },
+        setWorkPhotos(state: AppState, action: PayloadAction<any[]>) {
+            state.workPhotos = action.payload
+            console.log('Set workPhotos:', action.payload)
+        }
     },
 });
 
-export const { setTheme, setShowToaster, setToasterMessage, setGithubProfile } = appSlice.actions;
+export const { setTheme, setShowToaster, setToasterMessage, setGithubProfile, setWorkPhotos } = appSlice.actions;
 export default appSlice.reducer;

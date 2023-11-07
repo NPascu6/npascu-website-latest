@@ -11,3 +11,19 @@ export const _githubRepoTitles = [
     'Json-Server ',
     'openfin',
 ];
+
+export const workImages = [
+    import('../src/assets/work-photos/OtherComponents4.png'),
+    import('../src/assets/work-photos/portal2.png'),
+    import('../src/assets/work-photos/portal3.png'),
+    import('../src/assets/work-photos/portal4.png'),
+    import('../src/assets/work-photos/my-lenses1.png'),
+    import('../src/assets/work-photos/my-lenses2.png'),
+    import('../src/assets/work-photos/my-lenses3.png'),
+    import('../src/assets/work-photos/my-lenses4.png'),
+    import('../src/assets/work-photos/my-lenses5.png'),
+    import('../src/assets/work-photos/my-lenses6.png'),
+    import('../src/assets/work-photos/TradingApp2.png'),
+    import('../src/assets/work-photos/TradingApp4.png'),
+
+];
