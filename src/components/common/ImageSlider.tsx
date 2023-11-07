@@ -69,12 +69,13 @@ const ImageSlider = ({ images, autoSlideTimeout = 4000 }: ImageSliderProps) => {
     }, [currentImageIndex, autoSlideTimeout, images]);
 
     return (
-        <div className='flex card items-center rounded-lg shadow-xl justify-center align-center m-4'>
-            <div className='flex card items-center rounded-lg shadow-xl justify-center align-center min-w-full p-1'>
-                <span className="transform -translate-y-1/2" onClick={handlePrevClick}>
-                    <ChevronLeft />
-                </span>
-                <div className="relative flex justify-center rounded-lg min-w-full" style={{ maxHeight: '22em' }} onClick={toggleFullScreen} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <div className='flex card items-center shadow-xl justify-center min-w-full align-center mt-2'>
+            <span className="transform -translate-y-1/2" onClick={handlePrevClick}>
+                <ChevronLeft />
+            </span>
+            <div className='flex items-center justify-center align-center p-4'>
+
+                <div className="relative flex justify-center rounded-lg min-w-full" style={{ height: '18em', minWidth: '70dvw' }} onClick={toggleFullScreen} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
                     <img
                         loading="lazy"
                         src={images[currentImageIndex]}
@@ -82,19 +83,19 @@ const ImageSlider = ({ images, autoSlideTimeout = 4000 }: ImageSliderProps) => {
                         className="w-full rounded-lg object-contain p-1"
                     />
                 </div>
-                <span className="transform -translate-y-1/2" onClick={handleNextClick}>
-                    <ChevronRight />
-                </span>
-                {isFullScreen && <FullScreenImage
-                    handlePrevClick={handlePrevClick}
-                    handleNextClick={handleNextClick}
-                    toggleFullScreen={toggleFullScreen}
-                    selectedImage={images[currentImageIndex]}
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={handleTouchEnd}
-                />}
-            </div>
 
+            </div>
+            <span className="transform -translate-y-1/2" onClick={handleNextClick}>
+                <ChevronRight />
+            </span>
+            {isFullScreen && <FullScreenImage
+                handlePrevClick={handlePrevClick}
+                handleNextClick={handleNextClick}
+                toggleFullScreen={toggleFullScreen}
+                selectedImage={images[currentImageIndex]}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            />}
         </div>
     );
 };

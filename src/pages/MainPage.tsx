@@ -4,20 +4,22 @@ import { AmarisCard, BoschCard, CognizantCard, CovarioCard, DVSECard, FintamaCar
 import GithubProfileCard from "../components/GithubProfileCard";
 import YoutubeVideoLink from "../components/YoutubeVideoLink";
 import CollapsibleSection from "../components/common/CollapsableSection";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/store";
 import { fetchGithubUserProfile } from "../store/thunks/appThunk";
 import HighlightedRepos from "../components/HighlightedRepos";
-import ImageSlider from "../components/common/ImageSlider";
 import { workImages as images } from "../_constant";
 import { setWorkPhotos } from "../store/reducers/appReducer";
 
 const MainPage = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const workImages = useSelector((state: RootState) => state.app.workPhotos)
     const [loadedImages, setLoadedImages] = useState<any>([]);
 
     useEffect(() => {
+        let active = true;
+
+        if (!active) return;
+
         if (loadedImages.length > 0) return;
 
         Promise.all(images)
@@ -28,6 +30,10 @@ const MainPage = () => {
             })
             .catch((error) => console.error('Error loading images', error))
             .finally(() => console.log('Images loaded'));
+
+        return () => {
+            active = false;
+        }
     }, [dispatch, loadedImages]);
 
     useEffect(() => {
@@ -40,7 +46,7 @@ const MainPage = () => {
             active = false;
         }
     }, [dispatch])
-    console.log(workImages)
+
     return (
         <div className="p-4 md:p-10" id="main-page">
             <div className="flex justify-center items-center">
@@ -53,7 +59,6 @@ const MainPage = () => {
                 <CollapsibleSection hideTitleOnOpen title={'Highlighted Github Repos'}>
                     <HighlightedRepos />
                 </CollapsibleSection>
-                {workImages?.length > 0 && <ImageSlider images={workImages} />}
                 <CollapsibleSection hideTitleOnOpen title="Current employment (Fintama)" subTitle="02/2023 - current">
                     <FintamaCard />
                 </CollapsibleSection>
