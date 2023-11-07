@@ -9,7 +9,7 @@ interface TableBodyProps {
 }
 
 const TableBody = ({ filteredItems, handleRowClick, columns }: TableBodyProps) => {
-    return filteredItems?.items && filteredItems.items.length > 0 ? <tbody style={{ display: 'block', minHeight: '12em', maxHeight: 'calc(100vh - 16em)', overflow: 'auto' }}>
+    return filteredItems?.items && filteredItems.items.length > 0 ? <tbody style={{ display: 'block', minHeight: '12em', maxHeight: 'calc(100dvh - 16em)', overflow: 'auto' }}>
         {filteredItems?.items?.map((row: any, rowIndex: number) => (
             <tr
                 style={{ cursor: 'pointer', display: 'flex' }}
@@ -34,7 +34,7 @@ const TableBody = ({ filteredItems, handleRowClick, columns }: TableBodyProps) =
                 ))}
             </tr>
         ))}
-    </tbody > : <tr style={{ display: 'block', minHeight: '12em', maxHeight: 'calc(100vh - 16em)', overflow: 'auto' }}>
+    </tbody > : <tr style={{ display: 'block', minHeight: '12em', maxHeight: 'calc(100dvh - 16em)', overflow: 'auto' }}>
         <td className="flex items-center justify-center h-40 ">
             <p className="text-xl text-gray-600">No data found</p>
         </td>
