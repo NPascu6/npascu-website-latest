@@ -14,6 +14,7 @@ interface TicTacToeProps {
     setBoard: React.Dispatch<React.SetStateAction<SquareValue[]>>;
     setCurrentPlayer: React.Dispatch<React.SetStateAction<SquareValue>>;
     handleReset: () => void;
+    setWinner: React.Dispatch<React.SetStateAction<SquareValue | null>>;
 }
 
 interface GameStatisticsProps {
@@ -62,6 +63,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     setBoard,
     setCurrentPlayer,
     handleReset,
+    setWinner
 }) => {
 
     const handleClick = (e: any, index: number): void => {
@@ -78,12 +80,22 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         // Check for the winner after setting the board
         checkWinner(newBoard, currentPlayer);
 
-        const nextPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        setCurrentPlayer(nextPlayer);
+
     };
 
     const [diagonal1, setDiagonal1] = useState<number[]>([]);
     const [diagonal2, setDiagonal2] = useState<number[]>([]);
+    const [lines, setLines] = useState<number[][]>([]);
+
+    useEffect(() => {
+        const lines: number[][] = [];
+        for (let i = 0; i < boardSize; i++) {
+            lines.push(Array.from({ length: boardSize }, (_, index) => i * boardSize + index));
+            lines.push(Array.from({ length: boardSize }, (_, index) => i + index * boardSize));
+        }
+
+        setLines(lines);
+    }, [boardSize])
 
     useEffect(() => {
         const diagonal1 = Array.from({ length: boardSize }, (_, index) => index + index * boardSize);
@@ -91,53 +103,69 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
         setDiagonal1(diagonal1);
         setDiagonal2(diagonal2);
-    }, [boardSize, setDiagonal1, setDiagonal2])
+
+        // Additional diagonals for larger board sizes
+        for (let i = 1; i <= boardSize - 3; i++) {
+            diagonal1.push(i * (boardSize + 1)); // Add diagonal from top-left to bottom-right
+            diagonal2.push((i + 1) * (boardSize - 1)); // Add diagonal from top-right to bottom-left
+        }
+    }, [boardSize, setDiagonal1, setDiagonal2]);
 
     const checkWinner = useCallback((board: any, currentPlayer: any) => {
-        // Check for the winner after the last action
-        const lines: number[][] = [];
-        for (let i = 0; i < boardSize; i++) {
-            lines.push(Array.from({ length: boardSize }, (_, index) => i * boardSize + index));
-            lines.push(Array.from({ length: boardSize }, (_, index) => i + index * boardSize));
-        }
-
-        lines.push(diagonal1);
-        lines.push(diagonal2);
-
         for (const line of lines) {
             for (let i = 0; i <= line.length - 3; i++) {
                 const row = line.slice(i, i + 3);
                 const isWinningRow = row.every((index) => board[index] === currentPlayer);
 
                 if (isWinningRow) {
-                    alert(`Player ${currentPlayer} wins!`);
-                    handleReset();
+                    setWinner(currentPlayer);
                     return;
                 }
             }
         }
 
-        const isWinningDiagonal1 = diagonal1.every((index) => board[index] === currentPlayer);
-        const isWinningDiagonal2 = diagonal2.every((index) => board[index] === currentPlayer);
+        const isWinningDiagonal1 = diagonal1.slice(0, 3).every((index) => board[index] === currentPlayer);
+        const isWinningDiagonal2 = diagonal2.slice(0, 3).every((index) => board[index] === currentPlayer);
 
         if (isWinningDiagonal1 || isWinningDiagonal2) {
-            alert(`Player ${currentPlayer} wins!`);
-            handleReset();
+            setWinner(currentPlayer);
             return;
+        }
+
+        // Check additional diagonals for larger board sizes
+        if (boardSize > 3) {
+            for (let i = 0; i <= boardSize - 3; i++) {
+                const additionalDiagonal1 = Array.from({ length: 3 }, (_, index) => i * (boardSize + 1) + index);
+                const additionalDiagonal2 = Array.from({ length: 3 }, (_, index) => (i + 1) * (boardSize - 1) - index);
+
+                const isWinningAdditionalDiagonal1 = additionalDiagonal1.every((index) => board[index] === currentPlayer);
+                const isWinningAdditionalDiagonal2 = additionalDiagonal2.every((index) => board[index] === currentPlayer);
+
+                if (isWinningAdditionalDiagonal1 || isWinningAdditionalDiagonal2) {
+                    setWinner(currentPlayer);
+                    return;
+                }
+            }
         }
 
         if (board.every((square: any) => square !== null)) {
             alert("It's a draw!");
             handleReset();
+            return;
         }
-    }, [boardSize, handleReset, diagonal1, diagonal2]);
+
+        const nextPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        setCurrentPlayer(nextPlayer);
+    }, [diagonal1, diagonal2, lines, boardSize, handleReset, setCurrentPlayer, setWinner]);
+
+
 
     return (
         <div className="flex flex-col">
             <div className={`grid ${boardStyle} shadow-lg mb-4`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '5px', padding: '2px' }}>
                 {board.map((_: any, index: number) =>
                     <div
-                        style={{ minHeight: '50px' }}
+                        style={{ minHeight: '40px' }}
                         key={index}
                         className="h-full w-full min-h-full border border-gray-400 font-bold flex items-center justify-center focus:outline-none"
                         onClick={(e: any) => handleClick(e, index)}
@@ -185,12 +213,13 @@ const TicTacToeContainer: React.FC = () => {
     useEffect(() => {
         if (winner) {
             alert(`Player ${currentPlayer} wins!`);
-            handleReset();
             updateGameStats();
+            handleReset();
+
         } else if (isDraw) {
             alert("It's a draw!");
-            handleReset();
             updateGameStats();
+            handleReset();
         }
     }, [winner, isDraw, currentPlayer, handleReset, updateGameStats]);
 
@@ -199,7 +228,7 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="flex flex-col items-center justify-center p-4" style={{ minHeight: "calc(100dvh - 5em)" }}>
+        <div className="flex flex-col items-center justify-center p-4">
             <h1 className="text-3xl font-bold mb-4">Tic Tac Toe</h1>
             <div className="max-w-md w-full">
                 <div className="mb-4">
@@ -219,6 +248,7 @@ const TicTacToeContainer: React.FC = () => {
                     </select>
                 </div>
                 <TicTacToe
+                    setWinner={setWinner}
                     handleReset={handleReset}
                     setCurrentPlayer={setCurrentPlayer}
                     setBoard={setBoard}
