@@ -6,7 +6,6 @@ interface TicTacToeProps {
     boardSize: number;
     player1Symbol: SquareValue;
     player2Symbol: SquareValue;
-    boardStyle: string;
     winner: SquareValue | null;
     isDraw: boolean;
     board: SquareValue[];
@@ -55,7 +54,6 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     boardSize,
     player1Symbol,
     player2Symbol,
-    boardStyle,
     winner,
     isDraw,
     board,
@@ -176,20 +174,22 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
     return (
         <div className="flex flex-col">
-            <div className={`grid ${boardStyle} shadow-lg mb-4`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '5px', padding: '2px' }}>
+            <div className={`grid shadow-lg mb-4`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '5px', padding: '2px' }}>
                 {board.map((_: any, index: number) =>
                     <div
                         style={{ minHeight: '40px' }}
-                        key={index}
+                        // key={index}
                         className="h-full w-full min-h-full border border-gray-400 font-bold flex items-center justify-center focus:outline-none"
                         onClick={(e: any) => handleClick(e, index)}
                     >
                         {board[index]}
                     </div>)}
             </div>
-            <button className="p-2 rounded bg-blue-500 text-white" onClick={handleReset}>
-                Reset
-            </button>
+            <div className='items-center flex w-full justify-center'>
+                <button className="p-2 bg-blue-500 text-white" onClick={handleReset}>
+                    Reset
+                </button>
+            </div>
         </div>
     );
 };
@@ -278,7 +278,6 @@ const TicTacToeContainer: React.FC = () => {
                         boardSize={boardSize}
                         player1Symbol="X"
                         player2Symbol="O"
-                        boardStyle="border-2 border-gray-300"
                     />
                 </div>
             </div>
