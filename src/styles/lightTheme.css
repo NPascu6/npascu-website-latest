@@ -4,8 +4,8 @@
 }
 
 .light-theme #side-bar {
-    background-color: #333333;
-    color: #ECEFF1;
+    background-color: rgb(247, 247, 247);
+    color: #333333;
 }
 
 .light-theme table {

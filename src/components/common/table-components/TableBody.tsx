@@ -1,5 +1,5 @@
 import React from "react"
-import { getCellWidth } from "../../../util/util"
+import { getCellWidth } from "../../../util"
 import { ReusableColumn } from "../../../models/common/common"
 
 interface TableBodyProps {

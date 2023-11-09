@@ -1,5 +1,5 @@
 import dayjs from "dayjs"
-import { ReusableColumn } from "../models/common/common"
+import { ReusableColumn } from "./models/common/common"
 
 export const dateFormater = (date: string) => {
     return dayjs(date).format("YYYY-MM-DD HH:mm")

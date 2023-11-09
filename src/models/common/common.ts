@@ -50,3 +50,14 @@ export interface Order {
     createdAt: string;
     updatedAt: string;
 }
+
+interface AirplaneProps {
+    pathPoints: { x: number; y: number }[];
+    width: number;
+    height: number;
+    flightSpeed: number;
+    weaponKey: string;
+    shieldKey: string;
+  }
+  
+  export default AirplaneProps;
