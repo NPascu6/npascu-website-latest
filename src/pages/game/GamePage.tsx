@@ -17,6 +17,7 @@ interface TicTacToeProps {
 }
 
 interface GameStatisticsProps {
+    currentPlayer: string;
     player1Stats: {
         currentPlayer: string;
         wins: number;
@@ -29,19 +30,19 @@ interface GameStatisticsProps {
     };
 }
 
-const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats }) => (
-    <div className=" p-4 shadow-lg rounded-md">
+const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer }) => (
+    <div className="text-center p-4 shadow-lg rounded-md">
         <h2 className="text-xl font-bold mb-2">Game Statistics</h2>
-        <div className="flex">
+        <div className="flex justify-center">
             <div className="border mr-1 p-2">
                 <p>Player 1:</p>
-                <p>Current Player: {player1Stats.currentPlayer}</p>
+                <p className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
                 <p>Wins: {player1Stats.wins}</p>
                 <p>Draws: {player1Stats.draws}</p>
             </div>
             <div className="border ml-1 p-2">
                 <p>Player 2:</p>
-                <p>Current Player: {player2Stats.currentPlayer}</p>
+                <p className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
                 <p>Wins: {player2Stats.wins}</p>
                 <p>Draws: {player2Stats.draws}</p>
             </div>
@@ -198,7 +199,7 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className=" items-center justify-center p-4" style={{ minHeight: "calc(100dvh - 5em)" }}>
+        <div className="flex flex-col items-center justify-center p-4" style={{ minHeight: "calc(100dvh - 5em)" }}>
             <h1 className="text-3xl font-bold mb-4">Tic Tac Toe</h1>
             <div className="max-w-md w-full">
                 <div className="mb-4">
@@ -230,7 +231,7 @@ const TicTacToeContainer: React.FC = () => {
                     player2Symbol="O"
                     boardStyle="border-2 border-gray-300 rounded-md"
                 />
-                <GameStatistics player1Stats={player1Stats} player2Stats={player2Stats} />
+                {currentPlayer && <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
             </div>
         </div>
     );
