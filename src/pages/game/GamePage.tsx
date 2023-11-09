@@ -146,6 +146,20 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
                     return;
                 }
             }
+
+            // Check additional rows and columns
+            for (let i = 0; i <= boardSize - 3; i++) {
+                const additionalRow = Array.from({ length: 3 }, (_, index) => i * boardSize + index + 1);
+                const additionalColumn = Array.from({ length: 3 }, (_, index) => i + index * boardSize + 1);
+
+                const isWinningAdditionalRow = additionalRow.every((index) => board[index] === currentPlayer);
+                const isWinningAdditionalColumn = additionalColumn.every((index) => board[index] === currentPlayer);
+
+                if (isWinningAdditionalRow || isWinningAdditionalColumn) {
+                    setWinner(currentPlayer);
+                    return;
+                }
+            }
         }
 
         if (board.every((square: any) => square !== null)) {
@@ -228,7 +242,7 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 align-center">
+        <div className="flex flex-col items-center justify-center p-4 align-center" style={{ height: 'calc(100dvh - 4em)' }}>
             <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
             <div className="w-full flex flex-col">
                 <div className="mb-4">
@@ -247,7 +261,11 @@ const TicTacToeContainer: React.FC = () => {
                         <option value="5">5x5</option>
                     </select>
                 </div>
-                <div className='min-w-full min-h-full'>
+                <div >
+                    {currentPlayer &&
+                        <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
+                </div>
+                <div>
                     <TicTacToe
                         setWinner={setWinner}
                         handleReset={handleReset}
@@ -263,11 +281,6 @@ const TicTacToeContainer: React.FC = () => {
                         boardStyle="border-2 border-gray-300"
                     />
                 </div>
-                <div className='min-w-full min-h-full'>
-                    {currentPlayer &&
-                        <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
-                </div>
-
             </div>
         </div>
     );
