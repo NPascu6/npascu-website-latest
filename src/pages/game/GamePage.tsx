@@ -77,100 +77,63 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
         // Check for the winner after setting the board
         checkWinner(newBoard, currentPlayer);
-
-
     };
 
-    const [diagonal1, setDiagonal1] = useState<number[]>([]);
-    const [diagonal2, setDiagonal2] = useState<number[]>([]);
-    const [lines, setLines] = useState<number[][]>([]);
-
-    useEffect(() => {
-        const lines: number[][] = [];
-        for (let i = 0; i < boardSize; i++) {
-            lines.push(Array.from({ length: boardSize }, (_, index) => i * boardSize + index));
-            lines.push(Array.from({ length: boardSize }, (_, index) => i + index * boardSize));
-        }
-
-        setLines(lines);
-    }, [boardSize])
-
-    useEffect(() => {
-        const diagonal1 = Array.from({ length: boardSize }, (_, index) => index + index * boardSize);
-        const diagonal2 = Array.from({ length: boardSize }, (_, index) => (index + 1) * (boardSize - 1));
-
-        setDiagonal1(diagonal1);
-        setDiagonal2(diagonal2);
-
-        // Additional diagonals for larger board sizes
-        for (let i = 1; i <= boardSize - 3; i++) {
-            diagonal1.push(i * (boardSize + 1)); // Add diagonal from top-left to bottom-right
-            diagonal2.push((i + 1) * (boardSize - 1)); // Add diagonal from top-right to bottom-left
-        }
-    }, [boardSize, setDiagonal1, setDiagonal2]);
-
     const checkWinner = useCallback((board: any, currentPlayer: any) => {
-        for (const line of lines) {
-            for (let i = 0; i <= line.length - 3; i++) {
-                const row = line.slice(i, i + 3);
-                const isWinningRow = row.every((index) => board[index] === currentPlayer);
+        const isWinningSequence = (sequence: number[]) =>
+            sequence.every((index) => board[index] === currentPlayer);
 
-                if (isWinningRow) {
-                    setWinner(currentPlayer);
-                    return;
-                }
+        // Check rows and columns
+        for (let i = 0; i < boardSize; i++) {
+            const row = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
+            const column = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
+
+            if (isWinningSequence(row) || isWinningSequence(column)) {
+                setWinner(currentPlayer);
+                return;
             }
         }
 
-        const isWinningDiagonal1 = diagonal1.slice(0, 3).every((index) => board[index] === currentPlayer);
-        const isWinningDiagonal2 = diagonal2.slice(0, 3).every((index) => board[index] === currentPlayer);
+        // Check main diagonals
+        const mainDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize + 1));
+        const antiDiagonal = Array.from({ length: boardSize }, (_, index) => (index + 1) * (boardSize - 1));
 
-        if (isWinningDiagonal1 || isWinningDiagonal2) {
+        if (isWinningSequence(mainDiagonal) || isWinningSequence(antiDiagonal)) {
             setWinner(currentPlayer);
             return;
         }
 
-        // Check additional diagonals for larger board sizes
+        // Check additional diagonals, rows, and columns for larger board sizes
         if (boardSize > 3) {
             for (let i = 0; i <= boardSize - 3; i++) {
-                const additionalDiagonal1 = Array.from({ length: 3 }, (_, index) => i * (boardSize + 1) + index);
-                const additionalDiagonal2 = Array.from({ length: 3 }, (_, index) => (i + 1) * (boardSize - 1) - index);
+                const additionalDiagonal1 = Array.from({ length: boardSize }, (_, index) => i * (boardSize + 1) + index);
+                const additionalDiagonal2 = Array.from({ length: boardSize }, (_, index) => (i + 1) * (boardSize - 1) - index);
+                const additionalRow = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
+                const additionalColumn = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
 
-                const isWinningAdditionalDiagonal1 = additionalDiagonal1.every((index) => board[index] === currentPlayer);
-                const isWinningAdditionalDiagonal2 = additionalDiagonal2.every((index) => board[index] === currentPlayer);
-
-                if (isWinningAdditionalDiagonal1 || isWinningAdditionalDiagonal2) {
-                    setWinner(currentPlayer);
-                    return;
-                }
-            }
-
-            // Check additional rows and columns
-            for (let i = 0; i <= boardSize - 3; i++) {
-                const additionalRow = Array.from({ length: 3 }, (_, index) => i * boardSize + index + 1);
-                const additionalColumn = Array.from({ length: 3 }, (_, index) => i + index * boardSize + 1);
-
-                const isWinningAdditionalRow = additionalRow.every((index) => board[index] === currentPlayer);
-                const isWinningAdditionalColumn = additionalColumn.every((index) => board[index] === currentPlayer);
-
-                if (isWinningAdditionalRow || isWinningAdditionalColumn) {
+                if (
+                    isWinningSequence(additionalDiagonal1) ||
+                    isWinningSequence(additionalDiagonal2) ||
+                    isWinningSequence(additionalRow) ||
+                    isWinningSequence(additionalColumn)
+                ) {
                     setWinner(currentPlayer);
                     return;
                 }
             }
         }
 
+        // Check for a draw
         if (board.every((square: any) => square !== null)) {
             alert("It's a draw!");
             handleReset();
             return;
         }
 
+        // Switch to the next player
         const nextPlayer = currentPlayer === 'X' ? 'O' : 'X';
         setCurrentPlayer(nextPlayer);
-    }, [diagonal1, diagonal2, lines, boardSize, handleReset, setCurrentPlayer, setWinner]);
-
-
+    }, [boardSize, handleReset, setCurrentPlayer, setWinner]);
 
     return (
         <div className="flex flex-col">
@@ -242,9 +205,9 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 align-center" style={{ height: 'calc(100dvh - 4em)' }}>
-            <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
-            <div className="w-full flex flex-col">
+        <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+            <div className="w-full flex flex-col text-center">
+                <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
                 <div className="mb-4">
                     <label className="block text-sm font-medium">Select Board Size:</label>
                     <select
