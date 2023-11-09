@@ -32,7 +32,7 @@ interface GameStatisticsProps {
 }
 
 const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer }) => (
-    <div className="text-center p-4 shadow-lg rounded-md">
+    <div className="text-center p-4 shadow-lg">
         <h2 className="text-xl font-bold mb-2">Game Statistics</h2>
         <div className="flex justify-center">
             <div className="border mr-1 p-2">
@@ -228,13 +228,13 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="flex flex-col items-center justify-center p-4">
-            <h1 className="text-3xl font-bold mb-4">Tic Tac Toe</h1>
-            <div className="max-w-md w-full">
+        <div className="flex flex-col items-center justify-center p-4 align-center">
+            <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
+            <div className="w-full flex flex-col">
                 <div className="mb-4">
                     <label className="block text-sm font-medium">Select Board Size:</label>
                     <select
-                        className="mt-1 block w-full p-2 text-black border border-gray-300 rounded-md"
+                        className="mt-1 block w-full p-2 text-black border border-gray-300"
                         onChange={(e) => {
                             const newSize = parseInt(e.target.value, 10);
                             setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
@@ -247,21 +247,27 @@ const TicTacToeContainer: React.FC = () => {
                         <option value="5">5x5</option>
                     </select>
                 </div>
-                <TicTacToe
-                    setWinner={setWinner}
-                    handleReset={handleReset}
-                    setCurrentPlayer={setCurrentPlayer}
-                    setBoard={setBoard}
-                    currentPlayer={currentPlayer}
-                    board={board}
-                    isDraw={isDraw}
-                    winner={winner}
-                    boardSize={boardSize}
-                    player1Symbol="X"
-                    player2Symbol="O"
-                    boardStyle="border-2 border-gray-300 rounded-md"
-                />
-                {currentPlayer && <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
+                <div className='min-w-full min-h-full'>
+                    <TicTacToe
+                        setWinner={setWinner}
+                        handleReset={handleReset}
+                        setCurrentPlayer={setCurrentPlayer}
+                        setBoard={setBoard}
+                        currentPlayer={currentPlayer}
+                        board={board}
+                        isDraw={isDraw}
+                        winner={winner}
+                        boardSize={boardSize}
+                        player1Symbol="X"
+                        player2Symbol="O"
+                        boardStyle="border-2 border-gray-300"
+                    />
+                </div>
+                <div className='min-w-full min-h-full'>
+                    {currentPlayer &&
+                        <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
+                </div>
+
             </div>
         </div>
     );
