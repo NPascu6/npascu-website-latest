@@ -205,7 +205,7 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="min-h-screen flex items-center justify-center">
             <div className="w-full flex flex-col text-center">
                 <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
                 <div className="mb-4">
