@@ -14,13 +14,15 @@ interface CollapsibleSectionpProps {
 function CollapsibleSection({ title, children, isCollapsed = false, subTitle = "", hideTitleOnOpen = false }: CollapsibleSectionpProps) {
     const [isOpen, setIsOpen] = useState(isCollapsed);
 
-    const toggleSection = () => {
+    const toggleSection = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.preventDefault();
+        e.stopPropagation();
         setIsOpen(!isOpen);
     };
 
     return (
         <div className="select-none collapsable-section mt-1">
-            <div className={"flex space-between cursor-pointer shadow-xl p-1"} onClick={toggleSection}>
+            <div className={"flex space-between cursor-pointer shadow-xl p-1"} onClick={(e) => toggleSection(e)}>
                 <div className='w-full text-sm font-bold alig-center'>
                     {(hideTitleOnOpen ? !isOpen && <div className={'pl-2'}>{title}</div> :
                         <div className={'pl-2'}>{title}</div>)

@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 type SquareValue = 'X' | 'O' | null;
 
 interface TicTacToeProps {
-    boardSize: number;
     player1Symbol: SquareValue;
     player2Symbol: SquareValue;
     winner: SquareValue | null;
@@ -35,13 +34,13 @@ const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2St
     <div className="text-center shadow-xl">
         <h2 className="text-xl font-bold mb-2">Game Statistics</h2>
         <div className="flex justify-center">
-            <div className="border mr-1 p-1">
+            <div className="border mr-1 p-1" style={{ width: '11em' }}>
                 <p>Player 1:</p>
                 <p className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
                 <p>Wins: {player1Stats.wins}</p>
                 <p>Draws: {player1Stats.draws}</p>
             </div>
-            <div className="border ml-1 p-1">
+            <div className="border ml-1 p-1" style={{ width: '11em' }}>
                 <p>Player 2:</p>
                 <p className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
                 <p>Wins: {player2Stats.wins}</p>
@@ -52,7 +51,6 @@ const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2St
 );
 
 const TicTacToe: React.FC<TicTacToeProps> = ({
-    boardSize,
     player1Symbol,
     player2Symbol,
     winner,
@@ -231,13 +229,13 @@ const TicTacToeContainer: React.FC = () => {
 
     return (
         <div className="container mx-auto p-2 md:p-4">
-            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto rounded-lg shadow-xl flex flex-col">
+            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto shadow-xl flex flex-col">
                 <div className="p-2 text-center" >
                     <h1 className="text-xl md:text-xl lg:text-2xl font-bold mb-4">Tic Tac Toe</h1>
                     <div className="mb-4">
                         <label className="block text-xs font-medium">Select Board Size:</label>
                         <select
-                            className="mt-1 text-sm block w-full p-2 text-black border border-gray-300 rounded"
+                            className="mt-1 text-sm block w-full p-2 text-black border border-gray-300"
                             onChange={(e) => {
                                 const newSize = parseInt(e.target.value, 10);
                                 setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
@@ -273,7 +271,6 @@ const TicTacToeContainer: React.FC = () => {
                             board={board}
                             isDraw={isDraw}
                             winner={winner}
-                            boardSize={boardSize}
                             player1Symbol="X"
                             player2Symbol="O"
                         />

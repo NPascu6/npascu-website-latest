@@ -17,11 +17,11 @@ export interface ReusableColumn {
 
 export interface RouteDefinition {
     path: string;
-    component: ReactNode | JSX.Element;
+    routes?: RouteDefinition[];
+    element?: ReactNode | JSX.Element;
     exact?: boolean;
     title?: string;
     icon?: React.ReactElement;
-    subRoutes?: RouteDefinition[];
 }
 
 export interface User {
@@ -58,6 +58,6 @@ interface AirplaneProps {
     flightSpeed: number;
     weaponKey: string;
     shieldKey: string;
-  }
-  
-  export default AirplaneProps;
+}
+
+export default AirplaneProps;

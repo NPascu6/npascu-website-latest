@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from './store/reducers/appReducer';
-import { RoutesSwitch } from './router/Router';
 import Toaster from './components/common/Toaster';
 import TopBar from './components/TopBar';
 import { RootState } from './store/store';
+import RoutesSwitch from './router/Router';
 
 
 

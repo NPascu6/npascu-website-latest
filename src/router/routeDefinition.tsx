@@ -1,38 +1,46 @@
 //import DemoApiIcon from "../assets/icons/DemoApiIcon";
 import Info from "../assets/icons/Info";
 import MainIcon from "../assets/icons/MainIcon";
+import TicTacToeIcon from "../assets/icons/TicTacToe";
 import { RouteDefinition } from "../models/common/common";
 import AboutPage from "../pages/AboutPage";
 import MainPage from "../pages/MainPage";
-import GamePage from "../pages/game/GamePage";
+import GamePage from "../pages/game/TicTacToeGame";
+import GamesCardPage from "../pages/game/GamesContainer";
 
 export const routeDefinition: RouteDefinition[] = [
     {
         path: '/',
-        component: <MainPage />,
         exact: true,
         title: 'Main',
-        icon: <MainIcon />
+        icon: <MainIcon />,
+        element: <MainPage />,
     },
-    // {
-    //     path: '/demo-api',
-    //     component: <DemoApiPage />,
-    //     exact: true,
-    //     title: 'Demo Api',
-    //     icon: <DemoApiIcon />
-    // },
     {
         path: '/about',
-        component: <AboutPage />,
         exact: true,
         title: 'About',
-        icon: <Info />
+        icon: <Info />,
+        element: <AboutPage />,
     },
     {
-        path: '/game',
-        component: <GamePage />,
+        path: '/games/*',
         exact: true,
-        title: 'Demo Game',
-        icon: <Info />
-    }
-]
+        title: 'Demo Games',
+        icon: <Info />,
+        element: <GamesCardPage />,
+        routes: [
+            {
+                path: 'tic-tac-toe', // Removed '/games/' from the child path
+                exact: true,
+                title: 'Tic Tac Toe',
+                icon: <TicTacToeIcon />,
+                element: <GamePage />,
+            },
+        ],
+    },
+];
+
+
+
+
