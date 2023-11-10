@@ -182,6 +182,8 @@ const SnakeGame = () => {
     }, [setDirection]);
 
     const touchStart = (event: TouchEvent) => {
+        event.preventDefault()
+        event.stopPropagation()
         const { touches } = event;
         if (touches.length === 1) {
             const touch = touches[0];
@@ -190,6 +192,8 @@ const SnakeGame = () => {
     };
 
     const touchEnd = useCallback((event: TouchEvent) => {
+        event.preventDefault()
+        event.stopPropagation()
         const { changedTouches } = event;
         if (changedTouches.length === 1 && swipeState) {
             const touch = changedTouches[0];
