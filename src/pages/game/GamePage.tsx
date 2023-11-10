@@ -32,7 +32,7 @@ interface GameStatisticsProps {
 }
 
 const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer }) => (
-    <div className="text-center p-2 shadow-lg">
+    <div className="text-center shadow-xl">
         <h2 className="text-xl font-bold mb-2">Game Statistics</h2>
         <div className="flex justify-center">
             <div className="border mr-1 p-1">
@@ -79,19 +79,22 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
         // Check for the winner after setting the board
         checkWinner(newBoard, currentPlayer);
+
     };
 
-    const checkWinner = useCallback((board: any, currentPlayer: any) => {
+    const checkWinner = (board: SquareValue[], currentPlayer: SquareValue, winningCondition: number = 3) => {
+        const boardSize = Math.sqrt(board.length);
+
         const isWinningSequence = (sequence: number[]) =>
             sequence.every((index) => board[index] === currentPlayer);
 
-        const checkSequence = (sequence: number[], winningLength: number) => {
-            if (sequence.length < winningLength) {
+        const checkSequence = (sequence: number[]) => {
+            if (sequence.length < winningCondition) {
                 return false; // Not enough elements to form a winning sequence
             }
 
-            for (let i = 0; i <= sequence.length - winningLength; i++) {
-                const subsequence = sequence.slice(i, i + winningLength);
+            for (let i = 0; i <= sequence.length - winningCondition; i++) {
+                const subsequence = sequence.slice(i, i + winningCondition);
                 if (isWinningSequence(subsequence)) {
                     setWinner(currentPlayer);
                     return true;
@@ -100,78 +103,65 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
             return false;
         };
 
-        const checkDiagonals = (startIndex: number, step: number, direction: number) => {
-            const diagonals: number[][] = [];
-            for (let i = 0; i <= boardSize - startIndex - step; i++) {
-                diagonals.push(
-                    Array.from(
-                        { length: boardSize - startIndex },
-                        (_, index) => (startIndex + i + index * direction) * (boardSize + direction),
-                    ),
-                );
-            }
-
-            for (const diagonal of diagonals) {
-                if (checkSequence(diagonal, 3)) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
         // Check rows and columns
         for (let i = 0; i < boardSize; i++) {
             const row = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
             const column = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
 
-            if (checkSequence(row, 3) || checkSequence(column, 3)) {
-                return;
+            if (checkSequence(row) || checkSequence(column)) {
+                return true;
             }
         }
 
-        // Check main diagonals
+        // Check main diagonal
         const mainDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize + 1));
-        const antiDiagonal = Array.from({ length: boardSize }, (_, index) => (index + 1) * (boardSize - 1));
+        if (checkSequence(mainDiagonal)) {
+            return true;
+        }
 
-        if (checkSequence(mainDiagonal, 3) || checkSequence(antiDiagonal, 3)) {
-            return;
+        // Check secondary diagonal
+        const secondaryDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize - 1) + (boardSize - 1));
+        if (checkSequence(secondaryDiagonal)) {
+            return true;
         }
 
         // Check additional diagonals in both directions
-        if (checkDiagonals(0, 1, 1) || checkDiagonals(0, 1, -1)) {
-            return;
+        for (let i = 0; i <= boardSize - winningCondition; i++) {
+            for (let j = 0; j <= boardSize - winningCondition; j++) {
+                const additionalDiagonal1 = Array.from(
+                    { length: winningCondition },
+                    (_, index) => (i + index) * (boardSize + 1) + j
+                );
+
+                const additionalDiagonal2 = Array.from(
+                    { length: winningCondition },
+                    (_, index) => (i + index) * (boardSize - 1) + (boardSize - 1 - j)
+                );
+
+                if (checkSequence(additionalDiagonal1) || checkSequence(additionalDiagonal2)) {
+                    return true;
+                }
+            }
         }
 
-        // Check for a draw
-        if (board.every((square: any) => square !== null)) {
-            setIsDraw(true);
-            return;
-        }
-
-        // Switch to the next player
-        const nextPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        const nextPlayer = currentPlayer === player1Symbol ? player2Symbol : player1Symbol;
         setCurrentPlayer(nextPlayer);
-    }, [boardSize, setIsDraw, setCurrentPlayer, setWinner]);
 
+        return false;
+    };
 
-
-    return (
-
-        <div className={`grid shadow-lg mb-2 mt-2 min-h-max`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '2px', padding: '2px', height: '16em' }} >
-            {board.map((_: any, index: number) =>
-                <div
-                    key={index}
-                    className="border border-gray-400 font-bold flex items-center justify-center focus:outline-none overflow-hidden"
-                    style={{ height: '100%' }}
-                    onClick={(e: any) => handleClick(e, index)}
-                >
-                    {board[index] && <span style={{ margin: '-1em' }}> {board[index]}</span>}
-                </div>
-            )}
-        </div>
-
-    );
+    return <>
+        {board.map((_: any, index: number) =>
+            <div
+                key={index}
+                className="border border-gray-400 font-bold flex items-center justify-center focus:outline-none overflow-hidden"
+                style={{ height: '100%' }}
+                onClick={(e: any) => handleClick(e, index)}
+            >
+                {board[index] && <span style={{ margin: '-1em' }}> {board[index]}</span>}
+            </div>
+        )}
+    </>
 };
 
 const TicTacToeContainer: React.FC = () => {
@@ -223,13 +213,13 @@ const TicTacToeContainer: React.FC = () => {
 
     return (
         <div className="container mx-auto p-2 md:p-4">
-            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto rounded-lg shadow-xl">
-                <div className="p-2 md:p-4 text-center">
+            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto rounded-lg shadow-xl flex flex-col">
+                <div className="p-2 text-center" >
                     <h1 className="text-xl md:text-xl lg:text-2xl font-bold mb-4">Tic Tac Toe</h1>
                     <div className="mb-4">
                         <label className="block text-xs font-medium">Select Board Size:</label>
                         <select
-                            className="mt-1 text-sm block w-full p-1 text-black border border-gray-300"
+                            className="mt-1 text-sm block w-full p-2 text-black border border-gray-300 rounded"
                             onChange={(e) => {
                                 const newSize = parseInt(e.target.value, 10);
                                 setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
@@ -240,38 +230,44 @@ const TicTacToeContainer: React.FC = () => {
                             <option value="3">3x3</option>
                             <option value="4">4x4</option>
                             <option value="5">5x5</option>
+                            <option value="6">6x6</option>
+                            <option value="7">7x7</option>
+                            <option value="8">8x8</option>
                         </select>
                     </div>
-                    <div>
-                        {currentPlayer && (
-                            <GameStatistics
-                                currentPlayer={currentPlayer}
-                                player1Stats={player1Stats}
-                                player2Stats={player2Stats}
-                            />
-                        )}
-                    </div>
-                    <TicTacToe
-                        setIsDraw={setIsDraw}
-                        setWinner={setWinner}
-                        handleReset={handleReset}
-                        setCurrentPlayer={setCurrentPlayer}
-                        setBoard={setBoard}
-                        currentPlayer={currentPlayer}
-                        board={board}
-                        isDraw={isDraw}
-                        winner={winner}
-                        boardSize={boardSize}
-                        player1Symbol="X"
-                        player2Symbol="O"
-                    />
-                    <div className="flex justify-center mt-4">
-                        <button className="p-2 bg-blue-500 text-white" onClick={handleReset}>
-                            Reset
-                        </button>
+                    {currentPlayer && (
+                        <GameStatistics
+                            currentPlayer={currentPlayer}
+                            player1Stats={player1Stats}
+                            player2Stats={player2Stats}
+                        />
+                    )}
+                </div>
+                <div className="p-2 text-center">
+                    <div className="grid shadow-lg mb-2 min-h-max" style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '2px', height: '40dvh' }}>
+                        <TicTacToe
+                            setIsDraw={setIsDraw}
+                            setWinner={setWinner}
+                            handleReset={handleReset}
+                            setCurrentPlayer={setCurrentPlayer}
+                            setBoard={setBoard}
+                            currentPlayer={currentPlayer}
+                            board={board}
+                            isDraw={isDraw}
+                            winner={winner}
+                            boardSize={boardSize}
+                            player1Symbol="X"
+                            player2Symbol="O"
+                        />
                     </div>
                 </div>
+                <div className="flex justify-center mt-2 mb-2" >
+                    <button className="p-2 border-2 font-bold" onClick={handleReset}>
+                        Reset
+                    </button>
+                </div>
             </div>
+
         </div>
     );
 
