@@ -14,6 +14,7 @@ interface TicTacToeProps {
     setCurrentPlayer: React.Dispatch<React.SetStateAction<SquareValue>>;
     handleReset: () => void;
     setWinner: React.Dispatch<React.SetStateAction<SquareValue | null>>;
+    setIsDraw: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface GameStatisticsProps {
@@ -61,7 +62,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     setBoard,
     setCurrentPlayer,
     handleReset,
-    setWinner
+    setWinner,
+    setIsDraw
 }) => {
 
     const handleClick = (e: any, index: number): void => {
@@ -83,13 +85,27 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         const isWinningSequence = (sequence: number[]) =>
             sequence.every((index) => board[index] === currentPlayer);
 
+        const checkSequence = (sequence: number[], winningLength: number) => {
+            if (sequence.length < winningLength) {
+                return false; // Not enough elements to form a winning sequence
+            }
+
+            for (let i = 0; i <= sequence.length - winningLength; i++) {
+                const subsequence = sequence.slice(i, i + winningLength);
+                if (isWinningSequence(subsequence)) {
+                    setWinner(currentPlayer);
+                    return true;
+                }
+            }
+            return false;
+        };
+
         // Check rows and columns
         for (let i = 0; i < boardSize; i++) {
             const row = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
             const column = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
 
-            if (isWinningSequence(row) || isWinningSequence(column)) {
-                setWinner(currentPlayer);
+            if (checkSequence(row, 3) || checkSequence(column, 3)) {
                 return;
             }
         }
@@ -98,26 +114,35 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         const mainDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize + 1));
         const antiDiagonal = Array.from({ length: boardSize }, (_, index) => (index + 1) * (boardSize - 1));
 
-        if (isWinningSequence(mainDiagonal) || isWinningSequence(antiDiagonal)) {
-            setWinner(currentPlayer);
+        if (checkSequence(mainDiagonal, 3) || checkSequence(antiDiagonal, 3)) {
             return;
         }
 
-        // Check additional diagonals, rows, and columns for larger board sizes
-        if (boardSize > 3) {
-            for (let i = 0; i <= boardSize - 3; i++) {
-                const additionalDiagonal1 = Array.from({ length: boardSize }, (_, index) => i * (boardSize + 1) + index);
-                const additionalDiagonal2 = Array.from({ length: boardSize }, (_, index) => (i + 1) * (boardSize - 1) - index);
-                const additionalRow = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
-                const additionalColumn = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
+        // Check additional diagonals in both directions
+        for (let i = 0; i < boardSize; i++) {
+            // Top-left to bottom-right
+            const diagonal1 = Array.from({ length: boardSize - i }, (_, index) => (i + index) * (boardSize + 1));
 
-                if (
-                    isWinningSequence(additionalDiagonal1) ||
-                    isWinningSequence(additionalDiagonal2) ||
-                    isWinningSequence(additionalRow) ||
-                    isWinningSequence(additionalColumn)
-                ) {
-                    setWinner(currentPlayer);
+            // Top-right to bottom-left
+            const diagonal2 = Array.from({ length: boardSize - i }, (_, index) => (i + index + 1) * (boardSize - 1));
+
+            if (checkSequence(diagonal1, 3) || checkSequence(diagonal2, 3)) {
+                return;
+            }
+        }
+
+        // Check additional diagonals in both directions for larger matrices
+        for (let i = 0; i <= boardSize - 3; i++) {
+            const additionalDiagonals: number[][] = [];
+
+            // Top-left to bottom-right
+            additionalDiagonals.push(Array.from({ length: boardSize - i }, (_, index) => (i + index) * (boardSize + 1)));
+
+            // Top-right to bottom-left
+            additionalDiagonals.push(Array.from({ length: boardSize - i }, (_, index) => (i + index) * (boardSize - 1)));
+
+            for (const diagonal of additionalDiagonals) {
+                if (checkSequence(diagonal, 3)) {
                     return;
                 }
             }
@@ -125,15 +150,15 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
         // Check for a draw
         if (board.every((square: any) => square !== null)) {
-            alert("It's a draw!");
-            handleReset();
+            setIsDraw(true);
             return;
         }
 
         // Switch to the next player
         const nextPlayer = currentPlayer === 'X' ? 'O' : 'X';
         setCurrentPlayer(nextPlayer);
-    }, [boardSize, handleReset, setCurrentPlayer, setWinner]);
+    }, [boardSize, setIsDraw, setCurrentPlayer, setWinner]);
+
 
     return (
         <div className="flex flex-col mt-4">
@@ -141,7 +166,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
                 {board.map((_: any, index: number) =>
                     <div
                         style={{ minHeight: '60px' }}
-                        // key={index}
+                        key={index}
                         className="h-full w-full min-h-full border border-gray-400 font-bold flex items-center justify-center focus:outline-none"
                         onClick={(e: any) => handleClick(e, index)}
                     >
@@ -200,10 +225,10 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="">
-            <div className="p-4 shadow-xl">
-                <div className="flex flex-col text-center">
-                    <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
+        <div className="container mx-auto p-4 md:p-8">
+            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto rounded-lg shadow-xl">
+                <div className="p-4 md:p-8 text-center">
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4">Tic Tac Toe</h1>
                     <div className="mb-4">
                         <label className="block text-sm font-medium">Select Board Size:</label>
                         <select
@@ -220,12 +245,18 @@ const TicTacToeContainer: React.FC = () => {
                             <option value="5">5x5</option>
                         </select>
                     </div>
-                    <div >
-                        {currentPlayer &&
-                            <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
+                    <div>
+                        {currentPlayer && (
+                            <GameStatistics
+                                currentPlayer={currentPlayer}
+                                player1Stats={player1Stats}
+                                player2Stats={player2Stats}
+                            />
+                        )}
                     </div>
                     <div>
                         <TicTacToe
+                            setIsDraw={setIsDraw}
                             setWinner={setWinner}
                             handleReset={handleReset}
                             setCurrentPlayer={setCurrentPlayer}
@@ -239,16 +270,16 @@ const TicTacToeContainer: React.FC = () => {
                             player2Symbol="O"
                         />
                     </div>
-                    <div className='items-center flex w-full justify-center'>
+                    <div className="flex justify-center mt-4">
                         <button className="p-2 bg-blue-500 text-white" onClick={handleReset}>
                             Reset
                         </button>
                     </div>
                 </div>
             </div>
-
         </div>
     );
+
 };
 
 export default TicTacToeContainer;
