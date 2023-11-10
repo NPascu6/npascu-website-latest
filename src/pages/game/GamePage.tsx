@@ -32,16 +32,16 @@ interface GameStatisticsProps {
 }
 
 const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer }) => (
-    <div className="text-center p-4 shadow-lg">
+    <div className="text-center p-2 shadow-lg">
         <h2 className="text-xl font-bold mb-2">Game Statistics</h2>
         <div className="flex justify-center">
-            <div className="border mr-1 p-2">
+            <div className="border mr-1 p-1">
                 <p>Player 1:</p>
                 <p className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
                 <p>Wins: {player1Stats.wins}</p>
                 <p>Draws: {player1Stats.draws}</p>
             </div>
-            <div className="border ml-1 p-2">
+            <div className="border ml-1 p-1">
                 <p>Player 2:</p>
                 <p className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
                 <p>Wins: {player2Stats.wins}</p>
@@ -100,6 +100,26 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
             return false;
         };
 
+        const checkDiagonals = (startIndex: number, step: number, direction: number) => {
+            const diagonals: number[][] = [];
+            for (let i = 0; i <= boardSize - startIndex - step; i++) {
+                diagonals.push(
+                    Array.from(
+                        { length: boardSize - startIndex },
+                        (_, index) => (startIndex + i + index * direction) * (boardSize + direction),
+                    ),
+                );
+            }
+
+            for (const diagonal of diagonals) {
+                if (checkSequence(diagonal, 3)) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         // Check rows and columns
         for (let i = 0; i < boardSize; i++) {
             const row = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
@@ -119,33 +139,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         }
 
         // Check additional diagonals in both directions
-        for (let i = 0; i < boardSize; i++) {
-            // Top-left to bottom-right
-            const diagonal1 = Array.from({ length: boardSize - i }, (_, index) => (i + index) * (boardSize + 1));
-
-            // Top-right to bottom-left
-            const diagonal2 = Array.from({ length: boardSize - i }, (_, index) => (i + index + 1) * (boardSize - 1));
-
-            if (checkSequence(diagonal1, 3) || checkSequence(diagonal2, 3)) {
-                return;
-            }
-        }
-
-        // Check additional diagonals in both directions for larger matrices
-        for (let i = 0; i <= boardSize - 3; i++) {
-            const additionalDiagonals: number[][] = [];
-
-            // Top-left to bottom-right
-            additionalDiagonals.push(Array.from({ length: boardSize - i }, (_, index) => (i + index) * (boardSize + 1)));
-
-            // Top-right to bottom-left
-            additionalDiagonals.push(Array.from({ length: boardSize - i }, (_, index) => (i + index) * (boardSize - 1)));
-
-            for (const diagonal of additionalDiagonals) {
-                if (checkSequence(diagonal, 3)) {
-                    return;
-                }
-            }
+        if (checkDiagonals(0, 1, 1) || checkDiagonals(0, 1, -1)) {
+            return;
         }
 
         // Check for a draw
@@ -160,20 +155,22 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     }, [boardSize, setIsDraw, setCurrentPlayer, setWinner]);
 
 
+
     return (
-        <div className="flex flex-col mt-4">
-            <div className={`grid shadow-lg mb-4`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '5px', padding: '2px' }}>
-                {board.map((_: any, index: number) =>
-                    <div
-                        style={{ minHeight: '60px' }}
-                        key={index}
-                        className="h-full w-full min-h-full border border-gray-400 font-bold flex items-center justify-center focus:outline-none"
-                        onClick={(e: any) => handleClick(e, index)}
-                    >
-                        {board[index]}
-                    </div>)}
-            </div>
+
+        <div className={`grid shadow-lg mb-2 mt-2 min-h-max`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '2px', padding: '2px', height: '16em' }} >
+            {board.map((_: any, index: number) =>
+                <div
+                    key={index}
+                    className="border border-gray-400 font-bold flex items-center justify-center focus:outline-none overflow-hidden"
+                    style={{ height: '100%' }}
+                    onClick={(e: any) => handleClick(e, index)}
+                >
+                    {board[index] && <span style={{ margin: '-1em' }}> {board[index]}</span>}
+                </div>
+            )}
         </div>
+
     );
 };
 
@@ -225,14 +222,14 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="container mx-auto p-4 md:p-8">
+        <div className="container mx-auto p-2 md:p-4">
             <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto rounded-lg shadow-xl">
-                <div className="p-4 md:p-8 text-center">
-                    <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4">Tic Tac Toe</h1>
+                <div className="p-2 md:p-4 text-center">
+                    <h1 className="text-xl md:text-xl lg:text-2xl font-bold mb-4">Tic Tac Toe</h1>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium">Select Board Size:</label>
+                        <label className="block text-xs font-medium">Select Board Size:</label>
                         <select
-                            className="mt-1 block w-full p-2 text-black border border-gray-300"
+                            className="mt-1 text-sm block w-full p-1 text-black border border-gray-300"
                             onChange={(e) => {
                                 const newSize = parseInt(e.target.value, 10);
                                 setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
@@ -254,22 +251,20 @@ const TicTacToeContainer: React.FC = () => {
                             />
                         )}
                     </div>
-                    <div>
-                        <TicTacToe
-                            setIsDraw={setIsDraw}
-                            setWinner={setWinner}
-                            handleReset={handleReset}
-                            setCurrentPlayer={setCurrentPlayer}
-                            setBoard={setBoard}
-                            currentPlayer={currentPlayer}
-                            board={board}
-                            isDraw={isDraw}
-                            winner={winner}
-                            boardSize={boardSize}
-                            player1Symbol="X"
-                            player2Symbol="O"
-                        />
-                    </div>
+                    <TicTacToe
+                        setIsDraw={setIsDraw}
+                        setWinner={setWinner}
+                        handleReset={handleReset}
+                        setCurrentPlayer={setCurrentPlayer}
+                        setBoard={setBoard}
+                        currentPlayer={currentPlayer}
+                        board={board}
+                        isDraw={isDraw}
+                        winner={winner}
+                        boardSize={boardSize}
+                        player1Symbol="X"
+                        player2Symbol="O"
+                    />
                     <div className="flex justify-center mt-4">
                         <button className="p-2 bg-blue-500 text-white" onClick={handleReset}>
                             Reset
