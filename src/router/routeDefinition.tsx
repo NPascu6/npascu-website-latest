@@ -8,6 +8,7 @@ import AboutPage from "../pages/AboutPage";
 import MainPage from "../pages/MainPage";
 import GamePage from "../pages/game/TicTacToeGame";
 import GamesCardPage from "../pages/game/GamesContainer";
+import SnakeGame from "../pages/game/SnakeGame";
 
 export const routeDefinition: RouteDefinition[] = [
     {
@@ -38,6 +39,13 @@ export const routeDefinition: RouteDefinition[] = [
                 icon: <TicTacToeIcon />,
                 element: <GamePage />,
             },
+            {
+                path: 'snake', // Removed '/games/' from the child path
+                exact: true,
+                title: 'Snake',
+                icon: <TicTacToeIcon />,
+                element: <SnakeGame />,
+            }
         ],
     },
 ];
