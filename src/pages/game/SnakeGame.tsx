@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+
+interface SnakeSegment {
+    x: number;
+    y: number;
+}
 
 interface SwipeState {
     startX: number;
@@ -9,22 +14,21 @@ const ROWS = 20;
 const COLS = 20;
 const SQUARE_SIZE = 17;
 
-const SnakeGame = () => {
-    const generateFood = () => {
-        return {
-            x: Math.floor(Math.random() * COLS),
-            y: Math.floor(Math.random() * ROWS),
-        };
-    };
-
+const SnakeGame: React.FC = () => {
+    const generateFood = (): SnakeSegment => ({
+        x: Math.floor(Math.random() * COLS),
+        y: Math.floor(Math.random() * ROWS),
+    });
+    const boardRef = useRef<HTMLDivElement>(null);
     const [rows, setRows] = useState(ROWS);
     const [cols, setCols] = useState(COLS);
-    const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
-    const [food, setFood] = useState(generateFood());
+    const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
+    const [food, setFood] = useState<SnakeSegment>(generateFood());
     const [direction, setDirection] = useState("right");
     const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
+    const [isPaused, setIsPaused] = useState(false);
 
     const resetGame = useCallback(() => {
         setSnake([{ x: 0, y: 0 }]);
@@ -34,10 +38,10 @@ const SnakeGame = () => {
     }, []);
 
     const moveSnake = useCallback(() => {
-        if (!isRunning) return;
+        if (!isRunning || isPaused) return;
 
         const head = snake[0];
-        let newHead: any;
+        let newHead: SnakeSegment;
 
         switch (direction) {
             case "up":
@@ -52,6 +56,8 @@ const SnakeGame = () => {
             case "right":
                 newHead = { x: (head.x + 1) % cols, y: head.y };
                 break;
+            default:
+                newHead = head;
         }
 
         const newSnake = [newHead, ...snake.slice(0, -1)];
@@ -67,19 +73,16 @@ const SnakeGame = () => {
         if (newHead.x === food.x && newHead.y === food.y) {
             setFood(generateFood());
             setSnake([...newSnake, snake[snake.length - 1]]);
-            setScore(score + 1);
+            setScore((prevScore) => prevScore + 1);
         } else {
             setSnake(newSnake);
         }
-    }, [direction, food, snake, resetGame, score, isRunning, cols, rows]);
-
+    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused]);
 
     useEffect(() => {
         const intervalId = setInterval(moveSnake, 100);
 
-        return () => {
-            clearInterval(intervalId);
-        };
+        return () => clearInterval(intervalId);
     }, [moveSnake]);
 
     const renderSquare = (row: number, col: number) => {
@@ -88,42 +91,28 @@ const SnakeGame = () => {
 
         return (
             <div
-                style={{ width: SQUARE_SIZE, height: SQUARE_SIZE }}
-                onClick={() => handleCellClick(row, col)}
                 key={`${row}-${col}`}
                 className={`w-${SQUARE_SIZE} h-${SQUARE_SIZE} ${isSnake ? "bg-green-500" : isFood ? "bg-red-500" : "bg-white"
                     } border border-black`}
+                onClick={() => handleCellClick(row, col)}
+                style={{ width: SQUARE_SIZE, height: SQUARE_SIZE }}
             />
         );
     };
 
-    const renderBoard = () => {
-        const board = [];
-
-        for (let row = 0; row < rows; row++) {
-            const rowSquares = [];
-
-            for (let col = 0; col < cols; col++) {
-                rowSquares.push(renderSquare(row, col));
-            }
-
-            board.push(
+    const renderBoard = () => (
+        <div ref={boardRef}>
+            {Array.from({ length: rows }, (_, row) => (
                 <div key={row} className="flex align-center">
-                    {rowSquares}
+                    {Array.from({ length: cols }, (_, col) => renderSquare(row, col))}
                 </div>
-            );
-        }
+            ))}
+        </div>
+    );
 
-        return board;
-    };
+    const startGame = () => setIsRunning(true);
 
-    const startGame = () => {
-        setIsRunning(true);
-    };
-
-    const stopGame = () => {
-        setIsRunning(false);
-    };
+    const stopGame = () => setIsRunning(false);
 
     const resetAndStartGame = () => {
         resetGame();
@@ -132,10 +121,12 @@ const SnakeGame = () => {
 
     const handleButtonClick = (newDirection: string) => {
         // Avoid reversing the snake immediately
-        if ((direction === "up" && newDirection === "down") ||
+        if (
+            (direction === "up" && newDirection === "down") ||
             (direction === "down" && newDirection === "up") ||
             (direction === "left" && newDirection === "right") ||
-            (direction === "right" && newDirection === "left")) {
+            (direction === "right" && newDirection === "left")
+        ) {
             return;
         }
 
@@ -143,9 +134,7 @@ const SnakeGame = () => {
     };
 
     const handleCellClick = (row: number, col: number) => {
-        if (!isRunning) {
-            return;
-        }
+        if (!isRunning) return;
 
         const head = snake[0];
         const deltaX = col - head.x;
@@ -160,80 +149,117 @@ const SnakeGame = () => {
         }
     };
 
-    const handleSwipe = useCallback((startX: number, startY: number, endX: number, endY: number) => {
-        const MIN_SWIPE_DISTANCE = 50;
+    const handleSwipe = useCallback(
+        (startX: number, startY: number, endX: number, endY: number) => {
+            const MIN_SWIPE_DISTANCE = 50;
 
-        const deltaX = endX - startX;
-        const deltaY = endY - startY;
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
 
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal swipe
-            if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
-                console.log(deltaX > 0 ? "right" : "left")
-                setDirection(deltaX > 0 ? "right" : "left");
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe
+                if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
+                    console.log(deltaX > 0 ? "right" : "left");
+                    setDirection(deltaX > 0 ? "right" : "left");
+                }
+            } else {
+                // Vertical swipe
+                if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
+                    console.log(deltaX > 0 ? "down" : "up");
+                    setDirection(deltaY > 0 ? "down" : "up");
+                }
             }
-        } else {
-            // Vertical swipe
-            if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
-                console.log(deltaX > 0 ? "down" : "up")
-                setDirection(deltaY > 0 ? "down" : "up");
-            }
-        }
-    }, [setDirection]);
+        },
+        [setDirection]
+    );
 
     const touchStart = (event: TouchEvent) => {
-        event.preventDefault()
+        event.preventDefault();
         const { touches } = event;
-        if (touches.length === 1) {
+
+        if (touches.length === 1 && boardRef.current) {
             const touch = touches[0];
-            setSwipeState({ startX: touch.clientX, startY: touch.clientY });
+            const boardRect = boardRef.current.getBoundingClientRect();
+
+            if (
+                touch.clientX >= boardRect.left &&
+                touch.clientX <= boardRect.right &&
+                touch.clientY >= boardRect.top &&
+                touch.clientY <= boardRect.bottom
+            ) {
+                setSwipeState({ startX: touch.clientX, startY: touch.clientY });
+            }
         }
     };
 
-    const touchEnd = useCallback((event: TouchEvent) => {
-        event.preventDefault()
-        const { changedTouches } = event;
-        if (changedTouches.length === 1 && swipeState) {
-            const touch = changedTouches[0];
-            handleSwipe(swipeState.startX, swipeState.startY, touch.clientX, touch.clientY);
-            setSwipeState(null);
-        }
-    }, [handleSwipe, swipeState]);
+    const touchEnd = useCallback(
+        (event: TouchEvent) => {
+            event.preventDefault()
+            const { changedTouches } = event;
 
-    const handleKeyPress = useCallback((key: string) => {
-        if (isRunning) {
-            switch (key) {
-                case "up":
-                case "down":
-                case "left":
-                case "right":
-                    setDirection(key);
-                    break;
-                default:
-                    break;
+            if (changedTouches.length === 1 && swipeState && boardRef.current) {
+                const touch = changedTouches[0];
+                const boardRect = boardRef.current.getBoundingClientRect();
+
+                if (
+                    touch.clientX >= boardRect.left &&
+                    touch.clientX <= boardRect.right &&
+                    touch.clientY >= boardRect.top &&
+                    touch.clientY <= boardRect.bottom
+                ) {
+                    handleSwipe(swipeState.startX, swipeState.startY, touch.clientX, touch.clientY);
+                    setSwipeState(null);
+                }
             }
-        }
-    }, [isRunning]);
+        },
+        [handleSwipe, swipeState]
+    );
+
+    const handleKeyPress = useCallback(
+        (key: string) => {
+            if (isRunning) {
+                switch (key) {
+                    case "up":
+                    case "down":
+                    case "left":
+                    case "right":
+                        setDirection(key);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        },
+        [isRunning]
+    );
 
     useEffect(() => {
-        document.addEventListener("touchstart", touchStart);
-        document.addEventListener("touchend", touchEnd);
+        const ref = boardRef.current
+
+        if (!ref) return
+        ref.addEventListener("touchstart", touchStart, { passive: false });
+        ref.addEventListener("touchend", touchEnd, { passive: false });
 
         return () => {
-            document.removeEventListener("touchstart", touchStart);
-            document.removeEventListener("touchend", touchEnd);
+            ref.removeEventListener("touchstart", touchStart);
+            ref.removeEventListener("touchend", touchEnd);
         };
     }, [handleSwipe, swipeState, touchEnd]);
 
-    const handleKeyDown = useCallback((event: KeyboardEvent) => {
-        const key = event.key.toLowerCase();
-        if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
-            event.preventDefault();
-            handleKeyPress(key.replace("arrow", ""));
-        }
-    }, [handleKeyPress]);
+    const handleKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            const key = event.key.toLowerCase();
+            if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
+                event.preventDefault();
+                handleKeyPress(key.replace("arrow", ""));
+            }
+        },
+        [handleKeyPress]
+    );
 
+    const pauseGame = () => setIsPaused(true);
 
+    const resumeGame = () => setIsPaused(false);
 
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
@@ -245,46 +271,55 @@ const SnakeGame = () => {
 
     return (
         <div className="max-w-screen-md mx-auto p-4 justify-center content-center items-center">
-            {!isRunning && <div className="flex">
-                <div className="mb-4">
-                    <label htmlFor="rows" className="">
-                        Rows:
-                    </label>
-                    <input
-                        id="rows"
-                        type="number"
-                        value={rows}
-                        onChange={(event) => setRows(parseInt(event.target.value))}
-                        className="p-0 ml-2 border border-gray-500 w-1/2"
-                    />
+            {!isRunning && (
+                <div className="flex">
+                    <div className="mb-4">
+                        <label htmlFor="rows">Rows:</label>
+                        <input
+                            id="rows"
+                            type="number"
+                            value={rows}
+                            onChange={(event) => setRows(parseInt(event.target.value))}
+                            className="p-0 ml-2 border border-gray-500 w-1/2"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="cols">Columns:</label>
+                        <input
+                            id="cols"
+                            type="number"
+                            value={cols}
+                            onChange={(event) => setCols(parseInt(event.target.value))}
+                            className="p-0 ml-2 border border-gray-500 w-1/2"
+                        />
+                    </div>
                 </div>
-                <div className="mb-4">
-                    <label htmlFor="cols" className="">
-                        Columns:
-                    </label>
-                    <input
-                        id="cols"
-                        type="number"
-                        value={cols}
-                        onChange={(event) => setCols(parseInt(event.target.value))}
-                        className="p-0 ml-2 border border-gray-500 w-1/2"
-                    />
-                </div>
-            </div>}
+            )}
 
             <div className="mb-2 flex flex-col content-center items-center">{renderBoard()}</div>
             <div className="mb-2">Score: {score}</div>
-            {!isRunning && <div className="flex mb-4 items-center content-center justify-center">
-                <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
-                    Start
+            {!isRunning && (
+                <div className="flex mb-4 items-center content-center justify-center">
+                    <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
+                        Start
+                    </button>
+                    <button onClick={stopGame} className="bg-red-500 text-white p-2 mr-2">
+                        Stop
+                    </button>
+                    <button onClick={resetAndStartGame} className="bg-green-500 text-white p-2 mr-2">
+                        Reset and Start
+                    </button>
+                </div>
+            )}
+            {isPaused ? (
+                <button onClick={resumeGame} className="bg-green-500 text-white p-2 m-2 border border-gray-500">
+                    Resume
                 </button>
-                <button onClick={stopGame} className="bg-red-500 text-white p-2 mr-2">
-                    Stop
+            ) : (
+                <button onClick={pauseGame} className="bg-yellow-500 text-white p-2 m-2 border border-gray-500">
+                    Pause
                 </button>
-                <button onClick={resetAndStartGame} className="bg-green-500 text-white p-2 mr-2">
-                    Reset and Start
-                </button>
-            </div>}
+            )}
             <div className="flex flex-col justify-center content-center items-center">
                 <div>
                     <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("up")} className="p-2 m-1 border border-gray-500 w-1/2">
@@ -304,7 +339,6 @@ const SnakeGame = () => {
                 <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("down")} className="p-2 m-2 border border-gray-500">
                     Down
                 </button>
-
             </div>
         </div>
     );
