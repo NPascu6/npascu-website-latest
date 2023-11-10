@@ -163,6 +163,10 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         const nextPlayer = currentPlayer === player1Symbol ? player2Symbol : player1Symbol;
         setCurrentPlayer(nextPlayer);
 
+        if (board.every((square) => square !== null)) {
+            setIsDraw(true);
+        }
+
         return false;
     };
 
@@ -201,6 +205,7 @@ const TicTacToeContainer: React.FC = () => {
     const updateGameStats = useCallback(() => {
         if (!currentPlayer) return;
 
+        if (isDraw) return setGameStats({ currentPlayer, wins: gameStats.wins, draws: gameStats.draws + 1 });
         if (currentPlayer === 'X') {
             setPlayer1Stats({ currentPlayer, wins: player1Stats.wins + 1, draws: player1Stats.draws });
             setGameStats({ currentPlayer, wins: player1Stats.wins + 1, draws: gameStats.draws });
@@ -208,7 +213,7 @@ const TicTacToeContainer: React.FC = () => {
             setPlayer2Stats({ currentPlayer, wins: player2Stats.wins + 1, draws: player2Stats.draws });
             setGameStats({ currentPlayer, wins: player2Stats.wins + 1, draws: gameStats.draws });
         }
-    }, [currentPlayer, player1Stats, player2Stats, gameStats]);
+    }, [currentPlayer, player1Stats, player2Stats, gameStats, isDraw]);
 
     useEffect(() => {
         if (winner) {

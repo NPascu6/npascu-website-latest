@@ -2,16 +2,20 @@
 import React from 'react';
 import ToggleSvgDark from '../assets/icons/ToggleSvgDark';
 import ToggleSvgLight from '../assets/icons/ToggleSvgLight';
+import UserIcon from '../assets/icons/UserIcon';
 import Favicon32 from '../assets/favicon-32x32.png';
 import { RootState } from '../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '../store/reducers/appReducer';
 import Sidebar from './common/SideBar';
+import CommonDialog from './common/CommonDialog';
+import LoginForm from './LoginForm';
 
 const TopBar = () => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const dipatch = useDispatch()
     const [toggleSiderbar, setToggleSidebar] = React.useState<boolean>(false);
+    const [showLogin, setShowLogin] = React.useState<boolean>(false);
 
     const changeTheme = () => {
         const theme = isDarkTheme ? 'dark' : 'light';
@@ -33,6 +37,10 @@ const TopBar = () => {
                 Welcome to my website 🌞
             </div>
         </div>
+        <div className='flex justify-center items-center'>
+            <button className='mr-2' onClick={() => setShowLogin(true)}>
+                <UserIcon />
+            </button></div>
         <div className='flex justify-end items-center'>
             <button onClick={changeTheme}>
                 {!isDarkTheme ?
@@ -44,6 +52,9 @@ const TopBar = () => {
                     </div>}
             </button>
         </div>
+        {showLogin && <CommonDialog title='Login' onClose={() => { setShowLogin(false) }}>
+            <LoginForm />
+        </CommonDialog>}
     </div>
 }
 
