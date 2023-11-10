@@ -21,7 +21,7 @@ const FullScreenImage = ({ handlePrevClick, handleNextClick, toggleFullScreen, s
                     {/* Full-screen image */}
                     <img
                         loading="lazy"
-                        style={{ maxHeight: '70vh', maxWidth: '87vw' }}
+                        style={{ maxHeight: '70dvh', maxWidth: '87vw' }}
                         src={selectedImage}
                         alt={selectedImage}
                     />

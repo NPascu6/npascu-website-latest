@@ -136,22 +136,17 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     }, [boardSize, handleReset, setCurrentPlayer, setWinner]);
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-4">
             <div className={`grid shadow-lg mb-4`} style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '5px', padding: '2px' }}>
                 {board.map((_: any, index: number) =>
                     <div
-                        style={{ minHeight: '40px' }}
+                        style={{ minHeight: '60px' }}
                         // key={index}
                         className="h-full w-full min-h-full border border-gray-400 font-bold flex items-center justify-center focus:outline-none"
                         onClick={(e: any) => handleClick(e, index)}
                     >
                         {board[index]}
                     </div>)}
-            </div>
-            <div className='items-center flex w-full justify-center'>
-                <button className="p-2 bg-blue-500 text-white" onClick={handleReset}>
-                    Reset
-                </button>
             </div>
         </div>
     );
@@ -205,9 +200,9 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="flex items-center justify-center">
-            <div className="max-w-xl mx-auto p-4 shadow-xl">
-                <div className="w-full flex flex-col text-center">
+        <div className="">
+            <div className="p-4 shadow-xl">
+                <div className="flex flex-col text-center">
                     <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
                     <div className="mb-4">
                         <label className="block text-sm font-medium">Select Board Size:</label>
@@ -243,6 +238,11 @@ const TicTacToeContainer: React.FC = () => {
                             player1Symbol="X"
                             player2Symbol="O"
                         />
+                    </div>
+                    <div className='items-center flex w-full justify-center'>
+                        <button className="p-2 bg-blue-500 text-white" onClick={handleReset}>
+                            Reset
+                        </button>
                     </div>
                 </div>
             </div>
