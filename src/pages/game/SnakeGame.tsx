@@ -183,7 +183,6 @@ const SnakeGame = () => {
 
     const touchStart = (event: TouchEvent) => {
         event.preventDefault()
-        event.stopPropagation()
         const { touches } = event;
         if (touches.length === 1) {
             const touch = touches[0];
@@ -193,7 +192,6 @@ const SnakeGame = () => {
 
     const touchEnd = useCallback((event: TouchEvent) => {
         event.preventDefault()
-        event.stopPropagation()
         const { changedTouches } = event;
         if (changedTouches.length === 1 && swipeState) {
             const touch = changedTouches[0];
@@ -201,6 +199,21 @@ const SnakeGame = () => {
             setSwipeState(null);
         }
     }, [handleSwipe, swipeState]);
+
+    const handleKeyPress = useCallback((key: string) => {
+        if (isRunning) {
+            switch (key) {
+                case "up":
+                case "down":
+                case "left":
+                case "right":
+                    setDirection(key);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }, [isRunning]);
 
     useEffect(() => {
         document.addEventListener("touchstart", touchStart);
@@ -211,6 +224,24 @@ const SnakeGame = () => {
             document.removeEventListener("touchend", touchEnd);
         };
     }, [handleSwipe, swipeState, touchEnd]);
+
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        const key = event.key.toLowerCase();
+        if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
+            event.preventDefault();
+            handleKeyPress(key.replace("arrow", ""));
+        }
+    }, [handleKeyPress]);
+
+
+
+    useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [handleKeyDown]);
 
     return (
         <div className="max-w-screen-md mx-auto p-4 justify-center content-center items-center">
