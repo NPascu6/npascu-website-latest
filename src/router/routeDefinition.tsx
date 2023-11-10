@@ -2,6 +2,7 @@
 import Info from "../assets/icons/Info";
 import MainIcon from "../assets/icons/MainIcon";
 import TicTacToeIcon from "../assets/icons/TicTacToe";
+import GamesIcon from "../assets/icons/GamesIcon";
 import { RouteDefinition } from "../models/common/common";
 import AboutPage from "../pages/AboutPage";
 import MainPage from "../pages/MainPage";
@@ -27,7 +28,7 @@ export const routeDefinition: RouteDefinition[] = [
         path: '/games/*',
         exact: true,
         title: 'Demo Games',
-        icon: <Info />,
+        icon: <GamesIcon />,
         element: <GamesCardPage />,
         routes: [
             {

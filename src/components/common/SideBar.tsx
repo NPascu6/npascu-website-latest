@@ -70,8 +70,8 @@ const Sidebar = ({ toggle, setToggle }: any) => {
                             fontWeight: location.pathname === route.path ? 'bold' : 'normal',
                             textDecoration: isRouteActive(route) ? 'underline' : 'none',
                             minWidth: '8em',
-                            backgroundColor: isRouteActive(route) ? (isDarkTheme ? '#2d3748' : '#edf2f7') : '',
-                            color: isRouteActive(route) ? (isDarkTheme ? '#edf2f7' : '#2d3748') : ''
+                            backgroundColor: isRouteActive(route) ? (isDarkTheme ? '#2d3748' : 'gray') : '',
+                            color: isRouteActive(route) ? (isDarkTheme ? '#edf2f7' : "white") : ''
                         }}
                         id={route.path}
                         onClick={(e) => handleNavigateToRoute(e, route.path)}
