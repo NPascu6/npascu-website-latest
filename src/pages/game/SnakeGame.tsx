@@ -10,26 +10,26 @@ interface SwipeState {
     startY: number;
 }
 
-const ROWS = 30;
-const COLS = 20;
 const SQUARE_SIZE = 17;
 
 const SnakeGame: React.FC = () => {
-    const generateFood = (): SnakeSegment => ({
-        x: Math.floor(Math.random() * COLS),
-        y: Math.floor(Math.random() * ROWS),
-    });
     const boardRef = useRef<HTMLDivElement>(null);
-    const [rows, setRows] = useState(ROWS);
-    const [cols, setCols] = useState(COLS);
+    const [rows, setRows] = useState(20);
+    const [cols, setCols] = useState(20);
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
-    const [food, setFood] = useState<SnakeSegment>(generateFood());
+
     const [direction, setDirection] = useState("right");
     const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
     const [isPaused, setIsPaused] = useState(false);
+    const [speed, setSpeed] = useState(100); // 
 
+    const generateFood = (): SnakeSegment => ({
+        x: Math.floor(Math.random() * cols),
+        y: Math.floor(Math.random() * rows),
+    });
+    const [food, setFood] = useState<SnakeSegment>(generateFood());
     const resetGame = useCallback(() => {
         setSnake([{ x: 0, y: 0 }]);
         setFood(generateFood());
@@ -82,10 +82,10 @@ const SnakeGame: React.FC = () => {
     }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused]);
 
     useEffect(() => {
-        const intervalId = setInterval(moveSnake, 100);
+        const intervalId = setInterval(moveSnake, speed);
 
         return () => clearInterval(intervalId);
-    }, [moveSnake]);
+    }, [moveSnake, speed]);
 
     const renderSquare = (row: number, col: number) => {
         const isSnake = snake.some((s) => s.x === col && s.y === row);
@@ -299,6 +299,17 @@ const SnakeGame: React.FC = () => {
                     <button onClick={resetGame} className="bg-green-500 text-white p-2 mr-2">
                         Reset
                     </button>
+                    <label htmlFor="speed" className="mx-2">Speed:</label>
+                    <input
+                        id="speed"
+                        type="range"
+                        min="-200"
+                        max="500"
+                        step="20"
+                        value={speed}
+                        onChange={(e) => setSpeed(+e.target.value)}
+                        className="p-0 ml-2 border border-gray-500 w-1/2"
+                    />
                 </div>
             )}
 
