@@ -17,13 +17,12 @@ const SnakeGame: React.FC = () => {
     const [rows, setRows] = useState(20);
     const [cols, setCols] = useState(20);
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
-
     const [direction, setDirection] = useState("right");
     const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
     const [isPaused, setIsPaused] = useState(false);
-    const [speed, setSpeed] = useState(200); // 
+    const [speed, setSpeed] = useState(200);
 
     const generateFood = useCallback((): SnakeSegment => ({
         x: Math.floor(Math.random() * cols),
@@ -31,13 +30,14 @@ const SnakeGame: React.FC = () => {
     }), [cols, rows]);
 
     const [food, setFood] = useState<SnakeSegment>(generateFood());
+
     const resetGame = useCallback(() => {
         setSnake([{ x: 0, y: 0 }]);
         setFood(generateFood());
         setDirection("right");
         setScore(0);
         setIsRunning(false)
-        setIsPaused(false)
+        setIsPaused(false);
     }, [generateFood]);
 
     const moveSnake = useCallback(() => {
@@ -65,14 +65,12 @@ const SnakeGame: React.FC = () => {
 
         const newSnake = [newHead, ...snake.slice(0, -1)];
 
-        // Check if snake collides with itself
         if (newSnake.slice(1).some((segment) => segment.x === newHead.x && segment.y === newHead.y)) {
             setIsRunning(false);
             resetGame();
             return;
         }
 
-        // Check if snake consumes food
         if (newHead.x === food.x && newHead.y === food.y) {
             setFood(generateFood());
             setSnake([...newSnake, snake[snake.length - 1]]);
@@ -81,12 +79,6 @@ const SnakeGame: React.FC = () => {
             setSnake(newSnake);
         }
     }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood]);
-
-    useEffect(() => {
-        const intervalId = setInterval(moveSnake, speed);
-
-        return () => clearInterval(intervalId);
-    }, [moveSnake, speed]);
 
     const renderSquare = (row: number, col: number) => {
         const isSnake = snake.some((s) => s.x === col && s.y === row);
@@ -114,8 +106,12 @@ const SnakeGame: React.FC = () => {
     );
 
     const startGame = () => setIsRunning(true);
+    useEffect(() => {
+        const intervalId = setInterval(moveSnake, speed);
+        return () => clearInterval(intervalId);
+    }, [moveSnake, speed]);
 
-    const handleCellClick = (row: number, col: number) => {
+    const handleCellClick = useCallback((row: number, col: number) => {
         if (!isRunning) return;
 
         const head = snake[0];
@@ -123,32 +119,26 @@ const SnakeGame: React.FC = () => {
         const deltaY = row - head.y;
 
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal click
             setDirection(deltaX > 0 ? "right" : "left");
         } else {
-            // Vertical click
             setDirection(deltaY > 0 ? "down" : "up");
         }
+
         moveSnake();
-    };
+    }, [isRunning, moveSnake, snake]);
 
     const handleSwipe = useCallback(
         (startX: number, startY: number, endX: number, endY: number) => {
             const MIN_SWIPE_DISTANCE = 50;
-
             const deltaX = endX - startX;
             const deltaY = endY - startY;
 
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Horizontal swipe
                 if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
-                    console.log(deltaX > 0 ? "right" : "left");
                     setDirection(deltaX > 0 ? "right" : "left");
                 }
             } else {
-                // Vertical swipe
                 if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
-                    console.log(deltaX > 0 ? "down" : "up");
                     setDirection(deltaY > 0 ? "down" : "up");
                 }
             }
@@ -156,9 +146,7 @@ const SnakeGame: React.FC = () => {
         [setDirection]
     );
 
-    const touchStart = (event: TouchEvent) => {
-
-
+    const touchStart = useCallback((event: TouchEvent) => {
         event.preventDefault();
         const { touches } = event;
 
@@ -172,14 +160,16 @@ const SnakeGame: React.FC = () => {
                 touch.clientY >= boardRect.top &&
                 touch.clientY <= boardRect.bottom
             ) {
+
+
                 setSwipeState({ startX: touch.clientX, startY: touch.clientY });
             }
         }
-    };
+    }, []);
 
     const touchEnd = useCallback(
         (event: TouchEvent) => {
-            event.preventDefault()
+            event.preventDefault();
             const { changedTouches } = event;
 
             if (changedTouches.length === 1 && swipeState && boardRef.current) {
@@ -192,12 +182,16 @@ const SnakeGame: React.FC = () => {
                     touch.clientY >= boardRect.top &&
                     touch.clientY <= boardRect.bottom
                 ) {
+                    handleCellClick(
+                        Math.floor(touch.clientY / SQUARE_SIZE),
+                        Math.floor(touch.clientX / SQUARE_SIZE)
+                    );
                     handleSwipe(swipeState.startX, swipeState.startY, touch.clientX, touch.clientY);
                     setSwipeState(null);
                 }
             }
         },
-        [handleSwipe, swipeState]
+        [handleSwipe, swipeState, handleCellClick]
     );
 
     const handleKeyPress = useCallback(
@@ -229,7 +223,7 @@ const SnakeGame: React.FC = () => {
             ref.removeEventListener("touchstart", touchStart);
             ref.removeEventListener("touchend", touchEnd);
         };
-    }, [handleSwipe, swipeState, touchEnd]);
+    }, [handleSwipe, swipeState, touchEnd, touchStart]);
 
     const handleKeyDown = useCallback(
         (event: KeyboardEvent) => {
@@ -285,21 +279,19 @@ const SnakeGame: React.FC = () => {
             <div className="mb-2">Score: {score}</div>
             {(isRunning || !isPaused) && (
                 <div className="flex mb-4 items-center content-center justify-center">
-                    {!isRunning ? <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
-                        Start
-                    </button> :
-                        isPaused ? (
-                            <div>
-                                <button onClick={resumeGame} className="bg-green-500 text-white p-2 m-2 border border-gray-500">
-                                    Resume
-                                </button>
-                            </div>
-                        ) : (
-                            <button onClick={pauseGame} className="bg-yellow-500 text-white p-2 m-2 border border-gray-500">
-                                Pause
-                            </button>
-                        )
-                    }
+                    {!isRunning ? (
+                        <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
+                            Start
+                        </button>
+                    ) : isPaused ? (
+                        <button onClick={resumeGame} className="bg-green-500 text-white p-2 m-2 border border-gray-500">
+                            Resume
+                        </button>
+                    ) : (
+                        <button onClick={pauseGame} className="bg-yellow-500 text-white p-2 m-2 border border-gray-500">
+                            Pause
+                        </button>
+                    )}
                     <button onClick={resetGame} className="bg-green-500 text-white p-2 mr-2">
                         Reset
                     </button>
@@ -316,7 +308,6 @@ const SnakeGame: React.FC = () => {
                     />
                 </div>
             )}
-
         </div>
     );
 };
