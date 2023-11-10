@@ -89,6 +89,7 @@ const SnakeGame = () => {
         return (
             <div
                 style={{ width: SQUARE_SIZE, height: SQUARE_SIZE }}
+                onClick={() => handleCellClick(row, col)}
                 key={`${row}-${col}`}
                 className={`w-${SQUARE_SIZE} h-${SQUARE_SIZE} ${isSnake ? "bg-green-500" : isFood ? "bg-red-500" : "bg-white"
                     } border border-black`}
@@ -141,6 +142,24 @@ const SnakeGame = () => {
         setDirection(newDirection);
     };
 
+    const handleCellClick = (row: number, col: number) => {
+        if (!isRunning) {
+            return;
+        }
+
+        const head = snake[0];
+        const deltaX = col - head.x;
+        const deltaY = row - head.y;
+
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal click
+            setDirection(deltaX > 0 ? "right" : "left");
+        } else {
+            // Vertical click
+            setDirection(deltaY > 0 ? "down" : "up");
+        }
+    };
+
     const handleSwipe = useCallback((startX: number, startY: number, endX: number, endY: number) => {
         const MIN_SWIPE_DISTANCE = 50;
 
@@ -150,11 +169,13 @@ const SnakeGame = () => {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             // Horizontal swipe
             if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
+                console.log(deltaX > 0 ? "right" : "left")
                 setDirection(deltaX > 0 ? "right" : "left");
             }
         } else {
             // Vertical swipe
             if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
+                console.log(deltaX > 0 ? "down" : "up")
                 setDirection(deltaY > 0 ? "down" : "up");
             }
         }
