@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 
+interface SwipeState {
+    startX: number;
+    startY: number;
+}
+
 const ROWS = 20;
 const COLS = 20;
 const SQUARE_SIZE = 17;
@@ -19,6 +24,7 @@ const SnakeGame = () => {
     const [direction, setDirection] = useState("right");
     const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
+    const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
 
     const resetGame = useCallback(() => {
         setSnake([{ x: 0, y: 0 }]);
@@ -66,6 +72,7 @@ const SnakeGame = () => {
             setSnake(newSnake);
         }
     }, [direction, food, snake, resetGame, score, isRunning, cols, rows]);
+
 
     useEffect(() => {
         const intervalId = setInterval(moveSnake, 100);
@@ -133,6 +140,52 @@ const SnakeGame = () => {
 
         setDirection(newDirection);
     };
+
+    const handleSwipe = useCallback((startX: number, startY: number, endX: number, endY: number) => {
+        const MIN_SWIPE_DISTANCE = 50;
+
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
+
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe
+            if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
+                setDirection(deltaX > 0 ? "right" : "left");
+            }
+        } else {
+            // Vertical swipe
+            if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
+                setDirection(deltaY > 0 ? "down" : "up");
+            }
+        }
+    }, [setDirection]);
+
+    const touchStart = (event: TouchEvent) => {
+        const { touches } = event;
+        if (touches.length === 1) {
+            const touch = touches[0];
+            setSwipeState({ startX: touch.clientX, startY: touch.clientY });
+        }
+    };
+
+    const touchEnd = useCallback((event: TouchEvent) => {
+        const { changedTouches } = event;
+        if (changedTouches.length === 1 && swipeState) {
+            const touch = changedTouches[0];
+            handleSwipe(swipeState.startX, swipeState.startY, touch.clientX, touch.clientY);
+            setSwipeState(null);
+        }
+    }, [handleSwipe, swipeState]);
+
+    useEffect(() => {
+        document.addEventListener("touchstart", touchStart);
+        document.addEventListener("touchend", touchEnd);
+
+        return () => {
+            document.removeEventListener("touchstart", touchStart);
+            document.removeEventListener("touchend", touchEnd);
+        };
+    }, [handleSwipe, swipeState, touchEnd]);
 
     return (
         <div className="max-w-screen-md mx-auto p-4 justify-center content-center items-center">
