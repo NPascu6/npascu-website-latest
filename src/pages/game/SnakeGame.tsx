@@ -23,12 +23,13 @@ const SnakeGame: React.FC = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
     const [isPaused, setIsPaused] = useState(false);
-    const [speed, setSpeed] = useState(100); // 
+    const [speed, setSpeed] = useState(200); // 
 
-    const generateFood = (): SnakeSegment => ({
+    const generateFood = useCallback((): SnakeSegment => ({
         x: Math.floor(Math.random() * cols),
         y: Math.floor(Math.random() * rows),
-    });
+    }), [cols, rows]);
+
     const [food, setFood] = useState<SnakeSegment>(generateFood());
     const resetGame = useCallback(() => {
         setSnake([{ x: 0, y: 0 }]);
@@ -37,7 +38,7 @@ const SnakeGame: React.FC = () => {
         setScore(0);
         setIsRunning(false)
         setIsPaused(false)
-    }, []);
+    }, [generateFood]);
 
     const moveSnake = useCallback(() => {
         if (!isRunning || isPaused) return;
@@ -79,7 +80,7 @@ const SnakeGame: React.FC = () => {
         } else {
             setSnake(newSnake);
         }
-    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused]);
+    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood]);
 
     useEffect(() => {
         const intervalId = setInterval(moveSnake, speed);
@@ -128,6 +129,7 @@ const SnakeGame: React.FC = () => {
             // Vertical click
             setDirection(deltaY > 0 ? "down" : "up");
         }
+        moveSnake();
     };
 
     const handleSwipe = useCallback(
@@ -155,6 +157,8 @@ const SnakeGame: React.FC = () => {
     );
 
     const touchStart = (event: TouchEvent) => {
+
+
         event.preventDefault();
         const { touches } = event;
 
@@ -303,9 +307,9 @@ const SnakeGame: React.FC = () => {
                     <input
                         id="speed"
                         type="range"
-                        min="-200"
+                        min="20"
                         max="500"
-                        step="20"
+                        step="5"
                         value={speed}
                         onChange={(e) => setSpeed(+e.target.value)}
                         className="p-0 ml-2 border border-gray-500 w-1/2"
