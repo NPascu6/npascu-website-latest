@@ -3,7 +3,7 @@ import InstagramImage from '../assets/instagram_1.jpg';
 
 const AboutPage = () => {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="flex items-center justify-center bg-gray-900 text-white">
             <div className="max-w-3xl mx-auto p-6 shadow-xl">
                 <div className="mb-4">
                     <img id="about-image" src={InstagramImage} className="mx-auto" alt="" />

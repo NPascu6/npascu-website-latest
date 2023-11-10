@@ -205,45 +205,48 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-            <div className="w-full flex flex-col text-center">
-                <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
-                <div className="mb-4">
-                    <label className="block text-sm font-medium">Select Board Size:</label>
-                    <select
-                        className="mt-1 block w-full p-2 text-black border border-gray-300"
-                        onChange={(e) => {
-                            const newSize = parseInt(e.target.value, 10);
-                            setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
-                            setBoardSize(newSize);
-                            handleReset();
-                        }}
-                    >
-                        <option value="3">3x3</option>
-                        <option value="4">4x4</option>
-                        <option value="5">5x5</option>
-                    </select>
-                </div>
-                <div >
-                    {currentPlayer &&
-                        <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
-                </div>
-                <div>
-                    <TicTacToe
-                        setWinner={setWinner}
-                        handleReset={handleReset}
-                        setCurrentPlayer={setCurrentPlayer}
-                        setBoard={setBoard}
-                        currentPlayer={currentPlayer}
-                        board={board}
-                        isDraw={isDraw}
-                        winner={winner}
-                        boardSize={boardSize}
-                        player1Symbol="X"
-                        player2Symbol="O"
-                    />
+        <div className="flex items-center justify-center">
+            <div className="max-w-xl mx-auto p-4 shadow-xl">
+                <div className="w-full flex flex-col text-center">
+                    <h1 className="text-xl font-bold mb-4">Tic Tac Toe</h1>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium">Select Board Size:</label>
+                        <select
+                            className="mt-1 block w-full p-2 text-black border border-gray-300"
+                            onChange={(e) => {
+                                const newSize = parseInt(e.target.value, 10);
+                                setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
+                                setBoardSize(newSize);
+                                handleReset();
+                            }}
+                        >
+                            <option value="3">3x3</option>
+                            <option value="4">4x4</option>
+                            <option value="5">5x5</option>
+                        </select>
+                    </div>
+                    <div >
+                        {currentPlayer &&
+                            <GameStatistics currentPlayer={currentPlayer} player1Stats={player1Stats} player2Stats={player2Stats} />}
+                    </div>
+                    <div>
+                        <TicTacToe
+                            setWinner={setWinner}
+                            handleReset={handleReset}
+                            setCurrentPlayer={setCurrentPlayer}
+                            setBoard={setBoard}
+                            currentPlayer={currentPlayer}
+                            board={board}
+                            isDraw={isDraw}
+                            winner={winner}
+                            boardSize={boardSize}
+                            player1Symbol="X"
+                            player2Symbol="O"
+                        />
+                    </div>
                 </div>
             </div>
+
         </div>
     );
 };
