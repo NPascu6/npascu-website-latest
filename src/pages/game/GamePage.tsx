@@ -126,24 +126,42 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         }
 
         // Check additional diagonals in both directions
-        for (let i = 0; i <= boardSize - winningCondition; i++) {
-            for (let j = 0; j <= boardSize - winningCondition; j++) {
-                const additionalDiagonal1 = Array.from(
-                    { length: winningCondition },
-                    (_, index) => (i + index) * (boardSize + 1) + j
-                );
+        const checkAdditionalDiagonals = (startRow: any, startCol: any, rowIncrement: any, colIncrement: any) => {
+            const additionalDiagonal = Array.from(
+                { length: winningCondition },
+                (_, index) => (startRow + index * rowIncrement) * boardSize + (startCol + index * colIncrement)
+            );
 
-                const additionalDiagonal2 = Array.from(
-                    { length: winningCondition },
-                    (_, index) => (i + index) * (boardSize - 1) + (boardSize - 1 - j)
-                );
+            return checkSequence(additionalDiagonal);
+        };
 
-                if (checkSequence(additionalDiagonal1) || checkSequence(additionalDiagonal2)) {
-                    return true;
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                // Check additional diagonals in both directions
+                if (i <= boardSize - winningCondition) {
+                    // Check diagonals from left to right
+                    if (j <= boardSize - winningCondition) {
+                        if (checkAdditionalDiagonals(i, j, 1, 1)) {
+                            return true;
+                        }
+                    }
+
+                    // Check diagonals from right to left
+                    if (j >= winningCondition - 1) {
+                        if (checkAdditionalDiagonals(i, j, 1, -1)) {
+                            return true;
+                        }
+                    }
+                }
+
+                // Check diagonals from top to bottom
+                if (j <= boardSize - winningCondition) {
+                    if (checkAdditionalDiagonals(i, j, 1, 0)) {
+                        return true;
+                    }
                 }
             }
         }
-
         const nextPlayer = currentPlayer === player1Symbol ? player2Symbol : player1Symbol;
         setCurrentPlayer(nextPlayer);
 
