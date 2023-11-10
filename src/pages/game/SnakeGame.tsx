@@ -136,7 +136,7 @@ const SnakeGame = () => {
 
     return (
         <div className="max-w-screen-md mx-auto p-4 justify-center content-center items-center">
-            <div className="flex">
+            {!isRunning && <div className="flex">
                 <div className="mb-4">
                     <label htmlFor="rows" className="">
                         Rows:
@@ -161,11 +161,11 @@ const SnakeGame = () => {
                         className="p-0 ml-2 border border-gray-500 w-1/2"
                     />
                 </div>
-            </div>
+            </div>}
 
-            <div className="mb-4 flex flex-col content-center items-center">{renderBoard()}</div>
-            <div className="mb-4">Score: {score}</div>
-            <div className="flex mb-4 items-center content-center justify-center">
+            <div className="mb-2 flex flex-col content-center items-center">{renderBoard()}</div>
+            <div className="mb-2">Score: {score}</div>
+            {!isRunning && <div className="flex mb-4 items-center content-center justify-center">
                 <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
                     Start
                 </button>
@@ -175,21 +175,24 @@ const SnakeGame = () => {
                 <button onClick={resetAndStartGame} className="bg-green-500 text-white p-2 mr-2">
                     Reset and Start
                 </button>
-            </div>
-            <div className="flex flex-col">
-                <button onClick={() => handleButtonClick("up")} className="p-2 m-2 border border-gray-500">
-                    Up
-                </button>
+            </div>}
+            <div className="flex flex-col justify-center content-center items-center">
+                <div>
+                    <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("up")} className="p-2 m-1 border border-gray-500 w-1/2">
+                        Up
+                    </button>
+                </div>
+
                 <div className="flex justify-between">
-                    <button onClick={() => handleButtonClick("left")} className="p-2 m-2 border border-gray-500 w-full">
+                    <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("left")} className="p-2 m-1 border border-gray-500 w-full">
                         Left
                     </button>
-                    <button onClick={() => handleButtonClick("right")} className="p-2 m-2 border border-gray-500 w-full">
+                    <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("right")} className="p-2 m-1 border border-gray-500 w-full">
                         Right
                     </button>
                 </div>
 
-                <button onClick={() => handleButtonClick("down")} className="p-2 m-2 border border-gray-500">
+                <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("down")} className="p-2 m-2 border border-gray-500">
                     Down
                 </button>
 
