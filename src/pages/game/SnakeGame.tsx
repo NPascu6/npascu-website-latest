@@ -10,7 +10,7 @@ interface SwipeState {
     startY: number;
 }
 
-const ROWS = 20;
+const ROWS = 30;
 const COLS = 20;
 const SQUARE_SIZE = 17;
 
@@ -35,6 +35,8 @@ const SnakeGame: React.FC = () => {
         setFood(generateFood());
         setDirection("right");
         setScore(0);
+        setIsRunning(false)
+        setIsPaused(false)
     }, []);
 
     const moveSnake = useCallback(() => {
@@ -111,27 +113,6 @@ const SnakeGame: React.FC = () => {
     );
 
     const startGame = () => setIsRunning(true);
-
-    const stopGame = () => setIsRunning(false);
-
-    const resetAndStartGame = () => {
-        resetGame();
-        startGame();
-    };
-
-    const handleButtonClick = (newDirection: string) => {
-        // Avoid reversing the snake immediately
-        if (
-            (direction === "up" && newDirection === "down") ||
-            (direction === "down" && newDirection === "up") ||
-            (direction === "left" && newDirection === "right") ||
-            (direction === "right" && newDirection === "left")
-        ) {
-            return;
-        }
-
-        setDirection(newDirection);
-    };
 
     const handleCellClick = (row: number, col: number) => {
         if (!isRunning) return;
@@ -298,48 +279,29 @@ const SnakeGame: React.FC = () => {
 
             <div className="mb-2 flex flex-col content-center items-center">{renderBoard()}</div>
             <div className="mb-2">Score: {score}</div>
-            {!isRunning && (
+            {(isRunning || !isPaused) && (
                 <div className="flex mb-4 items-center content-center justify-center">
-                    <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
+                    {!isRunning ? <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
                         Start
-                    </button>
-                    <button onClick={stopGame} className="bg-red-500 text-white p-2 mr-2">
-                        Stop
-                    </button>
-                    <button onClick={resetAndStartGame} className="bg-green-500 text-white p-2 mr-2">
-                        Reset and Start
+                    </button> :
+                        isPaused ? (
+                            <div>
+                                <button onClick={resumeGame} className="bg-green-500 text-white p-2 m-2 border border-gray-500">
+                                    Resume
+                                </button>
+                            </div>
+                        ) : (
+                            <button onClick={pauseGame} className="bg-yellow-500 text-white p-2 m-2 border border-gray-500">
+                                Pause
+                            </button>
+                        )
+                    }
+                    <button onClick={resetGame} className="bg-green-500 text-white p-2 mr-2">
+                        Reset
                     </button>
                 </div>
             )}
-            {isPaused ? (
-                <button onClick={resumeGame} className="bg-green-500 text-white p-2 m-2 border border-gray-500">
-                    Resume
-                </button>
-            ) : (
-                <button onClick={pauseGame} className="bg-yellow-500 text-white p-2 m-2 border border-gray-500">
-                    Pause
-                </button>
-            )}
-            <div className="flex flex-col justify-center content-center items-center">
-                <div>
-                    <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("up")} className="p-2 m-1 border border-gray-500 w-1/2">
-                        Up
-                    </button>
-                </div>
 
-                <div className="flex justify-between">
-                    <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("left")} className="p-2 m-1 border border-gray-500 w-full">
-                        Left
-                    </button>
-                    <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("right")} className="p-2 m-1 border border-gray-500 w-full">
-                        Right
-                    </button>
-                </div>
-
-                <button style={{ minWidth: '8em' }} onClick={() => handleButtonClick("down")} className="p-2 m-2 border border-gray-500">
-                    Down
-                </button>
-            </div>
         </div>
     );
 };
