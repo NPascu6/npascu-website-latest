@@ -3,13 +3,13 @@ import React from 'react';
 const LoginForm = () => {
     return (
         <div className="flex justify-center items-center">
-            <div className="bg-white shadow-md rounded mb-4">
+            <div className="bg-white shadow-xl w-full p-8">
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                         Username
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border  w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="username"
                         type="text"
                         placeholder="Enter your username"
@@ -20,7 +20,7 @@ const LoginForm = () => {
                         Email
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border  w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="email"
                         type="email"
                         placeholder="Enter your email"
@@ -31,7 +31,7 @@ const LoginForm = () => {
                         Password
                     </label>
                     <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border  w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="password"
                         type="password"
                         placeholder="Enter your password"
@@ -39,7 +39,7 @@ const LoginForm = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     <button
-                        className="text-black border font-bold min-w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="text-black border font-bold min-w-full py-2 px-4  focus:outline-none focus:shadow-outline"
                         type="button"
                     >
                         Sign In

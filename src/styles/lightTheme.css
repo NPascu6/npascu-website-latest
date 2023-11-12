@@ -75,6 +75,10 @@
     color: #333333;
 }
 
+.light-theme .game-card {
+    background-color: rgb(247, 247, 247);
+}
+
 .light-theme #github-profile-card {
     background-color: rgb(247, 247, 247);
     color: #333333;

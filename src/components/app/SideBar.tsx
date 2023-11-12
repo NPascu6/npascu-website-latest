@@ -103,8 +103,8 @@ const Sidebar = ({ toggle, setToggle }: any) => {
                             onClick={(e) => handleNavigateToRoute(e, `/games/${subRoute.path}`)}
                         >
 
-                            <div className='sidebar flex items-center space-x-2 cursor-pointer p-3 ml-2' style={{ height: '2em' }}>
-                                <div style={{ opacity: location.pathname === `${route.path.split("*")[0]}${subRoute.path}` ? 1 : 0.5 }}>{subRoute.icon}</div>
+                            <div className='sidebar flex items-center space-x-2 cursor-pointer p-3 mt-1 shadow-xl ' style={{ height: '2.5em', fontSize: 13 }}>
+                                <div className='flex h-6' style={{ opacity: location.pathname === `${route.path.split("*")[0]}${subRoute.path}` ? 1 : 0.5 }}>{subRoute.icon}</div>
                                 <div style={{ opacity: location.pathname === `${route.path.split("*")[0]}${subRoute.path}` ? 1 : 0.5 }}>{subRoute.title}</div>
                             </div>
                         </ul>

@@ -2,6 +2,7 @@
 import Info from "../assets/icons/Info";
 import MainIcon from "../assets/icons/MainIcon";
 import TicTacToeIcon from "../assets/icons/TicTacToe";
+import SnakeIcon from "../assets/icons/Snake";
 import GamesIcon from "../assets/icons/GamesIcon";
 import { RouteDefinition } from "../models/common/common";
 import AboutPage from "../pages/AboutPage";
@@ -43,7 +44,7 @@ export const routeDefinition: RouteDefinition[] = [
                 path: 'snake', // Removed '/games/' from the child path
                 exact: true,
                 title: 'Snake',
-                icon: <TicTacToeIcon />,
+                icon: <SnakeIcon />,
                 element: <SnakeGame />,
             }
         ],

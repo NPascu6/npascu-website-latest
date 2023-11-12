@@ -77,6 +77,10 @@
     color: #ffffff;
 }
 
+.dark-theme .game-card {
+    background-color: #20242c
+}
+
 .dark-theme #github-profile-card {
     background-color: #20242c;
     color: #ffffff;

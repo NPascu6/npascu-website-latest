@@ -40,7 +40,7 @@ const SnakeGame: React.FC = () => {
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
     const [direction, setDirection] = useState("right");
 
-    const [speed, setSpeed] = useState(245);
+    const [speed, setSpeed] = useState(50);
     const [maxRows, setMaxRows] = useState<any>();
     const [maxCols, setMaxCols] = useState<any>();
 
@@ -52,10 +52,7 @@ const SnakeGame: React.FC = () => {
     }, [rows, cols, maxCols, maxRows]);
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
-        const adjustedSpeed = newSpeed < 0 ? -newSpeed : newSpeed;
-
-        // Your existing speed-related logic here
-        setSpeed(adjustedSpeed);
+        setSpeed(-newSpeed);
     }, [])
 
     const generateFood = useCallback((): SnakeSegment => ({
@@ -365,11 +362,11 @@ const SnakeGame: React.FC = () => {
                     <input
                         id="speed"
                         type="range"
-                        min="-500"
-                        max="0"
+                        min="-200"
+                        max="100"
                         step="10"
                         value={-speed}
-                        onChange={(e) => handleSetSpeed(parseInt(e.target.value))}
+                        onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}
                         className="w-full p-0 ml-2 border border-gray-500 w-2/3"
                         style={{ flexGrow: 1 }}
                     />

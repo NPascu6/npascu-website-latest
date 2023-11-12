@@ -4,16 +4,18 @@ import { AmarisCard, BoschCard, CognizantCard, CovarioCard, DVSECard, FintamaCar
 import GithubProfileCard from "../components/main-page/GithubProfileCard";
 import YoutubeVideoLink from "../components/main-page/YoutubeVideoLink";
 import CollapsibleSection from "../components/common/CollapsableSection";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
 import { fetchGithubUserProfile } from "../store/thunks/appThunk";
 import HighlightedRepos from "../components/main-page/HighlightedRepos";
 import { workImages as images } from "../_constant";
 import { setWorkPhotos } from "../store/reducers/appReducer";
+import ImageSlider from "../components/common/ImageSlider";
 
 const MainPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [loadedImages, setLoadedImages] = useState<any>([]);
+    const workImages = useSelector((state: RootState) => state.app.workPhotos)
 
     useEffect(() => {
         let active = true;
@@ -53,7 +55,7 @@ const MainPage = () => {
                 <GithubProfileCard />
             </div>
             <div className="mt-2" >
-                <CollapsibleSection title="Education">
+                <CollapsibleSection hideTitleOnOpen title="Education">
                     <EducationCard />
                 </CollapsibleSection>
                 <CollapsibleSection hideTitleOnOpen title={'Highlighted Github Repos'}>
@@ -80,7 +82,10 @@ const MainPage = () => {
                 <CollapsibleSection hideTitleOnOpen title="Support Technician (NewV Technologies)" subTitle="06/2015 - 06/2016">
                     <ItSupportTechnicianCard />
                 </CollapsibleSection>
-                <CollapsibleSection hideTitleOnOpen title="Trading App (Crypto trading platform)">
+                <CollapsibleSection isCollapsed hideTitleOnOpen title={'Sample screens form previous work.'}>
+                    {workImages?.length > 0 && <ImageSlider images={workImages} />}
+                </CollapsibleSection>
+                <CollapsibleSection isCollapsed hideTitleOnOpen title="Trading App (Crypto trading platform)">
                     <YoutubeVideoLink />
                 </CollapsibleSection>
             </div>

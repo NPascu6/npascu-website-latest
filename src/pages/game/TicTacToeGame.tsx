@@ -235,7 +235,7 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     const getHeight = useCallback(() => {
-        return windowSize.innerHeight - 430;
+        return windowSize.innerHeight - 455;
     }, [windowSize]);
 
     return (

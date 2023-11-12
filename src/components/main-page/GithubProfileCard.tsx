@@ -7,12 +7,9 @@ import LinkedInIcon from "../../assets/icons/LinkedIn";
 import Facebook from "../../assets/icons/Facebook";
 import Instagram from "../../assets/icons/Instagram";
 import GitHub from "../../assets/icons/Github";
-import CollapsibleSection from "../common/CollapsableSection";
-import ImageSlider from "../common/ImageSlider";
 
 const GithubProfileCard = () => {
     const { githubProfile } = useSelector((state: RootState) => state.app);
-    const workImages = useSelector((state: RootState) => state.app.workPhotos)
 
     const onDownload = () => {
         const link = document.createElement("a");
@@ -114,9 +111,6 @@ const GithubProfileCard = () => {
                         </a>
                     </div>
                 </div>
-                <CollapsibleSection isCollapsed hideTitleOnOpen title={'Sample screens form previous work.'}>
-                    {workImages?.length > 0 && <ImageSlider images={workImages} />}
-                </CollapsibleSection>
             </div>
         </div>
     );
