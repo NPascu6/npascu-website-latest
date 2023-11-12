@@ -1,6 +1,6 @@
 import React from "react"
-import { ReusableColumn } from "../../../models/common/common"
 import { getCellWidth } from "../../../util"
+import { ReusableColumn } from "../../../models/table"
 
 interface TableHeadProps {
     columns: ReusableColumn[]

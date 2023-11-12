@@ -1,5 +1,5 @@
 import * as React from "react";
-import useWindowSize from "../hooks/useWindowSize";
+import useWindowSize from "../../hooks/useWindowSize";
 
 const videos = [
     { title: 'Youtube1', src: 'https://www.youtube.com/embed/isTUIKnZl_0' },

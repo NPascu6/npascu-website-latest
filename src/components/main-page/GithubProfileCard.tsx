@@ -1,14 +1,14 @@
 import React from "react";
-import { RootState } from "../store/store";
-import { _githubAvatarUrl } from "../_constant";
+import { RootState } from "../../store/store";
+import { _githubAvatarUrl } from "../../_constant";
 import { useSelector } from 'react-redux';
-import DownloadIcon from "../assets/icons/DownloadIcon";
-import LinkedInIcon from "../assets/icons/LinkedIn";
-import Facebook from "../assets/icons/Facebook";
-import Instagram from "../assets/icons/Instagram";
-import GitHub from "../assets/icons/Github";
-import CollapsibleSection from "./common/CollapsableSection";
-import ImageSlider from "./common/ImageSlider";
+import DownloadIcon from "../../assets/icons/DownloadIcon";
+import LinkedInIcon from "../../assets/icons/LinkedIn";
+import Facebook from "../../assets/icons/Facebook";
+import Instagram from "../../assets/icons/Instagram";
+import GitHub from "../../assets/icons/Github";
+import CollapsibleSection from "../common/CollapsableSection";
+import ImageSlider from "../common/ImageSlider";
 
 const GithubProfileCard = () => {
     const { githubProfile } = useSelector((state: RootState) => state.app);

@@ -8,6 +8,7 @@ const Sidebar = ({ toggle, setToggle }: any) => {
     const navigate = useNavigate();
     const location = useLocation();
     const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+    const [openSubRoute, setOpenSubRoute] = useState('' as string)
 
     useEffect(() => {
         setIsOpen(toggle);
@@ -35,11 +36,17 @@ const Sidebar = ({ toggle, setToggle }: any) => {
         navigate(path);
     };
 
+
+    useEffect(() => {
+        const subRoute = location.pathname.split("/")[2];
+        if (subRoute) {
+            setOpenSubRoute(subRoute);
+        }
+    }, [location])
+
     const isRouteActive = useCallback((route: any) => {
         return location.pathname === route.path || (location.pathname.includes(route.path.split("*")[0]) && route.path.includes("*"));
-    }, [location.pathname]);
-
-    const [openSubRoute, setOpenSubRoute] = useState('' as string)
+    }, [location]);
 
     return (
         <div
@@ -64,7 +71,6 @@ const Sidebar = ({ toggle, setToggle }: any) => {
                         }
                     }}>
                     <ul
-
                         className='sidebar'
                         style={{
                             fontWeight: location.pathname === route.path ? 'bold' : 'normal',

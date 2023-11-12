@@ -1,6 +1,6 @@
 import React from "react"
 import { getCellWidth } from "../../../util"
-import { ReusableColumn } from "../../../models/common/common"
+import { ReusableColumn } from "../../../models/table"
 
 interface TableBodyProps {
     filteredItems: any

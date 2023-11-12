@@ -1,15 +1,15 @@
 
 import React from 'react';
-import ToggleSvgDark from '../assets/icons/ToggleSvgDark';
-import ToggleSvgLight from '../assets/icons/ToggleSvgLight';
-import UserIcon from '../assets/icons/UserIcon';
-import Favicon32 from '../assets/favicon-32x32.png';
-import { RootState } from '../store/store';
+import ToggleSvgDark from '../../assets/icons/ToggleSvgDark';
+import ToggleSvgLight from '../../assets/icons/ToggleSvgLight';
+import UserIcon from '../../assets/icons/UserIcon';
+import Favicon32 from '../../assets/favicon-32x32.png';
+import { RootState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTheme } from '../store/reducers/appReducer';
-import Sidebar from './common/SideBar';
-import CommonDialog from './common/CommonDialog';
-import LoginForm from './LoginForm';
+import { setTheme } from '../../store/reducers/appReducer';
+import Sidebar from './SideBar';
+import CommonDialog from '../common/CommonDialog';
+import LoginForm from '../game/LoginForm';
 
 const TopBar = () => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);

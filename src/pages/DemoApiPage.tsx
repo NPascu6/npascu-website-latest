@@ -5,9 +5,10 @@
 
 import React from 'react';
 import ReusableTable from '../components/common/ReusableTable';
-import { Item, Order, ReusableColumn, User } from '../models/common/common';
+import { Item, Order, User } from '../models/common/common';
 import dayjs from 'dayjs';
 import CollapsibleSection from '../components/common/CollapsableSection';
+import { ReusableColumn } from '../models/table';
 
 // Dummy data for Users
 export const usersData: User[] = [

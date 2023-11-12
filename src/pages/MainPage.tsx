@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import EducationCard from "../components/EducationAndTraining";
-import { AmarisCard, BoschCard, CognizantCard, CovarioCard, DVSECard, FintamaCard, ItSupportTechnicianCard } from "../components/ExperienceCards";
-import GithubProfileCard from "../components/GithubProfileCard";
-import YoutubeVideoLink from "../components/YoutubeVideoLink";
+import EducationCard from "../components/main-page/EducationAndTraining";
+import { AmarisCard, BoschCard, CognizantCard, CovarioCard, DVSECard, FintamaCard, ItSupportTechnicianCard } from "../components/main-page/ExperienceCards";
+import GithubProfileCard from "../components/main-page/GithubProfileCard";
+import YoutubeVideoLink from "../components/main-page/YoutubeVideoLink";
 import CollapsibleSection from "../components/common/CollapsableSection";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { fetchGithubUserProfile } from "../store/thunks/appThunk";
-import HighlightedRepos from "../components/HighlightedRepos";
+import HighlightedRepos from "../components/main-page/HighlightedRepos";
 import { workImages as images } from "../_constant";
 import { setWorkPhotos } from "../store/reducers/appReducer";
 

@@ -4,7 +4,7 @@ import SearchBar from './table-components/SearchBar';
 import TableBody from './table-components/TableBody';
 import TableHead from './table-components/TableHead';
 import Loading from '../../pages/generic/Loading';
-import { ReusableColumn } from '../../models/common/common';
+import { ReusableColumn } from '../../models/table';
 
 interface TableProps {
     columns: ReusableColumn[];
