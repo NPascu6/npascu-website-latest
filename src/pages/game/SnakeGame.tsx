@@ -14,6 +14,10 @@ interface SwipeState {
 const MIN_SQUARE_SIZE = 10;
 const MAX_SQUARE_SIZE = 30;
 
+function getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const SnakeGame: React.FC = () => {
     const windowSize = useWindowSize();
     const boardRef = useRef<HTMLDivElement>(null);
@@ -40,38 +44,54 @@ const SnakeGame: React.FC = () => {
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
     const [direction, setDirection] = useState("right");
 
-    const [speed, setSpeed] = useState(50);
+    const [speed, setSpeed] = useState(250);
     const [maxRows, setMaxRows] = useState<any>();
     const [maxCols, setMaxCols] = useState<any>();
-
-    useEffect(() => {
-        if (maxCols && maxRows) return
-        if (!rows || !cols) return
-        setMaxRows(rows);
-        setMaxCols(cols);
-    }, [rows, cols, maxCols, maxRows]);
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
         setSpeed(-newSpeed);
     }, [])
 
-    const generateFood = useCallback((): SnakeSegment => ({
-        x: Math.floor(Math.random() * cols),
-        y: Math.floor(Math.random() * rows),
-    }), [cols, rows]);
+    const generateFood = useCallback((): SnakeSegment[] => {
+        const foodCount = getRandomNumber(1, 3) // Adjust the obstacle count as needed
+        const food: SnakeSegment[] = [];
 
-    const [food, setFood] = useState<SnakeSegment>(generateFood());
+        for (let i = 0; i < foodCount; i++) {
+            food.push({
+                x: Math.floor(Math.random() * cols),
+                y: Math.floor(Math.random() * rows),
+            });
+        }
 
+        return food;
+    }, [cols, rows]);
+
+    const generateObstacles = useCallback((): SnakeSegment[] => {
+        const obstaclesCount = getRandomNumber(30, 50) // Adjust the obstacle count as needed
+        const obstacles: SnakeSegment[] = [];
+
+        for (let i = 0; i < obstaclesCount; i++) {
+            obstacles.push({
+                x: Math.floor(Math.random() * cols),
+                y: Math.floor(Math.random() * rows),
+            });
+        }
+
+        return obstacles;
+    }, [cols, rows,]);
+
+    const [food, setFood] = useState<SnakeSegment[]>(generateFood());
+    const [obstacles,] = useState<SnakeSegment[]>(generateObstacles());
     const renderSquare = (row: number, col: number) => {
         const isSnake = snake.some((s) => s.x === col && s.y === row);
-        const isFood = food.x === col && food.y === row;
+        const isFood = food.some((f) => f.x === col && f.y === row);
+        const isWall = obstacles.some((o) => o.x === col && o.y === row);
 
         return (
             <div
                 key={`${row}-${col}`}
-                className={`w-${squareSize} h-${squareSize} ${isSnake ? "bg-green-500" : isFood ? "bg-red-500" : "bg-white"
+                className={`w-${squareSize} h-${squareSize} ${isSnake ? "bg-green-400" : isFood ? "bg-green-600" : isWall ? "bg-gray-900" : "bg-white"
                     } border border-black`}
-                onClick={() => handleCellClick(row, col)}
                 style={{ width: squareSize, height: squareSize }}
             />
         );
@@ -91,23 +111,26 @@ const SnakeGame: React.FC = () => {
         </div>
     );
 
-    const startGame = () => setIsRunning(true);
+    const startGame = () => {
+        setIsRunning(true)
+    };
     const pauseGame = () => setIsPaused(true);
     const resumeGame = () => setIsPaused(false);
 
     const resetGame = useCallback(() => {
+        setIsRunning(false)
+        setIsPaused(false);
         setSnake([{ x: 0, y: 0 }]);
         setDirection("right");
         setScore(0);
         setRows(newRows);
         setCols(newCols);
-        setIsRunning(false)
-        setIsPaused(false);
-        setFood(generateFood());
-    }, [generateFood, newRows, newCols]);
+    }, [newRows, newCols]);
 
     const moveSnake = useCallback(() => {
-        if (!isRunning || isPaused) return;
+        if (!isRunning || isPaused || !cols || !rows || !snake || !food || !obstacles) {
+            return;
+        }
 
         const head = snake[0];
         let newHead: SnakeSegment;
@@ -131,71 +154,48 @@ const SnakeGame: React.FC = () => {
 
         const newSnake = [newHead, ...snake.slice(0, -1)];
 
-        if (newSnake.slice(1).some((segment) => segment.x === newHead.x && segment.y === newHead.y)) {
+        if (
+            newSnake.slice(1).some((segment) => segment.x === newHead.x && segment.y === newHead.y) ||
+            obstacles.some((o) => o.x === newHead.x && o.y === newHead.y)
+        ) {
             setIsRunning(false);
+            if (isRunning) {
+                alert(`Game over! Your score is ${score.toFixed(2)}`);
+            }
             resetGame();
             return;
         }
 
-        if (newHead.x === food.x && newHead.y === food.y) {
+        if (food.some((f) => f.x === newHead.x && f.y === newHead.y)) {
             setFood(generateFood());
             setSnake([...newSnake, snake[snake.length - 1]]);
             const calculateScore = (speed: number, boardSize: number) => {
-                const baseScore = 10;
-                const speedMultiplier = 0.5;
-                const sizeMultiplier = 0.1;
+                const baseScore = 0;
+                const difficultyModifier = 0.0;
+                const speedScore = +((1 / speed) * 300);
+                const sizeScore = boardSize * difficultyModifier;;
 
-                const speedScore = (speed === 0 ? 500 : -(speed)) * speedMultiplier;
-                const sizeScore = boardSize * sizeMultiplier;
-
-                return baseScore + (speedScore / 10) + (sizeScore / 10);
+                return baseScore + speedScore + sizeScore;
             };
-            setScore((prevScore) => +(prevScore + calculateScore(speed, rows * cols)));
+            setScore((prevScore) => +(prevScore + calculateScore(speed, 1)));
         } else {
             setSnake(newSnake);
         }
-    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood, speed]);
+    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood, speed, score, obstacles]);
 
-    const handleCellClick = useCallback((row: number, col: number) => {
-        if (!isRunning) return;
-
-        const head = snake[0];
-        const deltaX = col - head.x;
-        const deltaY = row - head.y;
-
-        // Check if the new direction is opposite to the current direction or the same as the current direction
-        if (
-            (deltaX === 1 && direction === "left") ||
-            (deltaX === -1 && direction === "right") ||
-            (deltaY === 1 && direction === "up") ||
-            (deltaY === -1 && direction === "down") ||
-            (deltaX === 0 && deltaY === 0)  // The new direction is the same as the current direction
-        ) {
-            // Ignore the input
-            return;
-        }
-
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            setDirection(deltaX > 0 ? "right" : "left");
-        } else {
-            setDirection(deltaY > 0 ? "down" : "up");
-        }
-
-        moveSnake();
-    }, [isRunning, moveSnake, snake, direction]);
 
     const handleSwipe = useCallback((startX: number, startY: number, endX: number, endY: number) => {
         if (!isRunning || isPaused) return;
 
-        const MIN_SWIPE_DISTANCE = 2;
+        const MIN_SWIPE_DISTANCE = 20;
         const deltaX = endX - startX;
         const deltaY = endY - startY;
 
-        if (
-            Math.abs(deltaX) > MIN_SWIPE_DISTANCE ||
-            Math.abs(deltaY) > MIN_SWIPE_DISTANCE
-        ) {
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+
+        if (absDeltaX > MIN_SWIPE_DISTANCE || absDeltaY > MIN_SWIPE_DISTANCE) {
+            if (absDeltaX > absDeltaY) {
                 // Horizontal swipe
                 setDirection(deltaX > 0 ? "right" : "left");
             } else {
@@ -238,30 +238,40 @@ const SnakeGame: React.FC = () => {
                 touch.clientY >= boardRect.top &&
                 touch.clientY <= boardRect.bottom
             ) {
-                handleCellClick(
-                    Math.floor(touch.clientY / squareSize),
-                    Math.floor(touch.clientX / squareSize)
-                );
                 handleSwipe(swipeState.startX, swipeState.startY, touch.clientX, touch.clientY);
                 setSwipeState(null);
             }
         }
-    }, [handleCellClick, handleSwipe, swipeState, squareSize, isRunning]);
+    }, [handleSwipe, swipeState, isRunning]);
 
     const handleKeyPress = useCallback((key: string) => {
         if (isRunning) {
             switch (key) {
                 case "up":
+                    if (direction !== "down") {
+                        setDirection(key);
+                    }
+                    break;
                 case "down":
+                    if (direction !== "up") {
+                        setDirection(key);
+                    }
+                    break;
                 case "left":
+                    if (direction !== "right") {
+                        setDirection(key);
+                    }
+                    break;
                 case "right":
-                    setDirection(key);
+                    if (direction !== "left") {
+                        setDirection(key);
+                    }
                     break;
                 default:
                     break;
             }
         }
-    }, [isRunning]);
+    }, [isRunning, direction]);
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         const key = event.key.toLowerCase();
@@ -288,10 +298,6 @@ const SnakeGame: React.FC = () => {
         // Additional logic for handling adjustments can be added here
 
     }, [windowSize, calculateSizes]);
-
-    useEffect(() => {
-        setFood(generateFood())
-    }, [rows, generateFood])
 
     useEffect(() => {
         const ref = boardRef.current;
@@ -330,7 +336,14 @@ const SnakeGame: React.FC = () => {
             const newRows = Math.floor((windowSize.innerHeight - 165) / squareSize);
             setRows(newRows);
         }
-    }, [isRunning, windowSize, squareSize, generateFood])
+    }, [isRunning, windowSize, squareSize])
+
+    useEffect(() => {
+        if (maxCols && maxRows) return
+        if (!rows || !cols) return
+        setMaxRows(rows);
+        setMaxCols(cols);
+    }, [rows, cols, maxCols, maxRows]);
 
     return (
         <div className="max-w-screen-md mx-auto p-1 justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
@@ -362,9 +375,9 @@ const SnakeGame: React.FC = () => {
                     <input
                         id="speed"
                         type="range"
-                        min="-200"
-                        max="100"
-                        step="10"
+                        min="-300"
+                        max="10"
+                        step="-100"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}
                         className="w-full p-0 ml-2 border border-gray-500 w-2/3"
@@ -381,4 +394,4 @@ const SnakeGame: React.FC = () => {
     );
 };
 
-export default SnakeGame;
+export default React.memo(SnakeGame);

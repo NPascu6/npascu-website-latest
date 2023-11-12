@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useWindowSize from '../../hooks/useWindowSize';
+import TicTacToeIcon from '../../assets/icons/TicTacToe';
 
 type SquareValue = 'X' | 'O' | null;
 
@@ -242,8 +243,11 @@ const TicTacToeContainer: React.FC = () => {
         <div className="container mx-auto p-2 md:p-4">
             <div className="shadow-xl flex flex-col">
                 <div className="p-2 text-center">
-                    <h1 className="text-xl md:text-xl lg:text-2xl font-bold mb-4">Tic Tac Toe</h1>
-                    <div className="mb-4">
+                    <h1 className="text-green text-xl md:text-xl lg:text-2xl font-bold mb-1">Tic Tac Toe</h1>
+                    <div className="flex justify-center">
+                        <TicTacToeIcon />
+                    </div>
+                    <div className="m-2">
                         <label className="block text-xs font-medium">Select Board Size:</label>
                         <select
                             className="mt-1 text-sm block w-full p-2 text-black border border-gray-300"
