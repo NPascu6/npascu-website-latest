@@ -24,9 +24,9 @@ const SnakeGame: React.FC = () => {
     const calculateSizes = useCallback(() => {
         const squareSize = Math.max(
             MIN_SQUARE_SIZE,
-            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 26))
+            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 28))
         );
-        const newRows = Math.floor((windowSize.innerHeight - 235) / squareSize);
+        const newRows = Math.floor((windowSize.innerHeight - 255) / squareSize);
         const newCols = Math.floor(windowSize.innerWidth / squareSize);
 
         return { squareSize, newRows, newCols };
@@ -55,6 +55,7 @@ const SnakeGame: React.FC = () => {
     }, [rows, cols, maxCols, maxRows]);
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
+        debugger
         const adjustedSpeed = newSpeed < 0 ? -newSpeed : newSpeed;
 
         // Your existing speed-related logic here
@@ -103,11 +104,11 @@ const SnakeGame: React.FC = () => {
 
     const resetGame = useCallback(() => {
         setSnake([{ x: 0, y: 0 }]);
-        setFood(generateFood());
         setDirection("right");
         setScore(0);
         setIsRunning(false)
         setIsPaused(false);
+        setFood(generateFood());
     }, [generateFood]);
 
     const moveSnake = useCallback(() => {
@@ -144,11 +145,21 @@ const SnakeGame: React.FC = () => {
         if (newHead.x === food.x && newHead.y === food.y) {
             setFood(generateFood());
             setSnake([...newSnake, snake[snake.length - 1]]);
-            setScore((prevScore) => prevScore + 1);
+            const calculateScore = (speed: number, boardSize: number) => {
+                const baseScore = 10;
+                const speedMultiplier = 0.5;
+                const sizeMultiplier = 0.1;
+
+                const speedScore = (speed === 0 ? 500 : -(speed)) * speedMultiplier;
+                const sizeScore = boardSize * sizeMultiplier;
+
+                return baseScore + (speedScore / 10) + (sizeScore / 10);
+            };
+            setScore((prevScore) => +(prevScore + calculateScore(speed, rows * cols)));
         } else {
             setSnake(newSnake);
         }
-    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood]);
+    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood, speed]);
 
     const handleCellClick = useCallback((row: number, col: number) => {
         if (!isRunning) return;
@@ -157,6 +168,18 @@ const SnakeGame: React.FC = () => {
         const deltaX = col - head.x;
         const deltaY = row - head.y;
 
+        // Check if the new direction is opposite to the current direction or the same as the current direction
+        if (
+            (deltaX === 1 && direction === "left") ||
+            (deltaX === -1 && direction === "right") ||
+            (deltaY === 1 && direction === "up") ||
+            (deltaY === -1 && direction === "down") ||
+            (deltaX === 0 && deltaY === 0)  // The new direction is the same as the current direction
+        ) {
+            // Ignore the input
+            return;
+        }
+
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             setDirection(deltaX > 0 ? "right" : "left");
         } else {
@@ -164,12 +187,24 @@ const SnakeGame: React.FC = () => {
         }
 
         moveSnake();
-    }, [isRunning, moveSnake, snake]);
+    }, [isRunning, moveSnake, snake, direction]);
 
     const handleSwipe = useCallback((startX: number, startY: number, endX: number, endY: number) => {
-        const MIN_SWIPE_DISTANCE = 50;
+        if (!isRunning || isPaused) return;
+
+        const MIN_SWIPE_DISTANCE = 2;
         const deltaX = endX - startX;
         const deltaY = endY - startY;
+
+        // Check if the new direction is opposite to the current direction or the same as the current direction
+        if (
+            (Math.abs(deltaX) > MIN_SWIPE_DISTANCE && (deltaX > 0 ? "right" : "left") === direction) ||
+            (Math.abs(deltaY) > MIN_SWIPE_DISTANCE && (deltaY > 0 ? "down" : "up") === direction) ||
+            (deltaX === 0 && deltaY === 0)  // The new direction is the same as the current direction
+        ) {
+            // Ignore the input
+            return;
+        }
 
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
@@ -180,13 +215,14 @@ const SnakeGame: React.FC = () => {
                 setDirection(deltaY > 0 ? "down" : "up");
             }
         }
-    }, [setDirection]);
+    }, [setDirection, isRunning, isPaused, direction]);
+
 
     const touchStart = useCallback((event: TouchEvent) => {
-        event.preventDefault();
         const { touches } = event;
 
-        if (touches.length === 1 && boardRef.current) {
+        if (touches.length === 1 && boardRef.current && isRunning) {
+            event.preventDefault();
             const touch = touches[0];
             const boardRect = boardRef.current.getBoundingClientRect();
 
@@ -196,18 +232,16 @@ const SnakeGame: React.FC = () => {
                 touch.clientY >= boardRect.top &&
                 touch.clientY <= boardRect.bottom
             ) {
-
-
                 setSwipeState({ startX: touch.clientX, startY: touch.clientY });
             }
         }
-    }, []);
+    }, [setSwipeState, isRunning]);
 
     const touchEnd = useCallback((event: TouchEvent) => {
-        event.preventDefault();
         const { changedTouches } = event;
 
-        if (changedTouches.length === 1 && swipeState && boardRef.current) {
+        if (changedTouches.length === 1 && swipeState && boardRef.current && isRunning) {
+            event.preventDefault();
             const touch = changedTouches[0];
             const boardRect = boardRef.current.getBoundingClientRect();
 
@@ -225,7 +259,7 @@ const SnakeGame: React.FC = () => {
                 setSwipeState(null);
             }
         }
-    }, [handleSwipe, swipeState, handleCellClick, squareSize]);
+    }, [handleCellClick, handleSwipe, swipeState, squareSize, isRunning]);
 
     const handleKeyPress = useCallback((key: string) => {
         if (isRunning) {
@@ -253,7 +287,11 @@ const SnakeGame: React.FC = () => {
         [handleKeyPress]);
 
     useEffect(() => {
-        const intervalId = setInterval(moveSnake, speed);
+        const intervalId = setInterval(() => {
+            moveSnake();
+            // Add score based on board size and speed
+        }, speed);
+
         return () => clearInterval(intervalId);
     }, [moveSnake, speed]);
 
@@ -268,17 +306,18 @@ const SnakeGame: React.FC = () => {
     }, [windowSize, calculateSizes]);
 
     useEffect(() => {
-        const ref = boardRef.current
+        const ref = boardRef.current;
 
-        if (!ref) return
-        ref.addEventListener("touchstart", touchStart, { passive: false });
-        ref.addEventListener("touchend", touchEnd, { passive: false });
+        if (!ref) return;
+
+        ref.addEventListener("touchstart", touchStart);
+        ref.addEventListener("touchend", touchEnd);
 
         return () => {
             ref.removeEventListener("touchstart", touchStart);
             ref.removeEventListener("touchend", touchEnd);
         };
-    }, [handleSwipe, swipeState, touchEnd, touchStart]);
+    }, [touchEnd, touchStart]);
 
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
@@ -289,7 +328,7 @@ const SnakeGame: React.FC = () => {
     }, [handleKeyDown]);
 
     return (
-        <div className="max-w-screen-md mx-auto p-4 justify-center content-center items-center">
+        <div className="max-w-screen-md mx-auto p-1 justify-center content-center items-center" style={{ height: 'calc(100dvh - 4em)' }}>
             {!isRunning && (
                 <div className="flex text-black justify-center">
                     <div className="mb-4 flex mr-4">
@@ -327,10 +366,8 @@ const SnakeGame: React.FC = () => {
                 </div>
 
             )}
-
-
-            <div className="mb-2 flex flex-col content-center items-center">{renderBoard()}</div>
-            <div className="mb-2">Score: {score}</div>
+            <div className="mb-1 flex flex-col content-center items-center">{renderBoard()}</div>
+            <div className="mb-1">Score: {score.toFixed(2)}</div>
             {(isRunning || !isPaused) && (
                 <div className="flex items-center content-center justify-center">
                     {!isRunning ? (
@@ -349,26 +386,29 @@ const SnakeGame: React.FC = () => {
                     <button onClick={resetGame} className="bg-green-500 text-white p-2 mr-2">
                         Reset
                     </button>
-                    <label htmlFor="speed" className="mx-2">
-                        Speed:
-                    </label>
-                    <div className="flex items-center">
-                        <input
-                            id="speed"
-                            type="range"
-                            min="-500"
-                            max="0"
-                            step="10"
-                            value={-speed}
-                            onChange={(e) => handleSetSpeed(-e.target.value)}
-                            className="p-0 ml-2 border border-gray-500 w-2/3"
-                            style={{ flexGrow: 1 }}
-                        />
-                    </div>
 
                 </div>
             )}
-
+            {speed !== undefined && (
+                <div className="flex items-center relative mt-8">
+                    <input
+                        id="speed"
+                        type="range"
+                        min="-500"
+                        max="0"
+                        step="10"
+                        value={-speed}
+                        onChange={(e) => handleSetSpeed(parseInt(e.target.value))}
+                        className="w-full p-0 ml-2 border border-gray-500 w-2/3"
+                        style={{ flexGrow: 1 }}
+                    />
+                    <div style={{ bottom: -20 }} className="w-full absolute left-0 flex justify-between">
+                        {["Super Easy", "Easy", "Normal", "Harder", "Max"].map((level) => (
+                            <div key={level}>{level}</div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
