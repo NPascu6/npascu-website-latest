@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 
 interface SnakeSegment {
     x: number;
@@ -14,19 +12,22 @@ interface SwipeState {
 }
 
 const MIN_SQUARE_SIZE = 10;
-const MAX_SQUARE_SIZE = 50;
-
+const MAX_SQUARE_SIZE = 30;
 
 const SnakeGame: React.FC = () => {
     const windowSize = useWindowSize();
     const boardRef = useRef<HTMLDivElement>(null);
+    const [score, setScore] = useState(0);
+    const [isRunning, setIsRunning] = useState(false);
+    const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
+    const [isPaused, setIsPaused] = useState(false);
 
     const calculateSizes = useCallback(() => {
         const squareSize = Math.max(
             MIN_SQUARE_SIZE,
-            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 28))
+            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 25))
         );
-        const newRows = Math.floor((windowSize.innerHeight - 255) / squareSize);
+        const newRows = Math.floor((windowSize.innerHeight - 210) / squareSize);
         const newCols = Math.floor(windowSize.innerWidth / squareSize);
 
         return { squareSize, newRows, newCols };
@@ -38,12 +39,8 @@ const SnakeGame: React.FC = () => {
     const [cols, setCols] = useState(newCols);
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
     const [direction, setDirection] = useState("right");
-    const [score, setScore] = useState(0);
-    const [isRunning, setIsRunning] = useState(false);
-    const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
-    const [isPaused, setIsPaused] = useState(false);
-    const [speed, setSpeed] = useState(200);
-    const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+
+    const [speed, setSpeed] = useState(245);
     const [maxRows, setMaxRows] = useState<any>();
     const [maxCols, setMaxCols] = useState<any>();
 
@@ -55,7 +52,6 @@ const SnakeGame: React.FC = () => {
     }, [rows, cols, maxCols, maxRows]);
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
-        debugger
         const adjustedSpeed = newSpeed < 0 ? -newSpeed : newSpeed;
 
         // Your existing speed-related logic here
@@ -106,10 +102,12 @@ const SnakeGame: React.FC = () => {
         setSnake([{ x: 0, y: 0 }]);
         setDirection("right");
         setScore(0);
+        setRows(newRows);
+        setCols(newCols);
         setIsRunning(false)
         setIsPaused(false);
         setFood(generateFood());
-    }, [generateFood]);
+    }, [generateFood, newRows, newCols]);
 
     const moveSnake = useCallback(() => {
         if (!isRunning || isPaused) return;
@@ -196,27 +194,19 @@ const SnakeGame: React.FC = () => {
         const deltaX = endX - startX;
         const deltaY = endY - startY;
 
-        // Check if the new direction is opposite to the current direction or the same as the current direction
         if (
-            (Math.abs(deltaX) > MIN_SWIPE_DISTANCE && (deltaX > 0 ? "right" : "left") === direction) ||
-            (Math.abs(deltaY) > MIN_SWIPE_DISTANCE && (deltaY > 0 ? "down" : "up") === direction) ||
-            (deltaX === 0 && deltaY === 0)  // The new direction is the same as the current direction
+            Math.abs(deltaX) > MIN_SWIPE_DISTANCE ||
+            Math.abs(deltaY) > MIN_SWIPE_DISTANCE
         ) {
-            // Ignore the input
-            return;
-        }
-
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (Math.abs(deltaX) > MIN_SWIPE_DISTANCE) {
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                // Horizontal swipe
                 setDirection(deltaX > 0 ? "right" : "left");
-            }
-        } else {
-            if (Math.abs(deltaY) > MIN_SWIPE_DISTANCE) {
+            } else {
+                // Vertical swipe
                 setDirection(deltaY > 0 ? "down" : "up");
             }
         }
-    }, [setDirection, isRunning, isPaused, direction]);
-
+    }, [setDirection, isRunning, isPaused]);
 
     const touchStart = useCallback((event: TouchEvent) => {
         const { touches } = event;
@@ -276,15 +266,13 @@ const SnakeGame: React.FC = () => {
         }
     }, [isRunning]);
 
-    const handleKeyDown = useCallback(
-        (event: KeyboardEvent) => {
-            const key = event.key.toLowerCase();
-            if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
-                event.preventDefault();
-                handleKeyPress(key.replace("arrow", ""));
-            }
-        },
-        [handleKeyPress]);
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        const key = event.key.toLowerCase();
+        if (["arrowup", "arrowdown", "arrowleft", "arrowright"].includes(key)) {
+            event.preventDefault();
+            handleKeyPress(key.replace("arrow", ""));
+        }
+    }, [handleKeyPress]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -300,24 +288,37 @@ const SnakeGame: React.FC = () => {
         const { newRows, newCols } = calculateSizes();
         setRows(newRows);
         setCols(newCols);
-
         // Additional logic for handling adjustments can be added here
 
     }, [windowSize, calculateSizes]);
+
+    useEffect(() => {
+        setFood(generateFood())
+    }, [rows, generateFood])
 
     useEffect(() => {
         const ref = boardRef.current;
 
         if (!ref) return;
 
+        const handleTouchMove = (event: TouchEvent) => {
+            const { touches } = event;
+            if (touches.length === 1 && swipeState && boardRef.current && isRunning) {
+                const touch = touches[0];
+                handleSwipe(swipeState.startX, swipeState.startY, touch.clientX, touch.clientY);
+            }
+        };
+
         ref.addEventListener("touchstart", touchStart);
         ref.addEventListener("touchend", touchEnd);
+        ref.addEventListener("touchmove", handleTouchMove);
 
         return () => {
             ref.removeEventListener("touchstart", touchStart);
             ref.removeEventListener("touchend", touchEnd);
+            ref.removeEventListener("touchmove", handleTouchMove);
         };
-    }, [touchEnd, touchStart]);
+    }, [touchEnd, touchStart, handleSwipe, swipeState, isRunning]);
 
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
@@ -327,70 +328,40 @@ const SnakeGame: React.FC = () => {
         };
     }, [handleKeyDown]);
 
-    return (
-        <div className="max-w-screen-md mx-auto p-1 justify-center content-center items-center" style={{ height: 'calc(100dvh - 4em)' }}>
-            {!isRunning && (
-                <div className="flex text-black justify-center">
-                    <div className="mb-4 flex mr-4">
-                        <label className={`${isDarkTheme ? "text-white" : "text-black"}`} htmlFor="rows">Rows:</label>
-                        <select
-                            id="rows"
-                            value={rows}
-                            onChange={(event) => setRows(parseInt(event.target.value))}
-                            className="p-0 ml-2 border border-gray-500 w-1/2"
-                            style={{ height: "30px", width: "100px" }}
-                        >
-                            {Array.from({ length: 5 }, (_, index) => (
-                                <option key={index} value={maxRows - (index * 3)}>
-                                    {maxRows - (index * 3)}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="mb-4 flex">
-                        <label className={`${isDarkTheme ? "text-white" : "text-black"}`} htmlFor="cols">Columns:</label>
-                        <select
-                            id="cols"
-                            value={cols}
-                            onChange={(event) => setCols(parseInt(event.target.value))}
-                            className="p-0 ml-2 border border-gray-500 w-1/2"
-                            style={{ height: "30px", width: "100px" }}
-                        >
-                            {Array.from({ length: 5 }, (_, index) => (
-                                <option key={index} value={maxCols - (index * 3)}>
-                                    {maxCols - (index * 3)}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
+    useEffect(() => {
+        if (isRunning) {
+            const newRows = Math.floor((windowSize.innerHeight - 165) / squareSize);
+            setRows(newRows);
+        }
+    }, [isRunning, windowSize, squareSize, generateFood])
 
-            )}
+    return (
+        <div className="max-w-screen-md mx-auto p-1 justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
             <div className="mb-1 flex flex-col content-center items-center">{renderBoard()}</div>
-            <div className="mb-1">Score: {score.toFixed(2)}</div>
+            <div className="mb-1 font-bold text-center">Score: {score.toFixed(2)}</div>
             {(isRunning || !isPaused) && (
-                <div className="flex items-center content-center justify-center">
+                <div className="flex items-center content-center justify-center ml-2">
                     {!isRunning ? (
-                        <button onClick={startGame} className="bg-blue-500 text-white p-2 mr-2">
+                        <button onClick={startGame} className="bg-blue-500 text-white w-20 p-2 mr-2">
                             Start
                         </button>
                     ) : isPaused ? (
-                        <button onClick={resumeGame} className="bg-green-500 text-white p-2 m-2 border border-gray-500">
+                        <button onClick={resumeGame} className="bg-green-500 text-white w-20 p-2 m-2 border border-gray-500">
                             Resume
                         </button>
                     ) : (
-                        <button onClick={pauseGame} className="bg-yellow-500 text-white p-2 m-2 border border-gray-500">
+                        <button onClick={pauseGame} className="bg-yellow-500 text-white w-20 p-2 m-2 border border-gray-500">
                             Pause
                         </button>
                     )}
-                    <button onClick={resetGame} className="bg-green-500 text-white p-2 mr-2">
+                    <button onClick={resetGame} className="bg-green-500 w-20 text-white p-2 mr-2">
                         Reset
                     </button>
 
                 </div>
             )}
-            {speed !== undefined && (
-                <div className="flex items-center relative mt-8">
+            {speed !== undefined && !isRunning && (
+                <div className="flex items-center relative mt-2 p-3">
                     <input
                         id="speed"
                         type="range"

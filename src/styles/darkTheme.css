@@ -1,6 +1,7 @@
 .dark-theme {
     color: #ffffff;
     background-color: #1a1d24;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 .dark-theme #side-bar {

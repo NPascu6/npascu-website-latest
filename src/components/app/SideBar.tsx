@@ -38,6 +38,7 @@ const Sidebar = ({ toggle, setToggle }: any) => {
 
 
     useEffect(() => {
+        console.log(location.pathname.split("/")[2])
         const subRoute = location.pathname.split("/")[2];
         if (subRoute) {
             setOpenSubRoute(subRoute);

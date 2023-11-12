@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import useWindowSize from '../../hooks/useWindowSize';
 
 type SquareValue = 'X' | 'O' | null;
 
@@ -194,6 +195,7 @@ const TicTacToeContainer: React.FC = () => {
     const [gameStats, setGameStats] = useState({ currentPlayer: 'X', wins: 0, draws: 0 });
     const [player1Stats, setPlayer1Stats] = useState({ currentPlayer: 'X', wins: 0, draws: 0 });
     const [player2Stats, setPlayer2Stats] = useState({ currentPlayer: 'O', wins: 0, draws: 0 });
+    const windowSize = useWindowSize();
 
     const handleReset = useCallback(() => {
         setBoard(initialBoard);
@@ -232,10 +234,14 @@ const TicTacToeContainer: React.FC = () => {
         setBoard(Array.from({ length: boardSize * boardSize }, () => null));
     }, [boardSize]);
 
+    const getHeight = useCallback(() => {
+        return windowSize.innerHeight - 430;
+    }, [windowSize]);
+
     return (
         <div className="container mx-auto p-2 md:p-4">
-            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto shadow-xl flex flex-col">
-                <div className="p-2 text-center" >
+            <div className="shadow-xl flex flex-col">
+                <div className="p-2 text-center">
                     <h1 className="text-xl md:text-xl lg:text-2xl font-bold mb-4">Tic Tac Toe</h1>
                     <div className="mb-4">
                         <label className="block text-xs font-medium">Select Board Size:</label>
@@ -265,7 +271,7 @@ const TicTacToeContainer: React.FC = () => {
                     )}
                 </div>
                 <div className="p-2 text-center">
-                    <div className="grid shadow-lg mb-2 min-h-max" style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '2px', height: '40dvh' }}>
+                    <div className="grid shadow-lg mb-2 min-h-max" style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '2px', height: getHeight() }}>
                         <TicTacToe
                             setIsDraw={setIsDraw}
                             setWinner={setWinner}
@@ -281,13 +287,12 @@ const TicTacToeContainer: React.FC = () => {
                         />
                     </div>
                 </div>
-                <div className="flex justify-center mt-2 mb-2" >
+                <div className="flex justify-center mt-2 mb-2">
                     <button className="p-2 border-2 font-bold" onClick={handleReset}>
                         Reset
                     </button>
                 </div>
             </div>
-
         </div>
     );
 
