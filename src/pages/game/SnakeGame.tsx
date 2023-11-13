@@ -274,6 +274,8 @@ const SnakeGame: React.FC = () => {
         if (minNumberOfObstacles) {
             setObstacles(generateObstacles())
         }
+
+     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [minNumberOfObstacles])
 
     return (
