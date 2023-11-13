@@ -42,7 +42,7 @@ const Board = ({
 
             switch (key) {
                 case " ": {
-                    if (!isRunning)
+                    if (!isRunning || isPaused)
                         startGame();
                     else {
                         stopGame();
@@ -73,7 +73,7 @@ const Board = ({
                     break;
             }
         },
-        [isRunning, direction, setDirection, startGame, stopGame]
+        [isRunning, direction, setDirection, startGame, stopGame, isPaused]
     );
 
     const handleKeyDown = useCallback(

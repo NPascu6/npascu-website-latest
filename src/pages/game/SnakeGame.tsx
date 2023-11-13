@@ -77,13 +77,20 @@ const SnakeGame: React.FC = () => {
     const [food, setFood] = useState<SnakeSegment[]>(generateFood());
     const [obstacles, setObstacles] = useState<SnakeSegment[]>(generateObstacles());
 
-    const startGame = () => setIsRunning(true);
-    const pauseGame = () => setIsPaused(true);
-    const resumeGame = () => setIsPaused(false);
+    const startGame = () => {
+        setIsRunning(true)
+        setIsPaused(false)
+    };
+    const pauseGame = () => {
+        setIsPaused(true)
+    };
+    const resumeGame = () => {
+        setIsPaused(false)
+    };
 
     const resetGame = useCallback(() => {
         setIsRunning(false)
-        setIsPaused(false);
+        setIsPaused(true);
         setSnake([{ x: 0, y: 0 }]);
         setDirection("right");
         setScore(0);
@@ -101,35 +108,30 @@ const SnakeGame: React.FC = () => {
         return baseScore + speedScore + sizeScore;
     }, []);
 
-    const handleFoodCollision = useCallback(
-        (newSnake: SnakeSegment[], newHead: SnakeSegment) => {
-            const remainingFood = food.filter(
-                (f) => !(f.x === newHead.x && f.y === newHead.y)
-            );
+    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment) => {
+        const remainingFood = food.filter(
+            (f) => !(f.x === newHead.x && f.y === newHead.y)
+        );
 
-            if (remainingFood.length === food.length) {
-                // No food was eaten
-                setSnake(newSnake);
-            } else {
-                // Food was eaten
-                setFood(remainingFood);
+        if (remainingFood.length === food.length) {
+            // No food was eaten
+            setSnake(newSnake);
+        } else {
+            // Food was eaten
+            setFood(remainingFood);
+            setSnake([...newSnake, newHead]);
 
-                // Check if all food is eaten
-                if (remainingFood.length === 0) {
-                    // Generate new food
-                    setFood(generateFood());
+            // Check if all food is eaten
+            if (remainingFood.length === 0) {
+                // Generate new food
+                setFood(generateFood());
 
-                    // Increase score
-                    const newScore = calculateScore(speed, 1);
-                    setScore((prevScore) => prevScore + newScore);
-                } else {
-                    // Food was eaten but there are still remaining food
-                    setSnake([...newSnake, snake[snake.length - 1]]);
-                }
+                // Increase score
+                const newScore = calculateScore(speed, 1);
+                setScore((prevScore) => prevScore + newScore);
             }
-        },
-        [food, snake, generateFood, speed, calculateScore]
-    );
+        }
+    }, [food, generateFood, speed, calculateScore]);
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
@@ -140,10 +142,8 @@ const SnakeGame: React.FC = () => {
     }, [isRunning, score, resetGame]);
 
     const moveSnake = useCallback(() => {
-        if (!isRunning || isPaused || !cols || !rows || !snake || !food || !obstacles) {
-            return;
-        }
-
+        if (!isRunning) return
+        if (isPaused) return
         const head = snake[0];
         let newHead: SnakeSegment;
 
@@ -178,7 +178,7 @@ const SnakeGame: React.FC = () => {
         }
 
         handleFoodCollision(newSnake, newHead);
-    }, [direction, food, snake, isRunning, cols, rows, isPaused, obstacles, handleFoodCollision, handleGameEnd]);
+    }, [direction, snake, cols, rows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -195,7 +195,7 @@ const SnakeGame: React.FC = () => {
         setCols(newCols);
         // Additional logic for handling adjustments can be added here
 
-    }, [windowSize, calculateSizes]);
+    }, [windowSize, calculateSizes, isRunning, windowSize]);
 
     useEffect(() => {
         if (isRunning) {
@@ -263,7 +263,7 @@ const SnakeGame: React.FC = () => {
                     isRunning={isRunning}
                     isPaused={isPaused}
                     direction={direction}
-                    stopGame={() => setIsRunning(false)}
+                    stopGame={() => setIsPaused(true)}
                     startGame={startGame}
                     setDirection={setDirection} />
             }
