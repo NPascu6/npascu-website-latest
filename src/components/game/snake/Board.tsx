@@ -203,9 +203,9 @@ const Board = ({
         <div
             ref={boardRef}
             style={{
-                maxWidth: `${cols * (squareSize - 0.2)}px`
+                maxWidth: `${cols * (squareSize + 30)}px`
             }}
-            className="bg-gray-800"
+            className="bg-gray-800 border-2 border-gray-700 rounded-md"
         >
             {Array.from({ length: rows }, (_, row) => (
                 <div key={row} className="flex align-center">
