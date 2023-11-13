@@ -22,7 +22,7 @@ const SnakeGame: React.FC = () => {
             MIN_SQUARE_SIZE,
             Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 22))
         );
-        const newRows = Math.floor((windowSize.innerHeight - 210) / squareSize);
+        const newRows = Math.floor((windowSize.innerHeight - 220) / squareSize);
         const newCols = Math.floor((windowSize.innerWidth) / squareSize);
 
         return { squareSize, newRows, newCols };
@@ -315,7 +315,7 @@ const SnakeGame: React.FC = () => {
                 </div>
             )}
             {speed !== undefined && !isRunning && (
-                <div className="flex items-center relative mt-2 p-3">
+                <div className="flex items-center relative p-3 pb-0">
                     <input
                         id="speed"
                         type="range"
