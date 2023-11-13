@@ -29,8 +29,6 @@ const SnakeGame: React.FC = () => {
         return { squareSize, newRows, newCols };
     }, [windowSize.innerHeight, windowSize.innerWidth]);
 
-    console.log(windowSize)
-
     const { squareSize, newRows, newCols } = calculateSizes()
     const [lastDirectionChangeTime, setLastDirectionChangeTime] = useState<number>(0);
     const directionChangeDebounceTime = 100; // Adjust the debounce time as needed
