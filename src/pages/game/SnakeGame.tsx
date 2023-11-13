@@ -275,7 +275,7 @@ const SnakeGame: React.FC = () => {
             setObstacles(generateObstacles())
         }
 
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [minNumberOfObstacles])
 
     return (
@@ -319,7 +319,7 @@ const SnakeGame: React.FC = () => {
                 </div>
             )}
             {speed !== undefined && !isRunning && (
-                <div className="flex items-center relative p-3 pb-0">
+                <div className="flex flex-col items-center relative">
                     <input
                         id="speed"
                         type="range"
@@ -328,10 +328,10 @@ const SnakeGame: React.FC = () => {
                         step="-100"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}
-                        className="h-10 w-full p-0 ml-2 border border-gray-500 w-2/3 mb-2"
+                        className="h-10 p-0 ml-2 border border-gray-500 w-4/5"
                         style={{ flexGrow: 1 }}
                     />
-                    <div style={{ bottom: -20 }} className="w-full absolute left-0 flex justify-between p-4">
+                    <div className="w-4/5 left-0 flex justify-between pl-2 pr-2">
                         {["Super Easy", "Easy", "Normal", "Harder", "Max"].map((level) => (
                             <div key={level}>{level}</div>
                         ))}
