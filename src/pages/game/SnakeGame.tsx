@@ -251,7 +251,7 @@ const SnakeGame: React.FC = () => {
     }, [minNumberOfFood, maxNumberOfFood, generateFood])
 
     return (
-        <div className="max-w-screen-md mx-auto p-1 justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
+        <div className="max-w-screen-md mx-auto justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
             <div className="mb-1 flex flex-col content-center items-center">{
                 <Board
                     rows={rows}
@@ -300,10 +300,10 @@ const SnakeGame: React.FC = () => {
                         step="-100"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}
-                        className="w-full p-0 ml-2 border border-gray-500 w-2/3"
+                        className="w-full p-0 ml-2 border border-gray-500 w-2/3 mb-2"
                         style={{ flexGrow: 1 }}
                     />
-                    <div style={{ bottom: -20 }} className="w-full absolute left-0 flex justify-between">
+                    <div style={{ bottom: -20 }} className="w-full absolute left-0 flex justify-between p-4">
                         {["Super Easy", "Easy", "Normal", "Harder", "Max"].map((level) => (
                             <div key={level}>{level}</div>
                         ))}
