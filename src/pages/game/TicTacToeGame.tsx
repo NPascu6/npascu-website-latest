@@ -16,6 +16,7 @@ interface TicTacToeProps {
     handleReset: () => void;
     setWinner: React.Dispatch<React.SetStateAction<SquareValue | null>>;
     setIsDraw: React.Dispatch<React.SetStateAction<boolean>>;
+    setResetButtonPresent?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface GameStatisticsProps {
@@ -61,7 +62,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     currentPlayer,
     setBoard,
     setCurrentPlayer,
-    handleReset,
+    setResetButtonPresent,
     setWinner,
     setIsDraw
 }) => {
@@ -69,6 +70,9 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     const handleClick = (e: any, index: number): void => {
         e.preventDefault();
         e.stopPropagation();
+
+        setResetButtonPresent && setResetButtonPresent(true);
+
         if (board[index] || winner || isDraw) {
             return;
         }
@@ -197,6 +201,7 @@ const TicTacToeContainer: React.FC = () => {
     const [player1Stats, setPlayer1Stats] = useState({ currentPlayer: 'X', wins: 0, draws: 0 });
     const [player2Stats, setPlayer2Stats] = useState({ currentPlayer: 'O', wins: 0, draws: 0 });
     const windowSize = useWindowSize();
+    const [resetButtonPresent, setResetButtonPresent] = useState(false);
 
     const handleReset = useCallback(() => {
         setBoard(initialBoard);
@@ -242,13 +247,12 @@ const TicTacToeContainer: React.FC = () => {
     return (
         <div className="container mx-auto p-2 md:p-4">
             <div className="shadow-xl flex flex-col">
-                <div className="p-2 text-center">
-                    <h1 className="text-green text-xl md:text-xl lg:text-2xl font-bold mb-1">Tic Tac Toe</h1>
+                <div className="p-1 text-center">
+                    <h1 className="text-green text-xl md:text-md lg:text-lg font-bold mb-1">Tic Tac Toe</h1>
                     <div className="flex justify-center">
                         <TicTacToeIcon />
                     </div>
                     <div className="m-2">
-                        <label className="block text-xs font-medium">Select Board Size:</label>
                         <select
                             className="mt-1 text-sm block w-full p-2 text-black border border-gray-300"
                             onChange={(e) => {
@@ -288,14 +292,15 @@ const TicTacToeContainer: React.FC = () => {
                             winner={winner}
                             player1Symbol="X"
                             player2Symbol="O"
+                            setResetButtonPresent={setResetButtonPresent}
                         />
                     </div>
                 </div>
-                <div className="flex justify-center mt-2 mb-2">
+                {resetButtonPresent && <div className="flex justify-center mt-2 mb-2">
                     <button className="p-2 border-2 font-bold" onClick={handleReset}>
                         Reset
                     </button>
-                </div>
+                </div>}
             </div>
         </div>
     );

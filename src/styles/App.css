@@ -35,7 +35,9 @@
   transition: background-color 0.3s;
 }
 
-.game-button:hover {}
+.game-button:hover {
+  background-color: #f1f1f1;
+}
 
 .games-card-page {
   display: flex;

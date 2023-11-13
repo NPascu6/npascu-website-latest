@@ -7,6 +7,7 @@
 .light-theme #side-bar {
     background-color: rgb(247, 247, 247);
     color: #333333;
+    z-index: 1;
 }
 
 .light-theme table {

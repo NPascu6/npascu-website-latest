@@ -9,6 +9,7 @@ import { HashRouter } from 'react-router-dom';
 import store from './store/store';
 import './styles/darkTheme.css';
 import './styles/lightTheme.css';
+import './styles/snake.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

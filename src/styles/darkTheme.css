@@ -7,6 +7,7 @@
 .dark-theme #side-bar {
     background-color: #20242c;
     color: #ffffff;
+    z-index: 1;
 }
 
 .dark-theme table {

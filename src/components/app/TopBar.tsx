@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '../../store/reducers/appReducer';
 import Sidebar from './SideBar';
 import CommonDialog from '../common/CommonDialog';
-import LoginForm from '../game/LoginForm';
+import LoginForm from '../auth/LoginForm';
 
 const TopBar = () => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
