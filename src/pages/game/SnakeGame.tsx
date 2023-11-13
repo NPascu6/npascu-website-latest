@@ -212,6 +212,10 @@ const SnakeGame: React.FC = () => {
     }, [rows, cols, maxCols, maxRows]);
 
     useEffect(() => {
+        setObstacles(generateObstacles())
+    }, [minNumberOfObstacles, generateObstacles])
+
+    useEffect(() => {
         if (score > 5) {
             setSpeed(prev => prev - 1)
             setMinNumberOfFood(2)
@@ -241,14 +245,6 @@ const SnakeGame: React.FC = () => {
             setMaxNumberOfObstacles(30)
         }
     }, [score])
-
-    useEffect(() => {
-        setObstacles(generateObstacles())
-    }, [minNumberOfObstacles, maxNumberOfObstacles, generateObstacles])
-
-    useEffect(() => {
-        setFood(generateFood())
-    }, [minNumberOfFood, maxNumberOfFood, generateFood])
 
     return (
         <div className="max-w-screen-md mx-auto justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
