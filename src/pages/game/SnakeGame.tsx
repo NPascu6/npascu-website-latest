@@ -28,10 +28,7 @@ const SnakeGame: React.FC = () => {
         return { squareSize, newRows, newCols };
     }, [windowSize]);
 
-    const { squareSize, newRows, newCols } = calculateSizes();
-
-    const [rows, setRows] = useState(newRows);
-    const [cols, setCols] = useState(newCols);
+    const { squareSize, newRows, newCols } = calculateSizes()
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
     const [direction, setDirection] = useState("right");
 
@@ -47,32 +44,82 @@ const SnakeGame: React.FC = () => {
     }, [])
 
     const generateFood = useCallback((): SnakeSegment[] => {
-        const foodCount = getRandomNumber(minNumberOfFood, maxNumberOfFood) // Adjust the obstacle count as needed
+        const foodCount = getRandomNumber(minNumberOfFood, maxNumberOfFood);
         const food: SnakeSegment[] = [];
 
+        const isFoodInRestrictedArea = (x: number, y: number): boolean => {
+            // Check if the food is too close to the snake's head
+            const isNearSnakeHead =
+                Math.abs(snake[0].x - x) <= 10 && Math.abs(snake[0].y - y) <= 10;
+
+            return isNearSnakeHead;
+        };
+
+        const generateSingleFood = (): SnakeSegment => ({
+            x: Math.floor(Math.random() * newCols),
+            y: Math.floor(Math.random() * newRows),
+        });
+
+        const generateValidFood = (): SnakeSegment => {
+            const newFood = generateSingleFood();
+
+            if (isFoodInRestrictedArea(newFood.x, newFood.y)) {
+                // If the generated food is in the restricted area, try again
+                return generateValidFood();
+            }
+
+            return newFood;
+        };
+
         for (let i = 0; i < foodCount; i++) {
-            food.push({
-                x: Math.floor(Math.random() * cols),
-                y: Math.floor(Math.random() * rows),
-            });
+            food.push(generateValidFood());
         }
 
         return food;
-    }, [cols, rows, minNumberOfFood, maxNumberOfFood]);
+    }, [newCols, newRows, minNumberOfFood, maxNumberOfFood, snake]);
+
 
     const generateObstacles = useCallback((): SnakeSegment[] => {
-        const obstaclesCount = getRandomNumber(minNumberOfObstacles, maxNumberOfObstacles) // Adjust the obstacle count as needed
+        const obstaclesCount = getRandomNumber(minNumberOfObstacles, maxNumberOfObstacles);
         const obstacles: SnakeSegment[] = [];
 
+        const isObstacleInRestrictedArea = (x: number, y: number): boolean => {
+            // Check if the obstacle is too close to the snake's head
+            const isNearSnakeHead =
+                Math.abs(snake[0].x - x) <= 10 && Math.abs(snake[0].y - y) <= 10;
+
+            // Check if the obstacle is too close to any part of the snake
+            const isNearSnake = snake.some(
+                (segment) =>
+                    Math.abs(segment.x - x) <= 10 && Math.abs(segment.y - y) <= 10
+            );
+
+            return isNearSnakeHead || isNearSnake;
+        };
+
+        const generateSingleObstacle = (): SnakeSegment => ({
+            x: Math.floor(Math.random() * newCols),
+            y: Math.floor(Math.random() * newRows),
+        });
+
+        const generateValidObstacle = (): SnakeSegment => {
+            const newObstacle = generateSingleObstacle();
+
+            if (isObstacleInRestrictedArea(newObstacle.x, newObstacle.y)) {
+                // If the generated obstacle is in the restricted area, try again
+                return generateValidObstacle();
+            }
+
+            return newObstacle;
+        };
+
         for (let i = 0; i < obstaclesCount; i++) {
-            obstacles.push({
-                x: Math.floor(Math.random() * cols),
-                y: Math.floor(Math.random() * rows),
-            });
+            obstacles.push(generateValidObstacle());
         }
 
         return obstacles;
-    }, [cols, rows, minNumberOfObstacles, maxNumberOfObstacles]);
+    }, [newCols, newRows, minNumberOfObstacles, maxNumberOfObstacles, snake]);
+
 
     const [food, setFood] = useState<SnakeSegment[]>(generateFood());
     const [obstacles, setObstacles] = useState<SnakeSegment[]>(generateObstacles());
@@ -90,15 +137,12 @@ const SnakeGame: React.FC = () => {
 
     const resetGame = useCallback(() => {
         setIsRunning(false)
-        setIsPaused(true);
         setSnake([{ x: 0, y: 0 }]);
         setDirection("right");
         setScore(0);
-        setRows(newRows);
-        setCols(newCols);
         setObstacles(generateObstacles());
         setFood(generateFood());
-    }, [newRows, newCols, generateObstacles, generateFood]);
+    }, [generateObstacles, generateFood]);
 
     const calculateScore = useCallback((speed: number, difficultyModifier: number) => {
         const baseScore = 0;
@@ -149,16 +193,16 @@ const SnakeGame: React.FC = () => {
 
         switch (direction) {
             case "up":
-                newHead = { x: head.x, y: (head.y - 1 + rows) % rows };
+                newHead = { x: head.x, y: (head.y - 1 + newRows) % newRows };
                 break;
             case "down":
-                newHead = { x: head.x, y: (head.y + 1) % rows };
+                newHead = { x: head.x, y: (head.y + 1) % newRows };
                 break;
             case "left":
-                newHead = { x: (head.x - 1 + cols) % cols, y: head.y };
+                newHead = { x: (head.x - 1 + newCols) % newCols, y: head.y };
                 break;
             case "right":
-                newHead = { x: (head.x + 1) % cols, y: head.y };
+                newHead = { x: (head.x + 1) % newCols, y: head.y };
                 break;
             default:
                 newHead = head;
@@ -178,7 +222,7 @@ const SnakeGame: React.FC = () => {
         }
 
         handleFoodCollision(newSnake, newHead);
-    }, [direction, snake, cols, rows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
+    }, [direction, snake, newCols, newRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -189,27 +233,11 @@ const SnakeGame: React.FC = () => {
     }, [moveSnake, speed]);
 
     useEffect(() => {
-        // Handle adjustments when window size changes
-        const { newRows, newCols } = calculateSizes();
-        setRows(newRows);
-        setCols(newCols);
-        // Additional logic for handling adjustments can be added here
-
-    }, [windowSize, calculateSizes, isRunning, windowSize]);
-
-    useEffect(() => {
-        if (isRunning) {
-            const newRows = Math.floor((windowSize.innerHeight - 165) / squareSize);
-            setRows(newRows);
-        }
-    }, [isRunning, windowSize, squareSize])
-
-    useEffect(() => {
         if (maxCols && maxRows) return
-        if (!rows || !cols) return
-        setMaxRows(rows);
-        setMaxCols(cols);
-    }, [rows, cols, maxCols, maxRows]);
+        if (!newRows || !newCols) return
+        setMaxRows(newRows);
+        setMaxCols(newCols);
+    }, [newRows, newCols, maxCols, maxRows]);
 
     useEffect(() => {
         setObstacles(generateObstacles())
@@ -250,8 +278,8 @@ const SnakeGame: React.FC = () => {
         <div className="max-w-screen-md mx-auto justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
             <div className="mb-1 flex flex-col content-center items-center">{
                 <Board
-                    rows={rows}
-                    cols={cols}
+                    rows={newRows}
+                    cols={newCols}
                     snake={snake}
                     food={food}
                     obstacles={obstacles}
@@ -296,7 +324,7 @@ const SnakeGame: React.FC = () => {
                         step="-100"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}
-                        className="w-full p-0 ml-2 border border-gray-500 w-2/3 mb-2"
+                        className="h-10 w-full p-0 ml-2 border border-gray-500 w-2/3 mb-2"
                         style={{ flexGrow: 1 }}
                     />
                     <div style={{ bottom: -20 }} className="w-full absolute left-0 flex justify-between p-4">
