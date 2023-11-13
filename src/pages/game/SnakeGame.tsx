@@ -78,7 +78,6 @@ const SnakeGame: React.FC = () => {
         return food;
     }, [newCols, newRows, minNumberOfFood, maxNumberOfFood, snake]);
 
-
     const generateObstacles = useCallback((): SnakeSegment[] => {
         const obstaclesCount = getRandomNumber(minNumberOfObstacles, maxNumberOfObstacles);
         const obstacles: SnakeSegment[] = [];
@@ -91,7 +90,7 @@ const SnakeGame: React.FC = () => {
             // Check if the obstacle is too close to any part of the snake
             const isNearSnake = snake.some(
                 (segment) =>
-                    Math.abs(segment.x - x) <= 10 && Math.abs(segment.y - y) <= 10
+                    Math.abs(segment.x - x) <= 5 && Math.abs(segment.y - y) <= 5
             );
 
             return isNearSnakeHead || isNearSnake;
@@ -119,7 +118,6 @@ const SnakeGame: React.FC = () => {
 
         return obstacles;
     }, [newCols, newRows, minNumberOfObstacles, maxNumberOfObstacles, snake]);
-
 
     const [food, setFood] = useState<SnakeSegment[]>(generateFood());
     const [obstacles, setObstacles] = useState<SnakeSegment[]>(generateObstacles());
@@ -186,8 +184,9 @@ const SnakeGame: React.FC = () => {
     }, [isRunning, score, resetGame]);
 
     const moveSnake = useCallback(() => {
-        if (!isRunning) return
-        if (isPaused) return
+        if (!isRunning) return;
+        if (isPaused) return;
+
         const head = snake[0];
         let newHead: SnakeSegment;
 
@@ -208,6 +207,18 @@ const SnakeGame: React.FC = () => {
                 newHead = head;
         }
 
+        // Check if the new direction is opposite to the current direction
+        const isOppositeDirection =
+            (direction === "up" && newHead.y === (head.y + 1) % newRows) ||
+            (direction === "down" && newHead.y === (head.y - 1 + newRows) % newRows) ||
+            (direction === "left" && newHead.x === (head.x + 1) % newCols) ||
+            (direction === "right" && newHead.x === (head.x - 1 + newCols) % newCols);
+
+        if (isOppositeDirection) {
+            // If opposite direction, ignore the input to prevent immediate reversal
+            return;
+        }
+
         const newSnake = [newHead, ...snake.slice(0, -1)];
 
         const hasCollision = newSnake.slice(1).some(
@@ -223,6 +234,8 @@ const SnakeGame: React.FC = () => {
 
         handleFoodCollision(newSnake, newHead);
     }, [direction, snake, newCols, newRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
+
+
 
     useEffect(() => {
         const intervalId = setInterval(() => {
