@@ -20,10 +20,10 @@ const SnakeGame: React.FC = () => {
     const calculateSizes = useCallback(() => {
         const squareSize = Math.max(
             MIN_SQUARE_SIZE,
-            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 30))
+            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 22))
         );
         const newRows = Math.floor((windowSize.innerHeight - 210) / squareSize);
-        const newCols = Math.floor(windowSize.innerWidth / squareSize);
+        const newCols = Math.floor((windowSize.innerWidth) / squareSize);
 
         return { squareSize, newRows, newCols };
     }, [windowSize]);
@@ -38,13 +38,16 @@ const SnakeGame: React.FC = () => {
     const [speed, setSpeed] = useState(250);
     const [maxRows, setMaxRows] = useState<any>();
     const [maxCols, setMaxCols] = useState<any>();
-
+    const [minNumberOfFood, setMinNumberOfFood] = useState(1);
+    const [maxNumberOfFood, setMaxNumberOfFood] = useState(2);
+    const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(5);
+    const [maxNumberOfObstacles, setMaxNumberOfObstacles] = useState(10);
     const handleSetSpeed = useCallback((newSpeed: number) => {
         setSpeed(-newSpeed);
     }, [])
 
     const generateFood = useCallback((): SnakeSegment[] => {
-        const foodCount = getRandomNumber(2, 4) // Adjust the obstacle count as needed
+        const foodCount = getRandomNumber(minNumberOfFood, maxNumberOfFood) // Adjust the obstacle count as needed
         const food: SnakeSegment[] = [];
 
         for (let i = 0; i < foodCount; i++) {
@@ -55,10 +58,10 @@ const SnakeGame: React.FC = () => {
         }
 
         return food;
-    }, [cols, rows]);
+    }, [cols, rows, minNumberOfFood, maxNumberOfFood]);
 
     const generateObstacles = useCallback((): SnakeSegment[] => {
-        const obstaclesCount = getRandomNumber(20, 40) // Adjust the obstacle count as needed
+        const obstaclesCount = getRandomNumber(minNumberOfObstacles, maxNumberOfObstacles) // Adjust the obstacle count as needed
         const obstacles: SnakeSegment[] = [];
 
         for (let i = 0; i < obstaclesCount; i++) {
@@ -69,7 +72,7 @@ const SnakeGame: React.FC = () => {
         }
 
         return obstacles;
-    }, [cols, rows]);
+    }, [cols, rows, minNumberOfObstacles, maxNumberOfObstacles]);
 
     const [food, setFood] = useState<SnakeSegment[]>(generateFood());
     const [obstacles, setObstacles] = useState<SnakeSegment[]>(generateObstacles());
@@ -90,6 +93,52 @@ const SnakeGame: React.FC = () => {
         setFood(generateFood());
     }, [newRows, newCols, generateObstacles, generateFood]);
 
+    const calculateScore = useCallback((speed: number, difficultyModifier: number) => {
+        const baseScore = 0;
+        const speedScore = (1 / speed) * 300;
+        const sizeScore = difficultyModifier;
+
+        return baseScore + speedScore + sizeScore;
+    }, []);
+
+    const handleFoodCollision = useCallback(
+        (newSnake: SnakeSegment[], newHead: SnakeSegment) => {
+            const remainingFood = food.filter(
+                (f) => !(f.x === newHead.x && f.y === newHead.y)
+            );
+
+            if (remainingFood.length === food.length) {
+                // No food was eaten
+                setSnake(newSnake);
+            } else {
+                // Food was eaten
+                setFood(remainingFood);
+
+                // Check if all food is eaten
+                if (remainingFood.length === 0) {
+                    // Generate new food
+                    setFood(generateFood());
+
+                    // Increase score
+                    const newScore = calculateScore(speed, 1);
+                    setScore((prevScore) => prevScore + newScore);
+                } else {
+                    // Food was eaten but there are still remaining food
+                    setSnake([...newSnake, snake[snake.length - 1]]);
+                }
+            }
+        },
+        [food, snake, generateFood, speed, calculateScore]
+    );
+
+    const handleGameEnd = useCallback(() => {
+        setIsRunning(false);
+        if (isRunning) {
+            alert(`Game over! Your score is ${score.toFixed(2)}`);
+        }
+        resetGame();
+    }, [isRunning, score, resetGame]);
+
     const moveSnake = useCallback(() => {
         if (!isRunning || isPaused || !cols || !rows || !snake || !food || !obstacles) {
             return;
@@ -100,13 +149,13 @@ const SnakeGame: React.FC = () => {
 
         switch (direction) {
             case "up":
-                newHead = { x: head.x, y: head.y - 1 < 0 ? rows - 1 : head.y - 1 };
+                newHead = { x: head.x, y: (head.y - 1 + rows) % rows };
                 break;
             case "down":
                 newHead = { x: head.x, y: (head.y + 1) % rows };
                 break;
             case "left":
-                newHead = { x: head.x - 1 < 0 ? cols - 1 : head.x - 1, y: head.y };
+                newHead = { x: (head.x - 1 + cols) % cols, y: head.y };
                 break;
             case "right":
                 newHead = { x: (head.x + 1) % cols, y: head.y };
@@ -117,39 +166,23 @@ const SnakeGame: React.FC = () => {
 
         const newSnake = [newHead, ...snake.slice(0, -1)];
 
-        if (
-            newSnake.slice(1).some((segment) => segment.x === newHead.x && segment.y === newHead.y) ||
-            obstacles.some((o) => o.x === newHead.x && o.y === newHead.y)
-        ) {
-            setIsRunning(false);
-            if (isRunning) {
-                alert(`Game over! Your score is ${score.toFixed(2)}`);
-            }
-            resetGame();
+        const hasCollision = newSnake.slice(1).some(
+            (segment) => segment.x === newHead.x && segment.y === newHead.y
+        ) || obstacles.some(
+            (o) => o.x === newHead.x && o.y === newHead.y
+        );
+
+        if (hasCollision) {
+            handleGameEnd();
             return;
         }
 
-        if (food.some((f) => f.x === newHead.x && f.y === newHead.y)) {
-            setFood(generateFood());
-            setSnake([...newSnake, snake[snake.length - 1]]);
-            const calculateScore = (speed: number, boardSize: number) => {
-                const baseScore = 0;
-                const difficultyModifier = 0.0;
-                const speedScore = +((1 / speed) * 300);
-                const sizeScore = boardSize * difficultyModifier;;
-
-                return baseScore + speedScore + sizeScore;
-            };
-            setScore((prevScore) => +(prevScore + calculateScore(speed, 1)));
-        } else {
-            setSnake(newSnake);
-        }
-    }, [direction, food, snake, resetGame, isRunning, cols, rows, isPaused, generateFood, speed, score, obstacles]);
+        handleFoodCollision(newSnake, newHead);
+    }, [direction, food, snake, isRunning, cols, rows, isPaused, obstacles, handleFoodCollision, handleGameEnd]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
             moveSnake();
-            // Add score based on board size and speed
         }, speed);
 
         return () => clearInterval(intervalId);
@@ -177,6 +210,45 @@ const SnakeGame: React.FC = () => {
         setMaxRows(rows);
         setMaxCols(cols);
     }, [rows, cols, maxCols, maxRows]);
+
+    useEffect(() => {
+        if (score > 5) {
+            setSpeed(prev => prev - 1)
+            setMinNumberOfFood(2)
+            setMaxNumberOfFood(3)
+            setMinNumberOfObstacles(10)
+            setMaxNumberOfObstacles(15)
+        }
+        if (score > 10) {
+            setSpeed(prev => prev - 5)
+            setMinNumberOfFood(3)
+            setMaxNumberOfFood(4)
+            setMinNumberOfObstacles(15)
+            setMaxNumberOfObstacles(20)
+        }
+        if (score > 30) {
+            setSpeed(prev => prev - 10)
+            setMinNumberOfFood(4)
+            setMaxNumberOfFood(5)
+            setMinNumberOfObstacles(20)
+            setMaxNumberOfObstacles(25)
+        }
+        if (score > 50) {
+            setSpeed(prev => prev - 15)
+            setMinNumberOfFood(5)
+            setMaxNumberOfFood(6)
+            setMinNumberOfObstacles(25)
+            setMaxNumberOfObstacles(30)
+        }
+    }, [score])
+
+    useEffect(() => {
+        setObstacles(generateObstacles())
+    }, [minNumberOfObstacles, maxNumberOfObstacles, generateObstacles])
+
+    useEffect(() => {
+        setFood(generateFood())
+    }, [minNumberOfFood, maxNumberOfFood, generateFood])
 
     return (
         <div className="max-w-screen-md mx-auto p-1 justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>

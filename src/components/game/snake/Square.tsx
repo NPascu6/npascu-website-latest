@@ -1,5 +1,4 @@
-import React from "react";
-import { getRandomNumber } from "../../../util";
+import React, { useCallback } from "react";
 
 interface SquareProps {
     snake: { x: number; y: number }[];
@@ -11,25 +10,29 @@ interface SquareProps {
 }
 
 const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) => {
-
     const isSnakeHead =
         snake.length > 0 && snake[0].x === col && snake[0].y === row;
     const isSnakeBody = snake.slice(1).some((s) => s.x === col && s.y === row);
     const isFood = food.some((f) => f.x === col && f.y === row);
     const isWall = obstacles.some((o) => o.x === col && o.y === row);
+
+    const getBackgroundColor = useCallback(() => {
+        if (isSnakeHead) return "bg-green-400";
+        if (isSnakeBody) return "bg-green-600";
+        if (isFood) return "bg-orange-600";
+        if (isWall) return "bg-gray-800";
+        return "";
+    }, [isSnakeHead, isSnakeBody, isFood, isWall]);
+
     return (
         <div
             key={`${row}-${col}`}
-            className={`w-${squareSize} h-${squareSize} relative 
-                ${isSnakeHead ? "bg-green-400 rounded-full" :
-                    isSnakeBody ? "bg-green-600 rounded-full" :
-                        isFood ? "bg-orange-600 rounded-full" :
-                            "bg-gray-800"}`}
+            className={`w-${squareSize} h-${squareSize} shadow-xl relative rounded-full ${getBackgroundColor()}`}
             style={{
                 width: squareSize,
                 height: squareSize,
-                transition: "all 0.1s ease-in-out",
-
+                //add transition effect to mask redrawing of snake
+                transition: isSnakeHead ? 'none' : "background-color 0.2s ease-in-out"
             }}
         >
             {isFood && (
@@ -37,22 +40,12 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
                     style={{ width: "1.5em", height: "1.5em", display: "block" }}
                     className="rounded-full"
                 >
-                    {Array.from({ length: 5 }, (_, i) => (
-                        <div
-                            key={i}
-                            className="food"
-                            style={{
-                                top: getRandomNumber(30, 70) + "%",
-                                left: getRandomNumber(20, 70) + "%",
-                            }}
-                        />
-                    ))}
                 </div>
             )}
             {isWall && <div className="brick-pattern" />}
 
             {isSnakeHead && (
-                <div className="snake-eyes">
+                <div className="snake-eyes" style={{ transition: 'none' }}>
                     <div className="snake-eye" />
                     <div className="snake-eye" />
                     <div className="snake-tongue" />
