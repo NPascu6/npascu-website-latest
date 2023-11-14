@@ -8,14 +8,15 @@ interface SquareProps {
     col: number;
     row: number;
     squareSize: number;
+    fruitEmoji: string;
+    wallEmoji: string;
 }
 
-const fruitEmojis = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🥭", "🍑", "🍉"];
-const wallEmojis = ["💀", "☠️"];
 
-const getRandomEmoji = (emojis: string[]) => emojis[Math.floor(Math.random() * emojis.length)];
 
-const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) => {
+
+
+const Square = ({ snake, food, obstacles, col, row, squareSize, fruitEmoji, wallEmoji }: SquareProps) => {
     const isSnakeHead =
         useMemo(() => snake.length > 0 && snake[0].x === col && snake[0].y === row, [snake, row, col])
     const isSnakeBody = useMemo(() => snake.slice(1).some((s) => s.x === col && s.y === row), [col, row, snake])
@@ -24,8 +25,7 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
     const isFood = useMemo(() => food.some((f) => f.x === col && f.y === row), [col, row, food])
     const isWall = useMemo(() => obstacles.some((o) => o.x === col && o.y === row), [col, row, obstacles]);
 
-    const fruitEmoji = useMemo(() => getRandomEmoji(fruitEmojis), []);
-    const wallEmoji = useMemo(() => getRandomEmoji(wallEmojis), []);
+
 
     return (
         <div

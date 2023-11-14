@@ -1,9 +1,12 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React, { useRef, useState, useCallback, useEffect, useMemo } from "react";
 import Square from "./Square";
+
 interface SwipeState {
     startX: number;
     startY: number;
 }
+const fruitEmojis = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🥭", "🍑", "🍉"];
+const wallEmojis = ["💀", "☠️"];
 
 interface BoardProps {
     rows: number;
@@ -75,7 +78,7 @@ const Board = ({
         },
         [isRunning, direction, setDirection, startGame, stopGame, isPaused]
     );
-
+    const getRandomEmoji = useCallback((emojis: string[]) => emojis[Math.floor(Math.random() * emojis.length)], []);
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         event.preventDefault();
         const key = event.key.toLowerCase();
@@ -86,6 +89,9 @@ const Board = ({
         }
     },
         [handleKeyPress]);
+
+    const fruitEmoji = useMemo(() => getRandomEmoji(fruitEmojis), [getRandomEmoji]);
+    const wallEmoji = useMemo(() => getRandomEmoji(wallEmojis), [getRandomEmoji]);
 
     const handleSwipe = useCallback(
         (startX: number, startY: number, endX: number, endY: number) => {
@@ -212,7 +218,16 @@ const Board = ({
             {Array.from({ length: rows }).map((_, row) => (
                 <div key={row} className="flex align-center">
                     {Array.from({ length: cols }).map((_, col) =>
-                        <Square key={`${row}-${col}`} snake={snake} food={food} obstacles={obstacles} col={col} row={row} squareSize={squareSize} />
+                        <Square key={`${row}-${col}`}
+                            snake={snake}
+                            food={food}
+                            obstacles={obstacles}
+                            col={col}
+                            row={row}
+                            squareSize={squareSize}
+                            fruitEmoji={fruitEmoji}
+                            wallEmoji={wallEmoji}
+                        />
                     )}
                 </div>
             ))}
