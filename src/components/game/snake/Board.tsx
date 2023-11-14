@@ -215,9 +215,9 @@ const Board = ({
             }}
             className="border-2 border-gray-700 rounded-md"
         >
-            {Array.from({ length: rows }).map((_, row) => (
+            {Array.from({ length: rows }, (_, row) => (
                 <div key={row} className="flex align-center">
-                    {Array.from({ length: cols }).map((_, col) =>
+                    {Array.from({ length: cols }, (_, col) => (
                         <Square key={`${row}-${col}`}
                             snake={snake}
                             food={food}
@@ -228,7 +228,7 @@ const Board = ({
                             fruitEmoji={fruitEmoji}
                             wallEmoji={wallEmoji}
                         />
-                    )}
+                    ))}
                 </div>
             ))}
         </div>
