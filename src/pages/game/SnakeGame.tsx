@@ -196,7 +196,7 @@ const SnakeGame: React.FC = () => {
             } else {
                 // Food was eaten
                 setFood(remainingFood);
-                setSnake([newHead, ...newSnake]); // Update this line
+                setSnake((prevSnake) => [newHead, ...prevSnake.slice(0, -1)]);
 
                 // Check if all food is eaten
                 if (remainingFood.length === 0) {
