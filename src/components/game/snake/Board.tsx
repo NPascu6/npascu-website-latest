@@ -203,7 +203,7 @@ const Board = ({
         <div
             ref={boardRef}
             style={{
-                maxWidth: `${cols * (squareSize + 0.1)}px`
+                maxWidth: `${cols * (squareSize + 0.01)}px`
             }}
             className="bg-gray-800 border-2 border-gray-700 rounded-md"
         >
