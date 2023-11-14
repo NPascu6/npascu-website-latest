@@ -195,8 +195,14 @@ const SnakeGame: React.FC = () => {
                 setSnake(newSnake);
             } else {
                 // Food was eaten
+                const growthRate = 1; // You can adjust this value based on how much the snake should grow
+                const newSegments = Array.from({ length: growthRate }, (_, index) => ({
+                    x: newHead.x,
+                    y: newHead.y - index - 1, // Adjust the logic based on the desired growth direction
+                }));
+
                 setFood(remainingFood);
-                setSnake((prevSnake) => [newHead, ...prevSnake.slice(0, -1)]);
+                setSnake((prevSnake) => [...newSegments, ...prevSnake]); // Add new segments to the snake
 
                 // Check if all food is eaten
                 if (remainingFood.length === 0) {
@@ -204,13 +210,14 @@ const SnakeGame: React.FC = () => {
                     setFood(generateFood());
 
                     // Increase score
-                    const newScore = calculateScore(speed, 1, obstacles.length);
+                    const newScore = calculateScore(speed, growthRate, obstacles.length);
                     setScore((prevScore) => prevScore + newScore);
                 }
             }
         },
         [food, generateFood, speed, calculateScore]
     );
+
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
