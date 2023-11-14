@@ -352,7 +352,7 @@ const SnakeGame: React.FC = () => {
     }, [windowSize.innerHeight, windowSize.innerWidth, initialWindowSizes, generateFood, generateObstacles])
 
     return (
-        <div className="max-w-screen-md mx-auto justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
+        <div className="justify-center content-center items-center min-w-full" style={{ height: 'calc(100dvh - 4em)' }}>
             <div className="mb-1 flex flex-col content-center items-center">{
                 <Board
                     rows={localRows}
