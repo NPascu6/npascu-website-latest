@@ -180,7 +180,7 @@ const SnakeGame: React.FC = () => {
         const baseScore = 0;
         const speedScore = (0.25 / Math.abs(speed)) * 400;
         const difficultyModifier = 1 - (numberOfFood / 10 + obstacles / 20) / 2;
-        
+
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 

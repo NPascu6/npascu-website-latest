@@ -37,7 +37,6 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             style={{
                 width: squareSize,
                 height: squareSize,
-                transition: isSnakeHead ? 'none' : "background-color 0.1s ease-in-out"
             }}
 
         >
