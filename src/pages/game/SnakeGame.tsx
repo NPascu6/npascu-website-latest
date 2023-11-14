@@ -109,7 +109,7 @@ const SnakeGame: React.FC = () => {
 
             // Check if the food is too close to any obstacle
             const isNearObstacle = obstacles.some(
-                (o) => Math.abs(o.x - x) <= 2 && Math.abs(o.y - y) <= 2
+                (o) => Math.abs(o.x - x) <= 4 && Math.abs(o.y - y) <= 4
             );
 
             return isNearSnakeHead || isNearSnake || isNearObstacle;
@@ -159,6 +159,7 @@ const SnakeGame: React.FC = () => {
     const pauseGame = () => {
         setIsPaused(true)
     };
+
     const resumeGame = () => {
         setIsPaused(false)
     };
@@ -197,14 +198,10 @@ const SnakeGame: React.FC = () => {
             } else {
                 // Food was eaten
                 const growthRate = 1;
-                const newSegments = Array.from({ length: growthRate }, (_, index) => {
-                    // Adjust the code to set the color of the square behind the food
-                    // You can use a flag in the state to indicate this, for example, isBehindFood
-                    const isBehindFood = index === growthRate - 1;
+                const newSegments = Array.from({ length: growthRate }, (_) => {
                     return {
                         x: newHead.x,
                         y: newHead.y,
-                        isBehindFood,
                     };
                 });
 
