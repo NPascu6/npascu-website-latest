@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SnakeHeadIcon from '../../../assets/icons/Snake2'
 
 interface SquareProps {
@@ -15,8 +15,6 @@ const wallEmojis = ["💀", "☠️"];
 
 const getRandomEmoji = (emojis: string[]) => emojis[Math.floor(Math.random() * emojis.length)];
 
-// ... (existing imports)
-
 const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) => {
     const isSnakeHead =
         snake.length > 0 && snake[0].x === col && snake[0].y === row;
@@ -31,15 +29,6 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
         setFruitEmoji(getRandomEmoji(fruitEmojis));
     }, []); // Empty dependency array so that this only runs once
 
-    const calculateTransition = useCallback(() => {
-        if (isSnakeBody) {
-            const transitionDuration = 0.2; // Adjust as needed
-            return `transform ${transitionDuration}s ease-in-out, opacity ${transitionDuration}s ease-in-out`;
-        }
-
-        return "";
-    }, [isSnakeBody]);
-
     return (
         <div
             key={`${row}-${col}`}
@@ -47,8 +36,7 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             style={{
                 width: squareSize,
                 height: squareSize,
-                transition: isSnakeBody ? calculateTransition() : 'none',
-                opacity: isSnakeBody ? 0.7 : 1, // Adjust opacity as needed
+                opacity: isSnakeBody ? 0.7 : 1,
             }}
         >
             {isFood && (
