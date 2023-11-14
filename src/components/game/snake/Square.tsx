@@ -77,6 +77,7 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
                     style={{
                         width: squareSize,
                         height: squareSize,
+                        fontSize: "1.2em",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
@@ -88,11 +89,10 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             )}
             {isSnakeBody && (
                 <div style={{
-                    height: '1em',
-                    width: '1em',
+                    height: '0.8em',
+                    width: '0.8em',
                     borderRadius: '50%',
                     backgroundColor: "#6ea632",
-                    padding: '0.2em'
                 }}></div>
             )}
         </div>

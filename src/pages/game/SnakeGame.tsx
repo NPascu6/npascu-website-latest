@@ -20,7 +20,7 @@ const SnakeGame: React.FC = () => {
     const calculateSizes = useCallback(() => {
         const squareSize = Math.max(
             MIN_SQUARE_SIZE,
-            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 20))
+            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 22))
         );
 
         const newRows = Math.floor((windowSize.innerHeight - 220) / squareSize);
@@ -39,10 +39,10 @@ const SnakeGame: React.FC = () => {
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
     const [direction, setDirection] = useState("right");
 
-    const [speed, setSpeed] = useState(250);
+    const [speed, setSpeed] = useState(200);
     const [minNumberOfFood, setMinNumberOfFood] = useState(1);
-    const [maxNumberOfFood, setMaxNumberOfFood] = useState(2);
-    const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(5);
+    const [maxNumberOfFood, setMaxNumberOfFood] = useState(1);
+    const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(6);
     const [maxNumberOfObstacles, setMaxNumberOfObstacles] = useState(10);
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
@@ -56,12 +56,12 @@ const SnakeGame: React.FC = () => {
         const isObstacleInRestrictedArea = (x: number, y: number): boolean => {
             // Check if the obstacle is too close to the snake's head
             const isNearSnakeHead =
-                Math.abs(snake[0].x - x) <= 4 && Math.abs(snake[0].y - y) <= 5;
+                Math.abs(snake[0].x - x) <= 4 && Math.abs(snake[0].y - y) <= 3;
 
             // Check if the obstacle is too close to any part of the snake
             const isNearSnake = snake.some(
                 (segment) =>
-                    Math.abs(segment.x - x) <= 2 && Math.abs(segment.y - y) <= 5
+                    Math.abs(segment.x - x) <= 2 && Math.abs(segment.y - y) <= 2
             );
 
             return isNearSnakeHead || isNearSnake;
@@ -98,12 +98,12 @@ const SnakeGame: React.FC = () => {
         const isFoodInRestrictedArea = (x: number, y: number): boolean => {
             // Check if the food is too close to the snake's head
             const isNearSnakeHead =
-                Math.abs(snake[0].x - x) <= 4 && Math.abs(snake[0].y - y) <= 10;
+                Math.abs(snake[0].x - x) <= 4 && Math.abs(snake[0].y - y) <= 3;
 
             // Check if the food is too close to any part of the snake
             const isNearSnake = snake.some(
                 (segment) =>
-                    Math.abs(segment.x - x) <= 2 && Math.abs(segment.y - y) <= 2
+                    Math.abs(segment.x - x) <= 2 && Math.abs(segment.y - y) <= 1
             );
 
             // Check if the food is too close to any obstacle
@@ -178,8 +178,8 @@ const SnakeGame: React.FC = () => {
 
     const calculateScore = useCallback((speed: number, numberOfFood: number, obstacles: number) => {
         const baseScore = 0;
-        const speedScore = (0.25 / Math.abs(speed)) * 400;
-        const difficultyModifier = 1 - (numberOfFood / 10 + obstacles / 20) / 2;
+        const speedScore = (0.5 / Math.abs(speed)) * 400;
+        const difficultyModifier = 1 - (numberOfFood / 10 + obstacles / 10) / 2;
 
         return (baseScore + speedScore + difficultyModifier);
     }, []);
@@ -271,8 +271,9 @@ const SnakeGame: React.FC = () => {
         }
 
         handleFoodCollision(newSnake, head, obstacles, direction);
-    },
-        [direction, snake, localCols, localRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [direction, snake, isRunning, isPaused]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -284,33 +285,45 @@ const SnakeGame: React.FC = () => {
 
     useEffect(() => {
         if (score > 5) {
-            setSpeed(prev => prev - 1)
+            if (speed < 540) {
+                setSpeed(prev => prev - 5)
+            }
+            setMinNumberOfFood(1)
+            setMaxNumberOfFood(2)
+            setMinNumberOfObstacles(3)
+            setMaxNumberOfObstacles(5)
+        }
+        if (score > 10) {
+            if (speed < 540) {
+                setSpeed(prev => prev - 4)
+            }
+
             setMinNumberOfFood(2)
             setMaxNumberOfFood(3)
+            setMinNumberOfObstacles(5)
+            setMaxNumberOfObstacles(10)
+        }
+        if (score > 30) {
+            if (speed < 540) {
+                setSpeed(prev => prev - 3)
+            }
+
+            setMinNumberOfFood(3)
+            setMaxNumberOfFood(4)
             setMinNumberOfObstacles(10)
             setMaxNumberOfObstacles(15)
         }
-        if (score > 10) {
-            setSpeed(prev => prev - 5)
-            setMinNumberOfFood(3)
-            setMaxNumberOfFood(4)
-            setMinNumberOfObstacles(15)
-            setMaxNumberOfObstacles(20)
-        }
-        if (score > 30) {
-            setSpeed(prev => prev - 10)
-            setMinNumberOfFood(4)
-            setMaxNumberOfFood(5)
-            setMinNumberOfObstacles(20)
-            setMaxNumberOfObstacles(25)
-        }
         if (score > 50) {
-            setSpeed(prev => prev - 15)
-            setMinNumberOfFood(5)
+            if (speed < 540) {
+                setSpeed(prev => prev - 2)
+            }
+
+            setMinNumberOfFood(4)
             setMaxNumberOfFood(6)
-            setMinNumberOfObstacles(25)
+            setMinNumberOfObstacles(20)
             setMaxNumberOfObstacles(30)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [score])
 
     useEffect(() => {
@@ -341,7 +354,6 @@ const SnakeGame: React.FC = () => {
     const [initialWindowSizes, setInitialWindowSizes] = useState({ width: windowSize.innerWidth, height: windowSize.innerHeight })
 
     useEffect(() => {
-
         if (windowSize.innerWidth !== initialWindowSizes.width || windowSize.innerHeight !== initialWindowSizes.height) {
             setFood(generateFood())
             setObstacles(generateObstacles())
@@ -394,8 +406,8 @@ const SnakeGame: React.FC = () => {
                     <input
                         id="speed"
                         type="range"
-                        min="-400"
-                        max="10"
+                        min="-640"
+                        max="-80"
                         step="10"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}

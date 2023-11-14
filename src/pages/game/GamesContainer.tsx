@@ -4,6 +4,7 @@ import GamePage from './TicTacToeGame';
 import SnakeGame from './SnakeGame';
 import SnakeIcon from '../../assets/icons/Snake';
 import TicTacToeIcon from '../../assets/icons/TicTacToe';
+// import BrickOutGame from './BrickoutGame';
 
 const GameCard = () => {
     return (
@@ -26,6 +27,14 @@ const GameCard = () => {
                         </div>
                     </div>
                 </Link>
+                {/* <Link to="brick-out" className="flex items-center text-center game-button border shadow-xl p-10 m-8 w-full">
+                    <div className=" flex align-center justify-between items-center">
+                        <h2>Slider</h2>
+                        <div className='game-icons'>
+                            <img src="https://img.icons8.com/ios/50/000000/puzzle.png" />
+                        </div>
+                    </div>
+                </Link> */}
             </div>
             <Link to="/" className="back-button">
                 Back to Main
@@ -43,6 +52,7 @@ const GamesCardPage = () => {
                 {/* Child routes */}
                 <Route path="tic-tac-toe" element={<GamePage />} />
                 <Route path="snake" element={<SnakeGame />} />
+                {/* <Route path="brick-out" element={<BrickOutGame />} /> */}
                 {/* Add other nested routes as needed */}
             </Routes>
         </div>
