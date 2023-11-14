@@ -33,7 +33,7 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
     return (
         <div
             key={`${row}-${col}`}
-            className={`shadow-xl relative rounded-full`}
+            className={`flex items-center justify-center shadow-xl relative rounded-full`}
             style={{
                 width: squareSize,
                 height: squareSize,
@@ -87,20 +87,9 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
                     <SnakeHeadIcon />
                 </div>
             )}
-            {isSnakeBody && (
-                <div
-                    style={{
-                        width: squareSize,
-                        height: squareSize,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontSize: "1em",
-                    }}
-                >
-                    {/* Adjust the font size as needed */}
-                    <span role="img" aria-label="snake-body" className="snake-body" />
-                </div>)}
+            {
+                isSnakeBody && <div style={{ height: '100%', width: '100%', borderRadius: '35%', backgroundColor: "green", padding: '0.2em' }}></div>
+            }
         </div>
     );
 }
