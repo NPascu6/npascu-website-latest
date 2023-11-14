@@ -77,14 +77,14 @@ const Board = ({
     );
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
-            event.preventDefault();
-            const key = event.key.toLowerCase();
+        event.preventDefault();
+        const key = event.key.toLowerCase();
 
-            if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)) {
+        if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)) {
 
-                handleKeyPress(key.replace("arrow", ""));
-            }
-        },
+            handleKeyPress(key.replace("arrow", ""));
+        }
+    },
         [handleKeyPress]);
 
     const handleSwipe = useCallback(
@@ -207,11 +207,11 @@ const Board = ({
             style={{
                 maxWidth: `${cols * (squareSize + 0.01)}px`
             }}
-            className=" border-2 border-gray-700 rounded-md"
+            className="border-2 border-gray-700 rounded-md"
         >
-            {Array.from({ length: rows }, (_, row) => (
+            {Array.from({ length: rows }).map((_, row) => (
                 <div key={row} className="flex align-center">
-                    {Array.from({ length: cols }, (_, col) =>
+                    {Array.from({ length: cols }).map((_, col) =>
                         <Square key={`${row}-${col}`} snake={snake} food={food} obstacles={obstacles} col={col} row={row} squareSize={squareSize} />
                     )}
                 </div>
