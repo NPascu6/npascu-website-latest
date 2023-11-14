@@ -32,12 +32,3 @@ code {
     monospace;
 }
 
-.brick-pattern {
-  background: repeating-linear-gradient(45deg,
-      #808080,
-      #808080 10px,
-      #A9A9A9 10px,
-      #A9A9A9 20px);
-  width: 100%;
-  height: 100%;
-}

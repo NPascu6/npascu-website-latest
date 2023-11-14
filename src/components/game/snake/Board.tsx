@@ -209,7 +209,9 @@ const Board = ({
         >
             {Array.from({ length: rows }, (_, row) => (
                 <div key={row} className="flex align-center">
-                    {Array.from({ length: cols }, (_, col) => <Square key={col} snake={snake} food={food} obstacles={obstacles} col={col} row={row} squareSize={squareSize} />)}
+                    {Array.from({ length: cols }, (_, col) =>
+                        <Square key={`${row}-${col}`} snake={snake} food={food} obstacles={obstacles} col={col} row={row} squareSize={squareSize} />
+                    )}
                 </div>
             ))}
         </div>

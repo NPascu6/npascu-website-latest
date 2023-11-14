@@ -20,14 +20,14 @@ const SnakeGame: React.FC = () => {
     const calculateSizes = useCallback(() => {
         const squareSize = Math.max(
             MIN_SQUARE_SIZE,
-            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 20
-            ))
+            Math.min(MAX_SQUARE_SIZE, Math.floor(Math.min(windowSize.innerWidth, windowSize.innerHeight) / 20))
         );
+
         const newRows = Math.floor((windowSize.innerHeight - 220) / squareSize);
-        const newCols = Math.floor((windowSize.innerWidth) / squareSize);
+        const newCols = Math.floor(windowSize.innerWidth / squareSize);
 
         return { squareSize, newRows, newCols };
-    }, [windowSize.innerHeight, windowSize.innerWidth]);
+    }, [windowSize.innerWidth, windowSize.innerHeight]);
 
     const { squareSize, newRows, newCols } = calculateSizes()
     const [lastDirectionChangeTime, setLastDirectionChangeTime] = useState<number>(0);
@@ -51,41 +51,6 @@ const SnakeGame: React.FC = () => {
         setSpeed(-newSpeed);
     }, [])
 
-    const generateFood = useCallback((): SnakeSegment[] => {
-        const foodCount = getRandomNumber(minNumberOfFood, maxNumberOfFood);
-        const food: SnakeSegment[] = [];
-
-        const isFoodInRestrictedArea = (x: number, y: number): boolean => {
-            // Check if the food is too close to the snake's head
-            const isNearSnakeHead =
-                Math.abs(snake[0].x - x) <= 10 && Math.abs(snake[0].y - y) <= 10;
-
-            return isNearSnakeHead;
-        };
-
-        const generateSingleFood = (): SnakeSegment => ({
-            x: Math.floor(Math.random() * localCols),
-            y: Math.floor(Math.random() * localRows),
-        });
-
-        const generateValidFood = (): SnakeSegment => {
-            const newFood = generateSingleFood();
-
-            if (isFoodInRestrictedArea(newFood.x, newFood.y)) {
-                // If the generated food is in the restricted area, try again
-                return generateValidFood();
-            }
-
-            return newFood;
-        };
-
-        for (let i = 0; i < foodCount; i++) {
-            food.push(generateValidFood());
-        }
-
-        return food;
-    }, [localCols, localRows, minNumberOfFood, maxNumberOfFood, snake]);
-
     const generateObstacles = useCallback((): SnakeSegment[] => {
         const obstaclesCount = getRandomNumber(minNumberOfObstacles, maxNumberOfObstacles);
         const obstacles: SnakeSegment[] = [];
@@ -93,12 +58,12 @@ const SnakeGame: React.FC = () => {
         const isObstacleInRestrictedArea = (x: number, y: number): boolean => {
             // Check if the obstacle is too close to the snake's head
             const isNearSnakeHead =
-                Math.abs(snake[0].x - x) <= 5 && Math.abs(snake[0].y - y) <= 5;
+                Math.abs(snake[0].x - x) <= 4 && Math.abs(snake[0].y - y) <= 5;
 
             // Check if the obstacle is too close to any part of the snake
             const isNearSnake = snake.some(
                 (segment) =>
-                    Math.abs(segment.x - x) <= 5 && Math.abs(segment.y - y) <= 5
+                    Math.abs(segment.x - x) <= 2 && Math.abs(segment.y - y) <= 5
             );
 
             return isNearSnakeHead || isNearSnake;
@@ -126,9 +91,66 @@ const SnakeGame: React.FC = () => {
 
         return obstacles;
     }, [localCols, localRows, minNumberOfObstacles, maxNumberOfObstacles, snake]);
+    const [obstacles, setObstacles] = useState<SnakeSegment[]>(generateObstacles());
+
+    const generateFood = useCallback((): SnakeSegment[] => {
+        const foodCount = getRandomNumber(minNumberOfFood, maxNumberOfFood);
+        const food: SnakeSegment[] = [];
+
+        const isFoodInRestrictedArea = (x: number, y: number): boolean => {
+            // Check if the food is too close to the snake's head
+            const isNearSnakeHead =
+                Math.abs(snake[0].x - x) <= 4 && Math.abs(snake[0].y - y) <= 10;
+
+            // Check if the food is too close to any part of the snake
+            const isNearSnake = snake.some(
+                (segment) =>
+                    Math.abs(segment.x - x) <= 2 && Math.abs(segment.y - y) <= 2
+            );
+
+            // Check if the food is too close to any obstacle
+            const isNearObstacle = obstacles.some(
+                (o) => Math.abs(o.x - x) <= 2 && Math.abs(o.y - y) <= 2
+            );
+
+            return isNearSnakeHead || isNearSnake || isNearObstacle;
+        };
+
+        const generateSingleFood = (): SnakeSegment => ({
+            x: Math.floor(Math.random() * localCols),
+            y: Math.floor(Math.random() * localRows),
+        });
+
+        const attemptToGenerateFood = (): SnakeSegment | null => {
+            const newFood = generateSingleFood();
+
+            if (
+                !isFoodInRestrictedArea(newFood.x, newFood.y) &&
+                newFood.x < localCols &&
+                newFood.y < localRows
+            ) {
+                return newFood;
+            }
+
+            return null;
+        };
+
+        let attempts = 0;
+
+        while (food.length < foodCount && attempts < 1000) {
+            const newFood = attemptToGenerateFood();
+
+            if (newFood !== null) {
+                food.push(newFood);
+            }
+
+            attempts++;
+        }
+
+        return food;
+    }, [localCols, localRows, minNumberOfFood, maxNumberOfFood, snake, obstacles]);
 
     const [food, setFood] = useState<SnakeSegment[]>(generateFood());
-    const [obstacles, setObstacles] = useState<SnakeSegment[]>(generateObstacles());
 
     const startGame = () => {
         setIsRunning(true)
@@ -150,17 +172,21 @@ const SnakeGame: React.FC = () => {
         setScore(0);
         setObstacles(generateObstacles());
         setFood(generateFood());
+        setMaxNumberOfFood(2)
+        setMinNumberOfFood(1)
+        setMaxNumberOfObstacles(10)
+        setMinNumberOfObstacles(5)
     }, [generateObstacles, generateFood]);
 
-    const calculateScore = useCallback((speed: number, difficultyModifier: number, minNumberOfObstacles: number) => {
+    const calculateScore = useCallback((speed: number, numberOfFood: number, obstacles: number) => {
         const baseScore = 0;
-        const speedScore = (1 / Math.abs(speed)) * 400;
-        const sizeScore = difficultyModifier;
-
-        return (baseScore + speedScore + sizeScore + minNumberOfObstacles / 5) / 3;
+        const speedScore = (0.25 / Math.abs(speed)) * 400;
+        const difficultyModifier = 1 - (numberOfFood / 10 + obstacles / 20) / 2;
+        debugger
+        return (baseScore + speedScore + difficultyModifier);
     }, []);
 
-    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment) => {
+    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[]) => {
         const remainingFood = food.filter(
             (f) => !(f.x === newHead.x && f.y === newHead.y)
         );
@@ -179,11 +205,11 @@ const SnakeGame: React.FC = () => {
                 setFood(generateFood());
 
                 // Increase score
-                const newScore = calculateScore(speed, 1, minNumberOfObstacles);
+                const newScore = calculateScore(speed, 1, obstacles.length);
                 setScore((prevScore) => prevScore + newScore);
             }
         }
-    }, [food, generateFood, speed, calculateScore, minNumberOfObstacles]);
+    }, [food, generateFood, speed, calculateScore]);
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
@@ -247,7 +273,7 @@ const SnakeGame: React.FC = () => {
             return;
         }
 
-        handleFoodCollision(newSnake, newHead);
+        handleFoodCollision(newSnake, newHead, obstacles);
     }, [direction, snake, localCols, localRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused, lastDirectionChangeTime]);
 
     useEffect(() => {
