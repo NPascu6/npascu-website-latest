@@ -184,40 +184,56 @@ const SnakeGame: React.FC = () => {
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 
-    const handleFoodCollision = useCallback(
-        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[]) => {
-            const remainingFood = food.filter(
-                (f) => !(f.x === newHead.x && f.y === newHead.y)
-            );
+    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[], direction: string) => {
+        const remainingFood = food.filter(
+            (f) => !(f.x === newHead.x && f.y === newHead.y)
+        );
 
-            if (remainingFood.length === food.length) {
-                // No food was eaten
-                setSnake(newSnake);
-            } else {
-                // Food was eaten
-                const growthRate = 1; // You can adjust this value based on how much the snake should grow
-                const newSegments = Array.from({ length: growthRate }, (_, index) => ({
-                    x: newHead.x,
-                    y: newHead.y - index - 1, // Adjust the logic based on the desired growth direction
-                }));
-
-                setFood(remainingFood);
-                setSnake((prevSnake) => [...newSegments, ...prevSnake]); // Add new segments to the snake
-
-                // Check if all food is eaten
-                if (remainingFood.length === 0) {
-                    // Generate new food
-                    setFood(generateFood());
-
-                    // Increase score
-                    const newScore = calculateScore(speed, growthRate, obstacles.length);
-                    setScore((prevScore) => prevScore + newScore);
+        if (remainingFood.length === food.length) {
+            // No food was eaten
+            setSnake(newSnake);
+        } else {
+            // Food was eaten
+            const growthRate = 1; // You can adjust this value based on how much the snake should grow
+            const newSegments = Array.from({ length: growthRate }, (_, index) => {
+                if (direction === "left" || direction === "right") {
+                    let newX = newHead.x - index - 1;
+                    if (direction === "right") {
+                        newX = newHead.x + index + 1;
+                    }
+                    return {
+                        x: newX,
+                        y: newHead.y,
+                    };
                 }
+                else {
+                    let newY = newHead.y - index - 1;
+                    if (direction === "down") {
+                        newY = newHead.y + index + 1;
+                    }
+                    return {
+                        x: newHead.x,
+                        y: newY,
+                    };
+                }
+            });
+
+            setFood(remainingFood);
+            setSnake((prevSnake) => [...newSegments, ...prevSnake]);
+
+            // Check if all food is eaten
+            if (remainingFood.length === 0) {
+                // Generate new food
+                setFood(generateFood());
+
+                // Increase score
+                const newScore = calculateScore(speed, growthRate, obstacles.length);
+                setScore((prevScore) => prevScore + newScore);
             }
-        },
+        }
+    },
         [food, generateFood, speed, calculateScore]
     );
-
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
@@ -231,32 +247,33 @@ const SnakeGame: React.FC = () => {
         if (!isRunning) return;
         if (isPaused) return;
 
-        const head = snake[0];
-        let newHead: SnakeSegment;
+        const newSnake = [...snake];
+        const head = { ...newSnake[0] };
 
         switch (direction) {
             case "up":
-                newHead = { x: head.x, y: (head.y - 1 + localRows) % localRows };
+                head.y = (head.y - 1 + localRows) % localRows;
                 break;
             case "down":
-                newHead = { x: head.x, y: (head.y + 1) % localRows };
+                head.y = (head.y + 1) % localRows;
                 break;
             case "left":
-                newHead = { x: (head.x - 1 + localCols) % localCols, y: head.y };
+                head.x = (head.x - 1 + localCols) % localCols;
                 break;
             case "right":
-                newHead = { x: (head.x + 1) % localCols, y: head.y };
+                head.x = (head.x + 1) % localCols;
                 break;
             default:
-                newHead = head;
+                break;
         }
 
-        const newSnake = [newHead, ...snake.slice(0, -1)];
+        newSnake.unshift(head);
+        newSnake.pop();
 
         const hasCollision = newSnake.slice(1).some(
-            (segment) => segment.x === newHead.x && segment.y === newHead.y
+            (segment) => segment.x === head.x && segment.y === head.y
         ) || obstacles.some(
-            (o) => o.x === newHead.x && o.y === newHead.y
+            (o) => o.x === head.x && o.y === head.y
         );
 
         if (hasCollision) {
@@ -264,8 +281,9 @@ const SnakeGame: React.FC = () => {
             return;
         }
 
-        handleFoodCollision(newSnake, newHead, obstacles);
-    }, [direction, snake, localCols, localRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
+        handleFoodCollision(newSnake, head, obstacles, direction);
+    },
+        [direction, snake, localCols, localRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {

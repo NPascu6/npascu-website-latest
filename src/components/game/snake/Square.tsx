@@ -10,8 +10,8 @@ interface SquareProps {
     squareSize: number;
 }
 
-const fruitEmojis = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🥭", "🍑", "🍉", "🥝"];
-const wallEmojis = ["🧱", "🥅", "💀", "☠️", "⛈️"];
+const fruitEmojis = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🥭", "🍑", "🍉"];
+const wallEmojis = ["💀", "☠️"];
 
 const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) => {
     const isSnakeHead =
@@ -19,16 +19,13 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
     const isSnakeBody = snake.slice(1).some((s) => s.x === col && s.y === row);
     const isFood = food.some((f) => f.x === col && f.y === row);
     const isWall = obstacles.some((o) => o.x === col && o.y === row);
-    const [fruitEmojy, setFruitEmojy] = useState<any>();
-    const [wallEmojy, setWallEmojy] = useState<any>();
+    const [fruitEmoji, setFruitEmoji] = useState<string | null>(null);
+    const [wallEmoji, setWallEmoji] = useState<string | null>(null);
 
     useEffect(() => {
-        const randomIndexWalls = Math.floor(Math.random() * wallEmojis.length);
-        const randomIndex = Math.floor(Math.random() * fruitEmojis.length);
-        setWallEmojy(wallEmojis[randomIndexWalls]);
-        setFruitEmojy(fruitEmojis[randomIndex]);
-    }, []);
-
+        setWallEmoji(wallEmojis[Math.floor(Math.random() * wallEmojis.length)]);
+        setFruitEmoji(fruitEmojis[Math.floor(Math.random() * fruitEmojis.length)]);
+    }, [food.length]); // Update emoji when new food is generated
 
     return (
         <div
@@ -37,24 +34,26 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             style={{
                 width: squareSize,
                 height: squareSize,
+                transition: (isSnakeBody || isSnakeHead) ? 'all 1s ease-in-out' : 'none',
+                background: isSnakeHead ? 'transparent' : isSnakeBody ? '#6ea632' : isFood ? 'red' : isWall ? '#6ea632' : '',
             }}
-
         >
             {isFood && (
                 <div
                     style={{
                         width: squareSize,
                         height: squareSize,
+                        border: "1px solid transparent", // Set border color to transparent
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        fontSize: "1.3em",
-                        borderRadius: "50%",
-                        //background: "linear-gradient(45deg, #ff8c00, #ffebcd)",
+                        fontSize: "1.2em",
+                        borderRadius: "5px",
+                        color: 'white', // Set the text color to white for better visibility
                     }}
-                    className="food-pattern"
+                    className="food-pattern shadow-xl"
                 >
-                    {fruitEmojy}
+                    {fruitEmoji}
                 </div>
             )}
             {isWall && (
@@ -62,36 +61,44 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
                     style={{
                         width: squareSize,
                         height: squareSize,
-                        border: "1px solid black",
+                        border: "1px solid transparent", // Set border color to transparent
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         fontSize: "1.2em",
-                        borderRadius: "5px", // Adjust the border radius as needed
-                        // Add any additional styling for the wall emoji
+                        borderRadius: "5px",
                     }}
                     className="brick-pattern shadow-xl"
                 >
-                    {wallEmojy}
+                    {wallEmoji}
                 </div>
             )}
             {isSnakeHead && (
-                <div style={{
-                    width: squareSize,
-                    height: squareSize,
-                    marginTop: "4px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}>
+                <div
+                    style={{
+                        width: squareSize,
+                        height: squareSize,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "column",
+                    }}
+                >
                     <SnakeHeadIcon />
                 </div>
             )}
-            {
-                isSnakeBody && <div style={{ height: '100%', width: '100%', borderRadius: '35%', backgroundColor: "green", padding: '0.2em' }}></div>
-            }
+            {isSnakeBody && (
+                <div style={{
+                    height: '1em',
+                    width: '1em',
+                    borderRadius: '50%',
+                    backgroundColor: "#6ea632",
+                    padding: '0.2em'
+                }}></div>
+            )}
         </div>
     );
 }
 
 export default React.memo(Square);
+
