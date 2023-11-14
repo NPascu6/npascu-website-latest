@@ -37,10 +37,7 @@
 
 .food-pattern {
     border-radius: 25%;
-    border: 1px solid rgb(118, 185, 79);
-    background: repeating-radial-gradient(
-            rgb(77, 246, 243) 10px,
-            rgb(156, 105, 105) 20px);
+    background: transparent;
     width: 100%;
     height: 100%;
 }
