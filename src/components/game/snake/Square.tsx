@@ -47,7 +47,7 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             style={{
                 width: squareSize,
                 height: squareSize,
-                transition: calculateTransition(),
+                transition: isSnakeBody ? calculateTransition() : 'none',
                 opacity: isSnakeBody ? 0.7 : 1, // Adjust opacity as needed
             }}
         >
