@@ -336,31 +336,12 @@ const SnakeGame: React.FC = () => {
     }, [minNumberOfObstacles])
 
     useEffect(() => {
-        if (isRunning) {
-            const newRows = Math.floor((windowSize.innerHeight - 165) / squareSize);
-            setRows(newRows)
+        const newRows = Math.floor((windowSize.innerHeight - (isRunning ? 165 : 220)) / squareSize);
+        setRows(newRows);
 
-            const newCols = Math.floor((windowSize.innerWidth) / squareSize);
-            setCols(newCols)
-        }
-        else if (!isRunning) {
-            const newRows = Math.floor((windowSize.innerHeight - 220) / squareSize);
-            setRows(newRows)
-
-            const newCols = Math.floor((windowSize.innerWidth) / squareSize);
-            setCols(newCols)
-        }
-    }, [windowSize, squareSize, isPaused, isRunning])
-
-    const [initialWindowSizes, setInitialWindowSizes] = useState({ width: windowSize.innerWidth, height: windowSize.innerHeight })
-
-    useEffect(() => {
-        if (windowSize.innerWidth !== initialWindowSizes.width || windowSize.innerHeight !== initialWindowSizes.height) {
-            setFood(generateFood())
-            setObstacles(generateObstacles())
-            setInitialWindowSizes({ width: windowSize.innerWidth, height: windowSize.innerHeight })
-        }
-    }, [windowSize.innerHeight, windowSize.innerWidth, initialWindowSizes, generateFood, generateObstacles])
+        const newCols = Math.floor(windowSize.innerWidth / squareSize);
+        setCols(newCols);
+    }, [windowSize, squareSize, isPaused, isRunning]);
 
     return (
         <div className="justify-center content-center items-center" style={{ height: 'calc(100dvh - 4em)' }}>
