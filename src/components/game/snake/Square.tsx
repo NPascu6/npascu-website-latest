@@ -19,16 +19,13 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
     const isSnakeBody = snake.slice(1).some((s) => s.x === col && s.y === row);
     const isFood = food.some((f) => f.x === col && f.y === row);
     const isWall = obstacles.some((o) => o.x === col && o.y === row);
-    const [fruitEmojy, setFruitEmojy] = useState(fruitEmojis[0]);
-    const [wallEmojy, setWallEmojy] = useState(wallEmojis[0]);
+    const [fruitEmojy, setFruitEmojy] = useState<any>();
+    const [wallEmojy, setWallEmojy] = useState<any>();
 
     useEffect(() => {
-        const randomIndex = Math.floor(Math.random() * wallEmojis.length);
-        setWallEmojy(wallEmojis[randomIndex]);
-    }, []);
-
-    useEffect(() => {
+        const randomIndexWalls = Math.floor(Math.random() * wallEmojis.length);
         const randomIndex = Math.floor(Math.random() * fruitEmojis.length);
+        setWallEmojy(wallEmojis[randomIndexWalls]);
         setFruitEmojy(fruitEmojis[randomIndex]);
     }, []);
 
