@@ -180,34 +180,37 @@ const SnakeGame: React.FC = () => {
         const baseScore = 0;
         const speedScore = (0.25 / Math.abs(speed)) * 400;
         const difficultyModifier = 1 - (numberOfFood / 10 + obstacles / 20) / 2;
-        debugger
+        
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 
-    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[]) => {
-        const remainingFood = food.filter(
-            (f) => !(f.x === newHead.x && f.y === newHead.y)
-        );
+    const handleFoodCollision = useCallback(
+        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[]) => {
+            const remainingFood = food.filter(
+                (f) => !(f.x === newHead.x && f.y === newHead.y)
+            );
 
-        if (remainingFood.length === food.length) {
-            // No food was eaten
-            setSnake(newSnake);
-        } else {
-            // Food was eaten
-            setFood(remainingFood);
-            setSnake([...newSnake, newHead]);
+            if (remainingFood.length === food.length) {
+                // No food was eaten
+                setSnake(newSnake);
+            } else {
+                // Food was eaten
+                setFood(remainingFood);
+                setSnake([newHead, ...newSnake]); // Update this line
 
-            // Check if all food is eaten
-            if (remainingFood.length === 0) {
-                // Generate new food
-                setFood(generateFood());
+                // Check if all food is eaten
+                if (remainingFood.length === 0) {
+                    // Generate new food
+                    setFood(generateFood());
 
-                // Increase score
-                const newScore = calculateScore(speed, 1, obstacles.length);
-                setScore((prevScore) => prevScore + newScore);
+                    // Increase score
+                    const newScore = calculateScore(speed, 1, obstacles.length);
+                    setScore((prevScore) => prevScore + newScore);
+                }
             }
-        }
-    }, [food, generateFood, speed, calculateScore]);
+        },
+        [food, generateFood, speed, calculateScore]
+    );
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
