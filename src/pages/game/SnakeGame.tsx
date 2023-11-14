@@ -184,54 +184,43 @@ const SnakeGame: React.FC = () => {
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 
-    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[], direction: string) => {
-        const remainingFood = food.filter(
-            (f) => !(f.x === newHead.x && f.y === newHead.y)
-        );
+    const handleFoodCollision = useCallback(
+        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[], direction: string) => {
+            const remainingFood = food.filter(
+                (f) => !(f.x === newHead.x && f.y === newHead.y)
+            );
 
-        if (remainingFood.length === food.length) {
-            // No food was eaten
-            setSnake(newSnake);
-        } else {
-            // Food was eaten
-            const growthRate = 1; // You can adjust this value based on how much the snake should grow
-            const newSegments = Array.from({ length: growthRate }, (_, index) => {
-                if (direction === "left" || direction === "right") {
-                    let newX = newHead.x - index - 1;
-                    if (direction === "right") {
-                        newX = newHead.x + index + 1;
-                    }
-                    return {
-                        x: newX,
-                        y: newHead.y,
-                    };
-                }
-                else {
-                    let newY = newHead.y - index - 1;
-                    if (direction === "down") {
-                        newY = newHead.y + index + 1;
-                    }
+            if (remainingFood.length === food.length) {
+                // No food was eaten
+                setSnake(newSnake);
+            } else {
+                // Food was eaten
+                const growthRate = 1;
+                const newSegments = Array.from({ length: growthRate }, (_, index) => {
+                    // Adjust the code to set the color of the square behind the food
+                    // You can use a flag in the state to indicate this, for example, isBehindFood
+                    const isBehindFood = index === growthRate - 1;
                     return {
                         x: newHead.x,
-                        y: newY,
+                        y: newHead.y,
+                        isBehindFood,
                     };
+                });
+
+                setSnake((prevSnake) => [...newSegments, ...prevSnake]);
+                setFood(remainingFood);
+
+                // Check if all food is eaten
+                if (remainingFood.length === 0) {
+                    // Generate new food
+                    setFood(generateFood());
+
+                    // Increase score
+                    const newScore = calculateScore(speed, growthRate, obstacles.length);
+                    setScore((prevScore) => prevScore + newScore);
                 }
-            });
-
-            setFood(remainingFood);
-            setSnake((prevSnake) => [...newSegments, ...prevSnake]);
-
-            // Check if all food is eaten
-            if (remainingFood.length === 0) {
-                // Generate new food
-                setFood(generateFood());
-
-                // Increase score
-                const newScore = calculateScore(speed, growthRate, obstacles.length);
-                setScore((prevScore) => prevScore + newScore);
             }
-        }
-    },
+        },
         [food, generateFood, speed, calculateScore]
     );
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SnakeHeadIcon from '../../../assets/icons/Snake2'
 
 interface SquareProps {
@@ -13,6 +13,10 @@ interface SquareProps {
 const fruitEmojis = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🥭", "🍑", "🍉"];
 const wallEmojis = ["💀", "☠️"];
 
+const getRandomEmoji = (emojis: string[]) => emojis[Math.floor(Math.random() * emojis.length)];
+
+// ... (existing imports)
+
 const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) => {
     const isSnakeHead =
         snake.length > 0 && snake[0].x === col && snake[0].y === row;
@@ -23,9 +27,18 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
     const [wallEmoji, setWallEmoji] = useState<string | null>(null);
 
     useEffect(() => {
-        setWallEmoji(wallEmojis[Math.floor(Math.random() * wallEmojis.length)]);
-        setFruitEmoji(fruitEmojis[Math.floor(Math.random() * fruitEmojis.length)]);
-    }, [food.length]); // Update emoji when new food is generated
+        setWallEmoji(getRandomEmoji(wallEmojis));
+        setFruitEmoji(getRandomEmoji(fruitEmojis));
+    }, []); // Empty dependency array so that this only runs once
+
+    const calculateTransition = useCallback(() => {
+        if (isSnakeBody) {
+            const transitionDuration = 0.2; // Adjust as needed
+            return `transform ${transitionDuration}s ease-in-out, opacity ${transitionDuration}s ease-in-out`;
+        }
+
+        return "";
+    }, [isSnakeBody]);
 
     return (
         <div
@@ -34,8 +47,8 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             style={{
                 width: squareSize,
                 height: squareSize,
-                transition: (isSnakeBody || isSnakeHead) ? 'all 1s ease-in-out' : 'none',
-                background: isSnakeHead ? 'transparent' : isSnakeBody ? '#6ea632' : isFood ? 'red' : isWall ? '#6ea632' : '',
+                transition: calculateTransition(),
+                opacity: isSnakeBody ? 0.7 : 1, // Adjust opacity as needed
             }}
         >
             {isFood && (
@@ -43,13 +56,11 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
                     style={{
                         width: squareSize,
                         height: squareSize,
-                        border: "1px solid transparent", // Set border color to transparent
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
                         fontSize: "1.2em",
                         borderRadius: "5px",
-                        color: 'white', // Set the text color to white for better visibility
                     }}
                     className="food-pattern shadow-xl"
                 >
@@ -101,4 +112,5 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
 }
 
 export default React.memo(Square);
+
 
