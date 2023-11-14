@@ -16,7 +16,7 @@ const SnakeGame: React.FC = () => {
     const [score, setScore] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
-
+    const gameInfoStyles = useMemo(() => ({ height: 'calc(100dvh - 4em)' }), []);
     const calculateSizes = useCallback(() => {
         const squareSize = Math.max(
             MIN_SQUARE_SIZE,
@@ -45,7 +45,6 @@ const SnakeGame: React.FC = () => {
     const [maxNumberOfFood, setMaxNumberOfFood] = useState(1);
     const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(6);
     const [maxNumberOfObstacles, setMaxNumberOfObstacles] = useState(10);
-
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
         setSpeed(-newSpeed);
@@ -278,6 +277,8 @@ const SnakeGame: React.FC = () => {
     const lastFrameTimeRef = useRef<number>(0);
 
     const gameLoop = useCallback((timestamp: number) => {
+        if (!isRunning) return;
+        if (isPaused) return;
         if (!lastFrameTimeRef.current) {
             lastFrameTimeRef.current = timestamp;
         }
@@ -290,7 +291,7 @@ const SnakeGame: React.FC = () => {
         }
 
         animationFrameRef.current = requestAnimationFrame(gameLoop);
-    }, [moveSnake, speed]);
+    }, [moveSnake, speed, isRunning, isPaused]);
 
     useEffect(() => {
         if (isRunning && !isPaused) {
@@ -363,7 +364,7 @@ const SnakeGame: React.FC = () => {
     }, [windowSize, squareSize, isPaused, isRunning]);
 
     return (
-        <div className="justify-center content-center items-center" style={{ height: 'calc(100dvh - 4em)' }}>
+        <div className="justify-center content-center items-center" style={gameInfoStyles}>
             <div className="mb-1 flex flex-col content-center items-center">{
                 <Board
                     rows={localRows}

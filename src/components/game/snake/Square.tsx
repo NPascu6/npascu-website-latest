@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import SnakeHeadIcon from '../../../assets/icons/Snake2'
+
 
 interface SquareProps {
     snake: { x: number; y: number }[];
@@ -10,22 +10,19 @@ interface SquareProps {
     squareSize: number;
     fruitEmoji: string;
     wallEmoji: string;
+    HeadIcon: any;
 }
 
 
 
 
 
-const Square = ({ snake, food, obstacles, col, row, squareSize, fruitEmoji, wallEmoji }: SquareProps) => {
+const Square = ({ snake, food, obstacles, col, row, squareSize, fruitEmoji, wallEmoji, HeadIcon }: SquareProps) => {
     const isSnakeHead =
         useMemo(() => snake.length > 0 && snake[0].x === col && snake[0].y === row, [snake, row, col])
     const isSnakeBody = useMemo(() => snake.slice(1).some((s) => s.x === col && s.y === row), [col, row, snake])
-
-
     const isFood = useMemo(() => food.some((f) => f.x === col && f.y === row), [col, row, food])
     const isWall = useMemo(() => obstacles.some((o) => o.x === col && o.y === row), [col, row, obstacles]);
-
-
 
     return (
         <div
@@ -81,11 +78,11 @@ const Square = ({ snake, food, obstacles, col, row, squareSize, fruitEmoji, wall
                         flexDirection: "column",
                     }}
                 >
-                    <SnakeHeadIcon />
+                    <HeadIcon />
                 </div>
             )}
             {isSnakeBody && (
-                <div style={{
+                <div className="shadow-xl" style={{
                     height: '0.8em',
                     width: '0.8em',
                     borderRadius: '50%',

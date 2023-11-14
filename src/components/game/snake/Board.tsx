@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect, useMemo } from "react";
 import Square from "./Square";
+import SnakeHeadIcon from '../../../assets/icons/Snake2'
 
 interface SwipeState {
     startX: number;
@@ -227,6 +228,7 @@ const Board = ({
                             squareSize={squareSize}
                             fruitEmoji={fruitEmoji}
                             wallEmoji={wallEmoji}
+                            HeadIcon={SnakeHeadIcon}
                         />
                     ))}
                 </div>
