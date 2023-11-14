@@ -100,12 +100,15 @@ const Board = ({
             const absDeltaY = Math.abs(deltaY);
 
             if (absDeltaX > MIN_SWIPE_DISTANCE || absDeltaY > MIN_SWIPE_DISTANCE) {
-                if (absDeltaX > absDeltaY) {
-                    // Horizontal swipe
-                    setDirection(deltaX > 0 ? "right" : "left");
-                } else {
-                    // Vertical swipe
-                    setDirection(deltaY > 0 ? "down" : "up");
+                switch (true) {
+                    case absDeltaX > absDeltaY:
+                        setDirection(deltaX > 0 ? "right" : "left");
+                        break;
+                    case absDeltaY > absDeltaX:
+                        setDirection(deltaY > 0 ? "down" : "up");
+                        break;
+                    default:
+                        break;
                 }
             }
         },
@@ -218,4 +221,4 @@ const Board = ({
     );
 };
 
-export default Board;
+export default React.memo(Board);

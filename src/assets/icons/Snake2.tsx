@@ -1,3 +1,5 @@
+import React from "react";
+
 const Snake2 = () => {
     return <svg xmlns="http://www.w3.org/2000/svg"
         width="34" height="34"
@@ -10,4 +12,4 @@ const Snake2 = () => {
         <path fill="#586c1c" d="M24 40a1 1 0 0 1-.71-.29l-1-1a1 1 0 0 1 1.42-1.42l1 1a1 1 0 0 1 0 1.42A1 1 0 0 1 24 40zM40 40a1 1 0 0 1-.71-.29 1 1 0 0 1 0-1.42l1-1a1 1 0 0 1 1.42 1.42l-1 1A1 1 0 0 1 40 40z"></path></svg>
 }
 
-export default Snake2;
+export default React.memo(Snake2);

@@ -29,10 +29,11 @@ const SnakeGame: React.FC = () => {
         return { squareSize, newRows, newCols };
     }, [windowSize.innerWidth, windowSize.innerHeight]);
 
-    const { squareSize, newRows, newCols } = calculateSizes()
     const [lastDirectionChangeTime, setLastDirectionChangeTime] = useState<number>(0);
     const directionChangeDebounceTime = 100; // Adjust the debounce time as needed
 
+    const initialSizes = windowSize.innerWidth && windowSize.innerHeight ? calculateSizes() : { squareSize: 0, newRows: 0, newCols: 0 };
+    const { squareSize, newRows, newCols } = initialSizes;
     const [localRows, setRows] = useState<number>(newRows);
     const [localCols, setCols] = useState<number>(newCols);
 

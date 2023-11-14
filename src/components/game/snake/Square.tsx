@@ -104,10 +104,9 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
                 >
                     {/* Adjust the font size as needed */}
                     <span role="img" aria-label="snake-body" className="snake-body" />
-
                 </div>)}
         </div>
     );
 }
 
-export default Square;
+export default React.memo(Square);
