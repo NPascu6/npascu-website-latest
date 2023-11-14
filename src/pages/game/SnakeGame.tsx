@@ -29,9 +29,6 @@ const SnakeGame: React.FC = () => {
         return { squareSize, newRows, newCols };
     }, [windowSize.innerWidth, windowSize.innerHeight]);
 
-    const [lastDirectionChangeTime, setLastDirectionChangeTime] = useState<number>(0);
-    const directionChangeDebounceTime = 100; // Adjust the debounce time as needed
-
     const initialSizes = windowSize.innerWidth && windowSize.innerHeight ? calculateSizes() : { squareSize: 0, newRows: 0, newCols: 0 };
     const { squareSize, newRows, newCols } = initialSizes;
     const [localRows, setRows] = useState<number>(newRows);
@@ -227,9 +224,6 @@ const SnakeGame: React.FC = () => {
         const head = snake[0];
         let newHead: SnakeSegment;
 
-        const currentTime = Date.now();
-        const timeSinceLastDirectionChange = currentTime - lastDirectionChangeTime;
-
         switch (direction) {
             case "up":
                 newHead = { x: head.x, y: (head.y - 1 + localRows) % localRows };
@@ -247,20 +241,6 @@ const SnakeGame: React.FC = () => {
                 newHead = head;
         }
 
-        // Check if the new direction is opposite to the current direction
-        const isOppositeDirection =
-            (direction === "up" && newHead.y === (head.y + 1) % localRows) ||
-            (direction === "down" && newHead.y === (head.y - 1 + localRows) % localRows) ||
-            (direction === "left" && newHead.x === (head.x + 1) % localCols) ||
-            (direction === "right" && newHead.x === (head.x - 1 + localCols) % localCols);
-
-        if (isOppositeDirection || timeSinceLastDirectionChange < directionChangeDebounceTime) {
-            // If opposite direction or within the debounce time, ignore the input
-            return;
-        }
-
-        setLastDirectionChangeTime(currentTime);
-
         const newSnake = [newHead, ...snake.slice(0, -1)];
 
         const hasCollision = newSnake.slice(1).some(
@@ -275,7 +255,7 @@ const SnakeGame: React.FC = () => {
         }
 
         handleFoodCollision(newSnake, newHead, obstacles);
-    }, [direction, snake, localCols, localRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused, lastDirectionChangeTime]);
+    }, [direction, snake, localCols, localRows, obstacles, handleFoodCollision, handleGameEnd, isRunning, isPaused]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
