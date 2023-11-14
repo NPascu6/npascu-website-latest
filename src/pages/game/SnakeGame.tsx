@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
 import Board from "../../components/game/snake/Board";
 import { getRandomNumber } from "../../util";
@@ -45,6 +45,7 @@ const SnakeGame: React.FC = () => {
     const [maxNumberOfFood, setMaxNumberOfFood] = useState(1);
     const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(6);
     const [maxNumberOfObstacles, setMaxNumberOfObstacles] = useState(10);
+
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
         setSpeed(-newSpeed);
@@ -273,13 +274,34 @@ const SnakeGame: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [direction, snake, isRunning, isPaused]);
 
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            moveSnake();
-        }, speed);
+    const animationFrameRef = useRef<number>();
+    const lastFrameTimeRef = useRef<number>(0);
 
-        return () => clearInterval(intervalId);
+    const gameLoop = useCallback((timestamp: number) => {
+        if (!lastFrameTimeRef.current) {
+            lastFrameTimeRef.current = timestamp;
+        }
+
+        const elapsed = timestamp - lastFrameTimeRef.current;
+
+        if (elapsed > speed) {
+            moveSnake();
+            lastFrameTimeRef.current = timestamp - (elapsed % speed);
+        }
+
+        animationFrameRef.current = requestAnimationFrame(gameLoop);
     }, [moveSnake, speed]);
+
+    useEffect(() => {
+        if (isRunning && !isPaused) {
+            animationFrameRef.current = requestAnimationFrame(gameLoop);
+        }
+
+        return () => {
+            if (animationFrameRef.current)
+                cancelAnimationFrame(animationFrameRef.current);
+        };
+    }, [isRunning, isPaused, gameLoop]);
 
     useEffect(() => {
         if (score > 5) {
