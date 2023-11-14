@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import SnakeHeadIcon from '../../../assets/icons/Snake2'
 
 interface SquareProps {
@@ -17,17 +17,15 @@ const getRandomEmoji = (emojis: string[]) => emojis[Math.floor(Math.random() * e
 
 const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) => {
     const isSnakeHead =
-        snake.length > 0 && snake[0].x === col && snake[0].y === row;
-    const isSnakeBody = snake.slice(1).some((s) => s.x === col && s.y === row);
-    const isFood = food.some((f) => f.x === col && f.y === row);
-    const isWall = obstacles.some((o) => o.x === col && o.y === row);
-    const [fruitEmoji, setFruitEmoji] = useState<string | null>(null);
-    const [wallEmoji, setWallEmoji] = useState<string | null>(null);
+        useMemo(() => snake.length > 0 && snake[0].x === col && snake[0].y === row, [snake, row, col])
+    const isSnakeBody = useMemo(() => snake.slice(1).some((s) => s.x === col && s.y === row), [col, row, snake])
 
-    useEffect(() => {
-        setWallEmoji(getRandomEmoji(wallEmojis));
-        setFruitEmoji(getRandomEmoji(fruitEmojis));
-    }, []); // Empty dependency array so that this only runs once
+
+    const isFood = useMemo(() => food.some((f) => f.x === col && f.y === row), [col, row, food])
+    const isWall = useMemo(() => obstacles.some((o) => o.x === col && o.y === row), [col, row, obstacles]);
+
+    const fruitEmoji = useMemo(() => getRandomEmoji(fruitEmojis), []);
+    const wallEmoji = useMemo(() => getRandomEmoji(wallEmojis), []);
 
     return (
         <div
@@ -35,8 +33,7 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             className={`flex items-center justify-center shadow-xl relative rounded-full`}
             style={{
                 width: squareSize,
-                height: squareSize,
-                opacity: isSnakeBody ? 0.7 : 1,
+                height: squareSize
             }}
         >
             {isFood && (
@@ -75,9 +72,9 @@ const Square = ({ snake, food, obstacles, col, row, squareSize }: SquareProps) =
             {isSnakeHead && (
                 <div
                     style={{
-                        width: squareSize,
-                        height: squareSize,
-                        fontSize: "1.2em",
+                        width: squareSize + 10,
+                        height: squareSize + 10,
+                        fontSize: "1.4em",
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",

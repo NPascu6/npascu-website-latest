@@ -76,17 +76,16 @@ const Board = ({
         [isRunning, direction, setDirection, startGame, stopGame, isPaused]
     );
 
-    const handleKeyDown = useCallback(
-        (event: KeyboardEvent) => {
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+            event.preventDefault();
             const key = event.key.toLowerCase();
 
             if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)) {
-                event.preventDefault();
+
                 handleKeyPress(key.replace("arrow", ""));
             }
         },
-        [handleKeyPress]
-    );
+        [handleKeyPress]);
 
     const handleSwipe = useCallback(
         (startX: number, startY: number, endX: number, endY: number) => {

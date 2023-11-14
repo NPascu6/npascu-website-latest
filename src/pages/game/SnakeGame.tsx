@@ -29,7 +29,8 @@ const SnakeGame: React.FC = () => {
         return { squareSize, newRows, newCols };
     }, [windowSize.innerWidth, windowSize.innerHeight]);
 
-    const initialSizes = windowSize.innerWidth && windowSize.innerHeight ? calculateSizes() : { squareSize: 0, newRows: 0, newCols: 0 };
+    const initialSizes = useMemo(() => windowSize.innerWidth && windowSize.innerHeight ? calculateSizes() : { squareSize: 0, newRows: 0, newCols: 0 }, [calculateSizes, windowSize])
+
     const { squareSize, newRows, newCols } = initialSizes;
     const [localRows, setRows] = useState<number>(newRows);
     const [localCols, setCols] = useState<number>(newCols);
