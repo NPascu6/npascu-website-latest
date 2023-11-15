@@ -1,6 +1,5 @@
 import React from "react";
 
-
 interface SquareProps {
     food: { x: number; y: number }[];
     col: number;
@@ -25,35 +24,34 @@ const Square = ({
     squareSize,
     fruitEmoji,
     wallEmoji,
-    HeadIcon }: SquareProps) => {
+    HeadIcon,
+}: SquareProps) => {
+    const getBorderRadius = () => (isSnakeHead ? "50%" : "5px");
+    const getFontSize = () => (isSnakeHead ? "1.4em" : "1.2em");
+    const getBorder = () => (isWall ? "1px solid transparent" : "none");
 
     const dynamicStyles = {
         width: squareSize,
         height: squareSize,
-        borderRadius: isSnakeHead ? "50%" : "5px",
-        fontSize: isSnakeHead ? "1.4em" : "1.2em",
-        border: isWall ? "1px solid transparent" : "none",
+        borderRadius: getBorderRadius(),
+        fontSize: getFontSize(),
+        border: getBorder(),
     };
 
-    const dynamicClass = isWall
-        ? "brick-pattern"
-        : isFood
-            ? "food-pattern" :
-            "";
+    const dynamicClass = isWall ? "brick-pattern" : isFood ? "food-pattern" : "";
 
     return (
         <div
             key={`${row}-${col}`}
             className={`flex items-center justify-center shadow-xl relative rounded-full ${dynamicClass}`}
-            style={dynamicStyles}>
+            style={dynamicStyles}
+        >
             {isFood && fruitEmoji}
             {isWall && wallEmoji}
             {isSnakeHead && <HeadIcon />}
             {isSnakeBody && <div className="snake-body"></div>}
         </div>
     );
-}
+};
 
 export default React.memo(Square);
-
-

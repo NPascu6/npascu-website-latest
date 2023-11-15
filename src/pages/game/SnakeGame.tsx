@@ -314,15 +314,33 @@ const SnakeGame: React.FC = () => {
     }, [moveSnake, speed, isRunning, isPaused]);
 
     useEffect(() => {
+        let animationFrameId: number;
+        let lastTimestamp = 0;
+
+        const gameLoop = (timestamp: number) => {
+            if (!isRunning || isPaused) return;
+            if (!lastTimestamp) {
+                lastTimestamp = timestamp;
+            }
+
+            const elapsed = timestamp - lastTimestamp;
+
+            if (elapsed > Math.abs(speed)) {
+                moveSnake();
+                lastTimestamp = timestamp - (elapsed % Math.abs(speed));
+            }
+
+            animationFrameId = window.requestAnimationFrame(gameLoop);
+        };
+
         if (isRunning && !isPaused) {
-            animationFrameRef.current = requestAnimationFrame(gameLoop);
+            animationFrameId = window.requestAnimationFrame(gameLoop);
         }
 
         return () => {
-            if (animationFrameRef.current)
-                cancelAnimationFrame(animationFrameRef.current);
+            if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
         };
-    }, [isRunning, isPaused, gameLoop]);
+    }, [isRunning, isPaused, speed, moveSnake]);
 
     useEffect(() => {
         if (score > 5) {
@@ -431,7 +449,7 @@ const SnakeGame: React.FC = () => {
                         id="speed"
                         type="range"
                         min="-640"
-                        max="-80"
+                        max="-40"
                         step="10"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}
