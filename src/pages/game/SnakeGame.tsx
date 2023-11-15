@@ -211,7 +211,7 @@ const SnakeGame: React.FC = () => {
     }, []);
 
     const handleFoodCollision = useCallback(
-        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: SnakeSegment[]) => {
+        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any) => {
             const remainingFood = food.filter(
                 (f) => !(f.x === newHead.x && f.y === newHead.y)
             );
@@ -222,9 +222,9 @@ const SnakeGame: React.FC = () => {
             } else {
                 // Food was eaten
                 const growthRate = 1;
-                const newSegments = generateNewSegments(growthRate, newSnake[newSnake.length - 1]);
+                const newSegments = generateNewSegments(growthRate, newHead);
 
-                updateSnake([...newSnake, ...newSegments]);
+                updateSnake([...newSegments, ...newSnake]);
 
                 setFood(remainingFood);
 
@@ -253,45 +253,45 @@ const SnakeGame: React.FC = () => {
     const moveSnake = useCallback(() => {
         if (!isRunning || isPaused) return;
 
-        setSnake((prevSnake) => {
-            const newSnake = [...prevSnake];
-            const head = { ...newSnake[0] };
+        const newSnake = [...snake];
+        const head = { ...newSnake[0] };
 
-            switch (direction) {
-                case "up":
-                    head.y = (head.y - 1 + localRows) % localRows;
-                    break;
-                case "down":
-                    head.y = (head.y + 1) % localRows;
-                    break;
-                case "left":
-                    head.x = (head.x - 1 + localCols) % localCols;
-                    break;
-                case "right":
-                    head.x = (head.x + 1) % localCols;
-                    break;
-                default:
-                    break;
-            }
+        switch (direction) {
+            case "up":
+                head.y = (head.y - 1 + localRows) % localRows;
+                break;
+            case "down":
+                head.y = (head.y + 1) % localRows;
+                break;
+            case "left":
+                head.x = (head.x - 1 + localCols) % localCols;
+                break;
+            case "right":
+                head.x = (head.x + 1) % localCols;
+                break;
+            default:
+                break;
+        }
 
-            newSnake.unshift(head);
-            newSnake.pop();
+        newSnake.unshift(head);
+        newSnake.pop();
 
-            const hasCollision = newSnake.slice(1).some(
-                (segment) => segment.x === head.x && segment.y === head.y
-            ) || obstacles.some(
-                (o) => o.x === head.x && o.y === head.y
-            );
+        const hasCollision = newSnake.slice(1).some(
+            (segment) => segment.x === head.x && segment.y === head.y
+        ) || obstacles.some(
+            (o) => o.x === head.x && o.y === head.y
+        );
 
-            if (hasCollision) {
-                handleGameEnd();
-            } else {
-                handleFoodCollision(newSnake, head, obstacles);
-            }
+        if (hasCollision) {
+            handleGameEnd();
+            return;
+        }
 
-            return newSnake;
-        });
-    }, [direction, localRows, localCols, isRunning, isPaused, obstacles, handleGameEnd, handleFoodCollision]);
+        handleFoodCollision(newSnake, head, obstacles);
+
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [direction, snake, isRunning, isPaused]);
 
     const animationFrameRef = useRef<number>();
     const lastFrameTimeRef = useRef<number>(0);
@@ -314,33 +314,15 @@ const SnakeGame: React.FC = () => {
     }, [moveSnake, speed, isRunning, isPaused]);
 
     useEffect(() => {
-        let animationFrameId: number;
-        let lastTimestamp = 0;
-
-        const gameLoop = (timestamp: number) => {
-            if (!isRunning || isPaused) return;
-            if (!lastTimestamp) {
-                lastTimestamp = timestamp;
-            }
-
-            const elapsed = timestamp - lastTimestamp;
-
-            if (elapsed > Math.abs(speed)) {
-                moveSnake();
-                lastTimestamp = timestamp - (elapsed % Math.abs(speed));
-            }
-
-            animationFrameId = window.requestAnimationFrame(gameLoop);
-        };
-
         if (isRunning && !isPaused) {
-            animationFrameId = window.requestAnimationFrame(gameLoop);
+            animationFrameRef.current = requestAnimationFrame(gameLoop);
         }
 
         return () => {
-            if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
+            if (animationFrameRef.current)
+                cancelAnimationFrame(animationFrameRef.current);
         };
-    }, [isRunning, isPaused, speed, moveSnake]);
+    }, [isRunning, isPaused, gameLoop]);
 
     useEffect(() => {
         if (score > 5) {
@@ -449,7 +431,7 @@ const SnakeGame: React.FC = () => {
                         id="speed"
                         type="range"
                         min="-640"
-                        max="-40"
+                        max="-80"
                         step="10"
                         value={-speed}
                         onChange={(e) => handleSetSpeed(e.target.valueAsNumber)}

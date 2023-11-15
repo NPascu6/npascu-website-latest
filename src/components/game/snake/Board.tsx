@@ -83,18 +83,20 @@ const Board = ({
         const absDeltaY = Math.abs(deltaY);
 
         if (absDeltaX > MIN_SWIPE_DISTANCE || absDeltaY > MIN_SWIPE_DISTANCE) {
-            switch (true) {
-                case absDeltaX > absDeltaY:
-                    setDirection(deltaX > 0 ? "right" : "left");
-                    break;
-                case absDeltaY > absDeltaX:
-                    setDirection(deltaY > 0 ? "down" : "up");
-                    break;
-                default:
-                    break;
+            // Calculate the swipe direction
+            let newDirection = "";
+            if (absDeltaX > absDeltaY) {
+                newDirection = deltaX > 0 ? "right" : "left";
+            } else {
+                newDirection = deltaY > 0 ? "down" : "up";
+            }
+
+            // Prevent immediate change to the opposite direction
+            if (oppositeDirection(newDirection) !== direction) {
+                setDirection(newDirection);
             }
         }
-    }, [isRunning, isPaused, setDirection]);
+    }, [isRunning, isPaused, direction, setDirection]);
 
     const touchStart = useCallback((event: TouchEvent) => {
         const { touches } = event;
