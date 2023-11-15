@@ -6,6 +6,7 @@ interface SwipeState {
     startX: number;
     startY: number;
 }
+
 const fruitEmojis = ["🍎", "🍌", "🍇", "🍓", "🍊", "🍍", "🥭", "🍑", "🍉"];
 const wallEmojis = ["💀", "☠️"];
 
@@ -41,140 +42,108 @@ const Board = ({
     const boardRef = useRef<HTMLDivElement>(null);
     const [swipeState, setSwipeState] = useState<SwipeState | null>(null);
 
-    const handleKeyPress = useCallback(
-        (key: string) => {
+    const handleKeyPress = useCallback((key: string) => {
+        switch (key) {
+            case " ":
+                !isRunning || isPaused ? startGame() : stopGame();
+                break;
+            case "up":
+            case "down":
+            case "left":
+            case "right":
+                direction !== oppositeDirection(key) && setDirection(key);
+                break;
+            default:
+                break;
+        }
+    }, [direction, isPaused, isRunning, setDirection, startGame, stopGame]);
 
-            switch (key) {
-                case " ": {
-                    if (!isRunning || isPaused)
-                        startGame();
-                    else {
-                        stopGame();
-                    }
-                    break
-                }
-                case "up":
-                    if (direction !== "down") {
-                        setDirection(key);
-                    }
-                    break;
-                case "down":
-                    if (direction !== "up") {
-                        setDirection(key);
-                    }
-                    break;
-                case "left":
-                    if (direction !== "right") {
-                        setDirection(key);
-                    }
-                    break;
-                case "right":
-                    if (direction !== "left") {
-                        setDirection(key);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        },
-        [isRunning, direction, setDirection, startGame, stopGame, isPaused]
-    );
-    const getRandomEmoji = useCallback((emojis: string[]) => emojis[Math.floor(Math.random() * emojis.length)], []);
+    const getRandomEmoji = (emojis: string[]) => emojis[Math.floor(Math.random() * emojis.length)];
+
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
         event.preventDefault();
         const key = event.key.toLowerCase();
 
         if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)) {
-
             handleKeyPress(key.replace("arrow", ""));
         }
-    },
-        [handleKeyPress]);
+    }, [handleKeyPress]);
 
-    const fruitEmoji = useMemo(() => getRandomEmoji(fruitEmojis), [getRandomEmoji]);
-    const wallEmoji = useMemo(() => getRandomEmoji(wallEmojis), [getRandomEmoji]);
+    const fruitEmoji = useMemo(() => getRandomEmoji(fruitEmojis), []);
+    const wallEmoji = useMemo(() => getRandomEmoji(wallEmojis), []);
 
-    const handleSwipe = useCallback(
-        (startX: number, startY: number, endX: number, endY: number) => {
-            if (!isRunning || isPaused) return;
+    const handleSwipe = useCallback((startX: number, startY: number, endX: number, endY: number) => {
+        if (!isRunning || isPaused) return;
 
-            const MIN_SWIPE_DISTANCE = 20;
-            const deltaX = endX - startX;
-            const deltaY = endY - startY;
+        const MIN_SWIPE_DISTANCE = 20;
+        const deltaX = endX - startX;
+        const deltaY = endY - startY;
 
-            const absDeltaX = Math.abs(deltaX);
-            const absDeltaY = Math.abs(deltaY);
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
 
-            if (absDeltaX > MIN_SWIPE_DISTANCE || absDeltaY > MIN_SWIPE_DISTANCE) {
-                switch (true) {
-                    case absDeltaX > absDeltaY:
-                        setDirection(deltaX > 0 ? "right" : "left");
-                        break;
-                    case absDeltaY > absDeltaX:
-                        setDirection(deltaY > 0 ? "down" : "up");
-                        break;
-                    default:
-                        break;
-                }
+        if (absDeltaX > MIN_SWIPE_DISTANCE || absDeltaY > MIN_SWIPE_DISTANCE) {
+            switch (true) {
+                case absDeltaX > absDeltaY:
+                    setDirection(deltaX > 0 ? "right" : "left");
+                    break;
+                case absDeltaY > absDeltaX:
+                    setDirection(deltaY > 0 ? "down" : "up");
+                    break;
+                default:
+                    break;
             }
-        },
-        [setDirection, isRunning, isPaused]
-    );
+        }
+    }, [isRunning, isPaused, setDirection]);
 
-    const touchStart = useCallback(
-        (event: TouchEvent) => {
-            const { touches } = event;
+    const touchStart = useCallback((event: TouchEvent) => {
+        const { touches } = event;
 
-            if (touches.length === 1 && boardRef.current && isRunning) {
-                event.preventDefault();
-                const touch = touches[0];
-                const boardRect = boardRef.current.getBoundingClientRect();
-
-                if (
-                    touch.clientX >= boardRect.left &&
-                    touch.clientX <= boardRect.right &&
-                    touch.clientY >= boardRect.top &&
-                    touch.clientY <= boardRect.bottom
-                ) {
-                    setSwipeState({ startX: touch.clientX, startY: touch.clientY });
-                }
-            }
-        },
-        [setSwipeState, isRunning]
-    );
-
-    const touchEnd = useCallback(
-        (event: TouchEvent) => {
-            const { changedTouches } = event;
+        if (touches.length === 1 && boardRef.current && isRunning) {
+            event.preventDefault();
+            const touch = touches[0];
+            const boardRect = boardRef.current.getBoundingClientRect();
 
             if (
-                changedTouches.length === 1 &&
-                swipeState &&
-                boardRef.current &&
-                isRunning
+                touch.clientX >= boardRect.left &&
+                touch.clientX <= boardRect.right &&
+                touch.clientY >= boardRect.top &&
+                touch.clientY <= boardRect.bottom
             ) {
-                event.preventDefault();
-                const touch = changedTouches[0];
-                const boardRect = boardRef.current.getBoundingClientRect();
-
-                if (
-                    touch.clientX >= boardRect.left &&
-                    touch.clientX <= boardRect.right &&
-                    touch.clientY >= boardRect.top &&
-                    touch.clientY <= boardRect.bottom
-                ) {
-                    handleSwipe(
-                        swipeState.startX,
-                        swipeState.startY,
-                        touch.clientX,
-                        touch.clientY
-                    );
-                    setSwipeState(null);
-                }
+                setSwipeState({ startX: touch.clientX, startY: touch.clientY });
             }
-        },
-        [handleSwipe, swipeState, isRunning]
-    );
+        }
+    }, [isRunning]);
+
+    const touchEnd = useCallback((event: TouchEvent) => {
+        const { changedTouches } = event;
+
+        if (
+            changedTouches.length === 1 &&
+            swipeState &&
+            boardRef.current &&
+            isRunning
+        ) {
+            event.preventDefault();
+            const touch = changedTouches[0];
+            const boardRect = boardRef.current.getBoundingClientRect();
+
+            if (
+                touch.clientX >= boardRect.left &&
+                touch.clientX <= boardRect.right &&
+                touch.clientY >= boardRect.top &&
+                touch.clientY <= boardRect.bottom
+            ) {
+                handleSwipe(
+                    swipeState.startX,
+                    swipeState.startY,
+                    touch.clientX,
+                    touch.clientY
+                );
+                setSwipeState(null);
+            }
+        }
+    }, [handleSwipe, swipeState, isRunning]);
 
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
@@ -208,22 +177,26 @@ const Board = ({
         };
     }, [touchEnd, touchStart, handleSwipe, swipeState, isRunning]);
 
+    const styles = {
+        maxWidth: `${cols * (squareSize + 0.01)}px`,
+    };
+
     return (
         <div
             ref={boardRef}
-            style={{
-                maxWidth: `${cols * (squareSize + 0.01)}px`
-            }}
+            style={styles}
             className="border-2 border-gray-700 rounded-md"
         >
             {Array.from({ length: rows }, (_, row) => (
                 <div key={row} className="flex align-center">
                     {Array.from({ length: cols }, (_, col) => (
                         <Square key={`${row}-${col}`}
-                            snake={snake}
                             food={food}
-                            obstacles={obstacles}
                             col={col}
+                            isFood={food.some((f) => f.x === col && f.y === row)}
+                            isWall={obstacles.some((o) => o.x === col && o.y === row)}
+                            isSnakeHead={snake.length > 0 && snake[0].x === col && snake[0].y === row}
+                            isSnakeBody={snake.slice(1).some((s) => s.x === col && s.y === row)}
                             row={row}
                             squareSize={squareSize}
                             fruitEmoji={fruitEmoji}
@@ -235,6 +208,22 @@ const Board = ({
             ))}
         </div>
     );
+};
+
+// Helper function to get opposite direction
+const oppositeDirection = (dir: string) => {
+    switch (dir) {
+        case "up":
+            return "down";
+        case "down":
+            return "up";
+        case "left":
+            return "right";
+        case "right":
+            return "left";
+        default:
+            return "";
+    }
 };
 
 export default React.memo(Board);

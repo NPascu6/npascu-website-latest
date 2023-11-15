@@ -11,6 +11,8 @@ interface SnakeSegment {
 const MIN_SQUARE_SIZE = 10;
 const MAX_SQUARE_SIZE = 40;
 
+
+
 const SnakeGame: React.FC = () => {
     const windowSize = useWindowSize();
     const [score, setScore] = useState(0);
@@ -38,13 +40,24 @@ const SnakeGame: React.FC = () => {
     const size = useMemo(() => squareSize, [squareSize])
 
     const [snake, setSnake] = useState<SnakeSegment[]>([{ x: 0, y: 0 }]);
+
+    const updateSnake = useCallback(
+        (newSnake: SnakeSegment[]) => {
+            setSnake((prevSnake) => {
+                // Update snake logic here, if needed
+                return newSnake;
+            });
+        },
+        []
+    );
+
     const [direction, setDirection] = useState("right");
 
     const [speed, setSpeed] = useState(200);
     const [minNumberOfFood, setMinNumberOfFood] = useState(1);
     const [maxNumberOfFood, setMaxNumberOfFood] = useState(1);
-    const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(6);
-    const [maxNumberOfObstacles, setMaxNumberOfObstacles] = useState(10);
+    const [minNumberOfObstacles, setMinNumberOfObstacles] = useState(3);
+    const [maxNumberOfObstacles, setMaxNumberOfObstacles] = useState(5);
 
     const handleSetSpeed = useCallback((newSpeed: number) => {
         setSpeed(-newSpeed);
@@ -170,12 +183,12 @@ const SnakeGame: React.FC = () => {
         setSnake([{ x: 0, y: 0 }]);
         setDirection("right");
         setScore(0);
+        setMaxNumberOfFood(1)
+        setMinNumberOfFood(1)
+        setMaxNumberOfObstacles(5)
+        setMinNumberOfObstacles(3)
         setObstacles(generateObstacles());
         setFood(generateFood());
-        setMaxNumberOfFood(2)
-        setMinNumberOfFood(1)
-        setMaxNumberOfObstacles(10)
-        setMinNumberOfObstacles(5)
     }, [generateObstacles, generateFood]);
 
     const calculateScore = useCallback((speed: number, numberOfFood: number, obstacles: number) => {
@@ -186,26 +199,32 @@ const SnakeGame: React.FC = () => {
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 
+    const generateNewSegments = useCallback((count: number, position: any) => {
+        return Array.from({ length: count }, (_, index) => {
+            return {
+                x: position.x,
+                y: position.y - index,
+            };
+        });
+    }, []);
+
+
     const handleFoodCollision = useCallback(
-        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any[], direction: string) => {
+        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any) => {
             const remainingFood = food.filter(
                 (f) => !(f.x === newHead.x && f.y === newHead.y)
             );
 
             if (remainingFood.length === food.length) {
                 // No food was eaten
-                setSnake(newSnake);
+                updateSnake(newSnake);
             } else {
                 // Food was eaten
                 const growthRate = 1;
-                const newSegments = Array.from({ length: growthRate }, (_) => {
-                    return {
-                        x: newHead.x,
-                        y: newHead.y,
-                    };
-                });
+                const newSegments = generateNewSegments(growthRate, newHead);
 
-                setSnake((prevSnake) => [...newSegments, ...prevSnake]);
+                updateSnake([...newSegments, ...newSnake]);
+
                 setFood(remainingFood);
 
                 // Check if all food is eaten
@@ -219,7 +238,7 @@ const SnakeGame: React.FC = () => {
                 }
             }
         },
-        [food, generateFood, speed, calculateScore]
+        [food, generateFood, speed, calculateScore, updateSnake, generateNewSegments]
     );
 
     const handleGameEnd = useCallback(() => {
@@ -231,8 +250,7 @@ const SnakeGame: React.FC = () => {
     }, [isRunning, score, resetGame]);
 
     const moveSnake = useCallback(() => {
-        if (!isRunning) return;
-        if (isPaused) return;
+        if (!isRunning || isPaused) return;
 
         const newSnake = [...snake];
         const head = { ...newSnake[0] };
@@ -268,7 +286,8 @@ const SnakeGame: React.FC = () => {
             return;
         }
 
-        handleFoodCollision(newSnake, head, obstacles, direction);
+        handleFoodCollision(newSnake, head, obstacles);
+
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [direction, snake, isRunning, isPaused]);
@@ -363,13 +382,15 @@ const SnakeGame: React.FC = () => {
         setCols(newCols);
     }, [windowSize, squareSize, isPaused, isRunning]);
 
+    const memoizedSnake = useMemo(() => snake, [snake]);
+
     return (
         <div className="justify-center content-center items-center" style={gameInfoStyles}>
             <div className="mb-1 flex flex-col content-center items-center">{
                 <Board
                     rows={localRows}
                     cols={localCols}
-                    snake={snake}
+                    snake={memoizedSnake}
                     food={food}
                     obstacles={obstacles}
                     squareSize={size}
