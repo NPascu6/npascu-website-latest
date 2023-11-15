@@ -250,45 +250,46 @@ const SnakeGame: React.FC = () => {
     const moveSnake = useCallback(() => {
         if (!isRunning || isPaused) return;
 
-        const newSnake = [...snake];
-        const head = { ...newSnake[0] };
+        setSnake((prevSnake) => {
+            const newSnake = [...prevSnake];
+            const head = { ...newSnake[0] };
 
-        switch (direction) {
-            case "up":
-                head.y = (head.y - 1 + localRows) % localRows;
-                break;
-            case "down":
-                head.y = (head.y + 1) % localRows;
-                break;
-            case "left":
-                head.x = (head.x - 1 + localCols) % localCols;
-                break;
-            case "right":
-                head.x = (head.x + 1) % localCols;
-                break;
-            default:
-                break;
-        }
+            switch (direction) {
+                case "up":
+                    head.y = (head.y - 1 + localRows) % localRows;
+                    break;
+                case "down":
+                    head.y = (head.y + 1) % localRows;
+                    break;
+                case "left":
+                    head.x = (head.x - 1 + localCols) % localCols;
+                    break;
+                case "right":
+                    head.x = (head.x + 1) % localCols;
+                    break;
+                default:
+                    break;
+            }
 
-        newSnake.unshift(head);
-        newSnake.pop();
+            newSnake.unshift(head);
+            newSnake.pop();
 
-        const hasCollision = newSnake.slice(1).some(
-            (segment) => segment.x === head.x && segment.y === head.y
-        ) || obstacles.some(
-            (o) => o.x === head.x && o.y === head.y
-        );
+            const hasCollision = newSnake.slice(1).some(
+                (segment) => segment.x === head.x && segment.y === head.y
+            ) || obstacles.some(
+                (o) => o.x === head.x && o.y === head.y
+            );
 
-        if (hasCollision) {
-            handleGameEnd();
-            return;
-        }
+            if (hasCollision) {
+                handleGameEnd();
+            } else {
+                handleFoodCollision(newSnake, head, obstacles);
+            }
 
-        handleFoodCollision(newSnake, head, obstacles);
+            return newSnake;
+        });
+    }, [direction, localRows, localCols, isRunning, isPaused, obstacles, handleGameEnd, handleFoodCollision]);
 
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [direction, snake, isRunning, isPaused]);
 
     const animationFrameRef = useRef<number>();
     const lastFrameTimeRef = useRef<number>(0);
