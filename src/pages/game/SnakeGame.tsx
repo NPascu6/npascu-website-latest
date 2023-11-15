@@ -210,34 +210,37 @@ const SnakeGame: React.FC = () => {
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 
-    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any) => {
-        const remainingFood = food.filter(
-            (f) => !(f.x === newHead.x && f.y === newHead.y)
-        );
+    const handleFoodCollision = useCallback(
+        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: SnakeSegment[]) => {
+            const remainingFood = food.filter(
+                (f) => !(f.x === newHead.x && f.y === newHead.y)
+            );
 
-        if (remainingFood.length === food.length) {
-            // No food was eaten
-            updateSnake(newSnake);
-        } else {
-            // Food was eaten
-            const growthRate = 1;
-            const newSegments = generateNewSegments(growthRate, newHead);
+            if (remainingFood.length === food.length) {
+                // No food was eaten
+                updateSnake(newSnake);
+            } else {
+                // Food was eaten
+                const growthRate = 1;
+                const newSegments = generateNewSegments(growthRate, newHead);
 
-            updateSnake([...newSegments, ...newSnake]);
+                updateSnake([...newSegments, ...newSnake]);
 
-            setFood(remainingFood);
+                setFood(remainingFood);
 
-            // Check if all food is eaten
-            if (remainingFood.length === 0) {
-                // Generate new food
-                setFood(generateFood());
+                // Check if all food is eaten
+                if (remainingFood.length === 0) {
+                    // Generate new food
+                    setFood(generateFood());
 
-                // Increase score
-                const newScore = calculateScore(speed, growthRate, obstacles.length);
-                setScore((prevScore) => prevScore + newScore);
+                    // Increase score
+                    const newScore = calculateScore(speed, growthRate, obstacles.length);
+                    setScore((prevScore) => prevScore + newScore);
+                }
             }
-        }
-    }, [food, generateFood, speed, calculateScore, updateSnake, generateNewSegments]);
+        },
+        [food, generateFood, speed, calculateScore, updateSnake, generateNewSegments]
+    );
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
@@ -289,7 +292,6 @@ const SnakeGame: React.FC = () => {
             return newSnake;
         });
     }, [direction, localRows, localCols, isRunning, isPaused, obstacles, handleGameEnd, handleFoodCollision]);
-
 
     const animationFrameRef = useRef<number>();
     const lastFrameTimeRef = useRef<number>(0);
