@@ -222,9 +222,9 @@ const SnakeGame: React.FC = () => {
             } else {
                 // Food was eaten
                 const growthRate = 1;
-                const newSegments = generateNewSegments(growthRate, newHead);
+                const newSegments = generateNewSegments(growthRate, newSnake[newSnake.length - 1]);
 
-                updateSnake([...newSegments, ...newSnake]);
+                updateSnake([...newSnake, ...newSegments]);
 
                 setFood(remainingFood);
 
