@@ -11,8 +11,6 @@ interface SnakeSegment {
 const MIN_SQUARE_SIZE = 10;
 const MAX_SQUARE_SIZE = 40;
 
-
-
 const SnakeGame: React.FC = () => {
     const windowSize = useWindowSize();
     const [score, setScore] = useState(0);
@@ -62,6 +60,18 @@ const SnakeGame: React.FC = () => {
     const handleSetSpeed = useCallback((newSpeed: number) => {
         setSpeed(-newSpeed);
     }, [])
+
+    const generateNewSegments = useCallback((count: number, position: any) => {
+        const newSegments = [];
+        let currentSegment = position;
+
+        for (let i = 0; i < count; i++) {
+            newSegments.push({ x: currentSegment.x, y: currentSegment.y - i });
+            currentSegment = newSegments[i];
+        }
+
+        return newSegments;
+    }, []);
 
     const generateObstacles = useCallback((): SnakeSegment[] => {
         const obstaclesCount = getRandomNumber(minNumberOfObstacles, maxNumberOfObstacles);
@@ -183,6 +193,7 @@ const SnakeGame: React.FC = () => {
         setSnake([{ x: 0, y: 0 }]);
         setDirection("right");
         setScore(0);
+
         setMaxNumberOfFood(1)
         setMinNumberOfFood(1)
         setMaxNumberOfObstacles(5)
@@ -199,47 +210,34 @@ const SnakeGame: React.FC = () => {
         return (baseScore + speedScore + difficultyModifier);
     }, []);
 
-    const generateNewSegments = useCallback((count: number, position: any) => {
-        return Array.from({ length: count }, (_, index) => {
-            return {
-                x: position.x,
-                y: position.y - index,
-            };
-        });
-    }, []);
+    const handleFoodCollision = useCallback((newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any) => {
+        const remainingFood = food.filter(
+            (f) => !(f.x === newHead.x && f.y === newHead.y)
+        );
 
+        if (remainingFood.length === food.length) {
+            // No food was eaten
+            updateSnake(newSnake);
+        } else {
+            // Food was eaten
+            const growthRate = 1;
+            const newSegments = generateNewSegments(growthRate, newHead);
 
-    const handleFoodCollision = useCallback(
-        (newSnake: SnakeSegment[], newHead: SnakeSegment, obstacles: any) => {
-            const remainingFood = food.filter(
-                (f) => !(f.x === newHead.x && f.y === newHead.y)
-            );
+            updateSnake([...newSegments, ...newSnake]);
 
-            if (remainingFood.length === food.length) {
-                // No food was eaten
-                updateSnake(newSnake);
-            } else {
-                // Food was eaten
-                const growthRate = 1;
-                const newSegments = generateNewSegments(growthRate, newHead);
+            setFood(remainingFood);
 
-                updateSnake([...newSegments, ...newSnake]);
+            // Check if all food is eaten
+            if (remainingFood.length === 0) {
+                // Generate new food
+                setFood(generateFood());
 
-                setFood(remainingFood);
-
-                // Check if all food is eaten
-                if (remainingFood.length === 0) {
-                    // Generate new food
-                    setFood(generateFood());
-
-                    // Increase score
-                    const newScore = calculateScore(speed, growthRate, obstacles.length);
-                    setScore((prevScore) => prevScore + newScore);
-                }
+                // Increase score
+                const newScore = calculateScore(speed, growthRate, obstacles.length);
+                setScore((prevScore) => prevScore + newScore);
             }
-        },
-        [food, generateFood, speed, calculateScore, updateSnake, generateNewSegments]
-    );
+        }
+    }, [food, generateFood, speed, calculateScore, updateSnake, generateNewSegments]);
 
     const handleGameEnd = useCallback(() => {
         setIsRunning(false);
