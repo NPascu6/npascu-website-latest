@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import classNames from "classnames";
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import useWindowSize from "../../hooks/useWindowSize";
 
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
+const fruitEmojis = ["🍎", "🍌", "🍇", "🍊", "🍓", "🍍"];
 
 enum Direction {
     Up,
@@ -29,6 +29,7 @@ type State = {
     running: boolean;
     score?: number;
     foodCount?: number;
+    obstacles?: Position[];
 };
 
 const initialState: State = {
@@ -43,12 +44,13 @@ const initialState: State = {
     speed: 5,
     running: false,
     foodCount: 1,
+    obstacles: [],
 };
 
 const SnakeGame: React.FC = () => {
     const [state, setState] = useState<State>(initialState);
     const { innerWidth, innerHeight } = useWindowSize();
-
+    const randomFruitRef = useRef<string | null>(null);
     const touchStartX = useRef<number | null>(null);
     const touchStartY = useRef<number | null>(null);
 
@@ -96,27 +98,74 @@ const SnakeGame: React.FC = () => {
         [generateFood]
     );
 
+    const handleObstacleCollision = useCallback(() => {
+        const { snake, obstacles } = state;
+        const head = snake[snake.length - 1];
+        return obstacles?.some((pos) => pos.x === head.x && pos.y === head.y);
+    }, [state]);
+
+    const renderFood = useCallback((x: number, y: number) => {
+        const { food } = state;
+        const isFood = food.some((pos) => pos.x === x && pos.y === y);
+
+        if (isFood && randomFruitRef.current) {
+            return (
+                <div className="flex items-center justify-center h-full emoji-row">
+                    <div className="rounded-full bg-transparent-400 p-1">{randomFruitRef.current}</div>
+                </div>
+            );
+        }
+        return null;
+    }, [state]);
+
     const getCellStyle = useCallback(
         (x: number, y: number) => {
-            const { snake, food } = state;
-            const isSnake = snake.some((pos) => pos.x === x && pos.y === y);
+            const { snake, food, direction } = state;
+            const isSnakeHead =
+                snake.length > 0 && snake[snake.length - 1].x === x && snake[snake.length - 1].y === y;
+            const isSnakeBody = snake.slice(0, -1).some((pos) => pos.x === x && pos.y === y);
             const isFood = food.some((pos) => pos.x === x && pos.y === y);
 
-            return classNames("w-4", "h-4", "inline-block", {
-                "bg-green-500": isSnake,
-                "bg-red-500": isFood,
-            });
+            let styleClass = "border-dotted border-2 border-gray-500 w-4 h-4 inline-block ";
+
+            if (isSnakeHead) {
+                // Add styling for the snake's head
+                switch (direction) {
+                    case Direction.Down:
+                        styleClass += "rounded-b-full border-t-0 ";
+                        break;
+                    case Direction.Up:
+                        styleClass += "rounded-t-full border-b-0 ";
+                        break;
+                    case Direction.Right:
+                        styleClass += "rounded-r-full border-l-0 ";
+                        break;
+                    case Direction.Left:
+                        styleClass += "rounded-l-full border-r-0 ";
+                        break;
+                }
+                // Add eyes and mouth
+                styleClass += "bg-green-500 relative";
+            } else if (isSnakeBody) {
+                // Styling for the snake's body
+                styleClass += "bg-green-500 ";
+            } else if (isFood) {
+                // Styling for the food
+                styleClass += "text-xl font-bold "; // You can adjust the font size and weight
+            }
+
+            return styleClass;
         },
         [state]
     );
 
-    const startGame = () => {
+    const startGame = useCallback(() => {
         setState((prevState) => ({
             ...prevState,
             running: true,
             score: 0,
         }));
-    };
+    }, []);
 
     const resetGame = useCallback(() => {
         setState((prevState) => ({
@@ -146,45 +195,45 @@ const SnakeGame: React.FC = () => {
         }));
     }, []);
 
-    const handleKeyDown = useCallback(
-        (event: KeyboardEvent) => {
-            event.preventDefault(); // Prevent default behavior for the keys
+    const handleKeyDown = useCallback((event: KeyboardEvent) => {
+        event.preventDefault(); // Prevent default behavior for the keys
+        event.stopPropagation();
 
-            switch (event.key) {
-                case "ArrowUp":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Up,
-                    }));
-                    break;
-                case "ArrowDown":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Down,
-                    }));
-                    break;
-                case "ArrowLeft":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Left,
-                    }));
-                    break;
-                case "ArrowRight":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Right,
-                    }));
-                    break;
-                case " ":
-                    // Space key - start/pause the game
-                    pauseGame();
-                    break;
-                case "Escape":
-                    // Escape key - reset the game
-                    resetGame();
-                    break;
-            }
-        },
+        switch (event.key) {
+            case "ArrowUp":
+                setState((prevState) => ({
+                    ...prevState,
+                    direction: Direction.Up,
+                }));
+                break;
+            case "ArrowDown":
+                setState((prevState) => ({
+                    ...prevState,
+                    direction: Direction.Down,
+                }));
+                break;
+            case "ArrowLeft":
+                setState((prevState) => ({
+                    ...prevState,
+                    direction: Direction.Left,
+                }));
+                break;
+            case "ArrowRight":
+                setState((prevState) => ({
+                    ...prevState,
+                    direction: Direction.Right,
+                }));
+                break;
+            case " ":
+                // Space key - start/pause the game
+                pauseGame();
+                break;
+            case "Escape":
+                // Escape key - reset the game
+                resetGame();
+                break;
+        }
+    },
         [pauseGame, resetGame]
     );
 
@@ -192,7 +241,7 @@ const SnakeGame: React.FC = () => {
         setState((prevState) => {
             const newSnake = [...prevState.snake];
             const head = newSnake[newSnake.length - 1];
-            let newHead;
+            let newHead: Position;
 
             switch (prevState.direction) {
                 case Direction.Up:
@@ -224,6 +273,11 @@ const SnakeGame: React.FC = () => {
 
             newSnake.push(newHead);
 
+            if (checkSelfCollision() || handleObstacleCollision()) {
+                endGame();
+                return prevState;
+            }
+
             if (checkSelfCollision()) {
                 endGame();
                 return prevState;
@@ -237,7 +291,7 @@ const SnakeGame: React.FC = () => {
 
             return { ...prevState, snake: newSnake, score: newSnake.length - 1 };
         });
-    }, [consumeFood, checkSelfCollision, endGame, isCollidingWithFood]);
+    }, [consumeFood, checkSelfCollision, endGame, isCollidingWithFood, handleObstacleCollision]);
 
     const renderControls = () => {
         if (state.running) {
@@ -254,9 +308,9 @@ const SnakeGame: React.FC = () => {
         } else {
             return (
                 <>
-                    <button className="border m-1 p-1" onClick={startGame}>
+                    {<button className="border m-1 p-1" onClick={startGame}>
                         Start
-                    </button>
+                    </button>}
                     <button className="border m-1 p-1" onClick={resetGame}>
                         Reset
                     </button>
@@ -265,48 +319,55 @@ const SnakeGame: React.FC = () => {
         }
     };
 
-    const handleSwipe = useCallback(
-        (direction: Direction) => {
-            setState((prevState) => ({
-                ...prevState,
-                direction,
-            }));
-        },
+    const handleSwipe = useCallback((direction: Direction) => {
+        setState((prevState) => ({
+            ...prevState,
+            direction,
+        }));
+    },
         [setState]
     );
 
     useEffect(() => {
         const handleTouchStart = (e: TouchEvent) => {
+            e.preventDefault()
+            e.stopPropagation()
             touchStartX.current = e.touches[0].clientX;
             touchStartY.current = e.touches[0].clientY;
         };
 
         const handleTouchMove = (e: TouchEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (!touchStartX.current || !touchStartY.current) return;
 
             const deltaX = e.touches[0].clientX - touchStartX.current;
             const deltaY = e.touches[0].clientY - touchStartY.current;
 
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                if (deltaX > 0) {
-                    handleSwipe(Direction.Right);
-                } else {
-                    handleSwipe(Direction.Left);
-                }
-            } else {
-                if (deltaY > 0) {
-                    handleSwipe(Direction.Down);
-                } else {
-                    handleSwipe(Direction.Up);
-                }
-            }
+            const deltaThreshold = 10; // Adjust this threshold as needed
 
-            touchStartX.current = null;
-            touchStartY.current = null;
+            if (Math.abs(deltaX) > deltaThreshold || Math.abs(deltaY) > deltaThreshold) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 0) {
+                        handleSwipe(Direction.Right);
+                    } else {
+                        handleSwipe(Direction.Left);
+                    }
+                } else {
+                    if (deltaY > 0) {
+                        handleSwipe(Direction.Down);
+                    } else {
+                        handleSwipe(Direction.Up);
+                    }
+                }
+
+                touchStartX.current = null;
+                touchStartY.current = null;
+            }
         };
 
-        const handleClick = () => {
-            // Handle click event here (you can change the direction or perform other actions)
+        const handleClick = (e: any) => {
+
         };
 
         document.addEventListener("touchstart", handleTouchStart);
@@ -327,7 +388,7 @@ const SnakeGame: React.FC = () => {
         const boardHeight = Math.floor((innerHeight - BOARD_PADDING) / CELL_SIZE);
         setState((prevState) => ({
             ...prevState,
-            boardSize: { innerWidth: boardWidth, innerHeight: boardHeight - 8 },
+            boardSize: { innerWidth: boardWidth, innerHeight: boardHeight - 10 },
         }));
     }, [innerWidth, innerHeight]);
 
@@ -345,8 +406,38 @@ const SnakeGame: React.FC = () => {
         };
     }, [state, moveSnake]);
 
+    useEffect(() => {
+        // Generate a random fruit emoji when the component mounts
+        randomFruitRef.current = fruitEmojis[Math.floor(Math.random() * fruitEmojis.length)];
+    }, []);
+
+    const renderObstacles = useCallback((x: number, y: number) => {
+        const { obstacles } = state;
+        const isObstacle = obstacles?.some((pos) => pos.x === x && pos.y === y);
+
+        if (isObstacle) {
+            return (
+                <div className="bg-gray-700 w-4 h-4 inline-block"></div>
+            );
+        }
+
+        return null;
+    }, [state]);
+
     return (
-        <div className="flex flex-col items-center border shadow-xl p-2">
+        <div className="container p-2">
+            <div className="flex flex-col justify-center items-center mt-4 border" onClick={() => console.log(state)}>
+                <div className="score border">Score: {state.score}</div>
+                {Array.from({ length: state.boardSize.innerHeight }).map((_, y) => (
+                    <div key={y} className="flex">
+                        {Array.from({ length: state.boardSize.innerWidth }).map((_, x) => (
+                            <div key={x} className={getCellStyle(x, y)}>
+                                {renderFood(x, y)}
+                                {renderObstacles(x, y)}</div>
+                        ))}
+                    </div>
+                ))}
+            </div>
             <div className="flex items-center border">
                 {renderControls()}
                 <input
@@ -361,16 +452,6 @@ const SnakeGame: React.FC = () => {
                         }))
                     }
                 />
-            </div>
-            <div className="mt-4 border" onClick={() => console.log(state)}>
-                <div className="score border">Score: {state.score}</div>
-                {Array.from({ length: state.boardSize.innerHeight }).map((_, y) => (
-                    <div key={y} className="flex">
-                        {Array.from({ length: state.boardSize.innerWidth }).map((_, x) => (
-                            <div key={x} className={getCellStyle(x, y)}></div>
-                        ))}
-                    </div>
-                ))}
             </div>
         </div>
     );

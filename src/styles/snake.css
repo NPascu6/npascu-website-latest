@@ -48,3 +48,10 @@
     border-radius: 10px;
     background: rgb(123, 178, 61);
 }
+
+.emoji-row {
+    display: flex;
+    /* or use grid or other styling based on your design */
+    align-items: center;
+    justify-content: center;
+}
