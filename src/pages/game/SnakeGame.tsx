@@ -23,11 +23,12 @@ type State = {
         innerHeight: number;
     };
     snake: Position[];
-    food: Position;
+    food: Position[];
     direction: Direction;
     speed: number;
     running: boolean;
     score?: number;
+    foodCount?: number;
 };
 
 const initialState: State = {
@@ -37,10 +38,11 @@ const initialState: State = {
     },
     score: 0,
     snake: [{ x: 0, y: 0 }],
-    food: { x: 10, y: 10 },
+    food: [{ x: 10, y: 10 }],
     direction: Direction.Right,
     speed: 5,
     running: false,
+    foodCount: 1,
 };
 
 const SnakeGame: React.FC = () => {
@@ -50,40 +52,63 @@ const SnakeGame: React.FC = () => {
     const touchStartX = useRef<number | null>(null);
     const touchStartY = useRef<number | null>(null);
 
-    const isCollidingWithFood = useCallback((snake: Position[]) => {
-        const { food } = state;
-        const head = snake[snake.length - 1];
-        return head.x === food.x && head.y === food.y;
-    }, [state]);
+    const isCollidingWithFood = useCallback(
+        (snake: Position[]) => {
+            const { food } = state;
+            const head = snake[snake.length - 1];
+            return food.some((f) => f.x === head.x && f.y === head.y);
+        },
+        [state]
+    );
 
     const generateFood = useCallback(() => {
         const { boardSize } = state;
-        const x = Math.floor(Math.random() * boardSize.innerWidth);
-        const y = Math.floor(Math.random() * boardSize.innerHeight);
-        setState((prevState) => ({ ...prevState, food: { x, y } }));
+        const { foodCount } = state;
+        if (!foodCount) return null;
+        const newFood: Position[] = [];
+        for (let i = 0; i < foodCount; i++) {
+            const x = Math.floor(Math.random() * boardSize.innerWidth);
+            const y = Math.floor(Math.random() * boardSize.innerHeight);
+            newFood.push({ x, y });
+        }
+        setState((prevState) => ({ ...prevState, food: newFood }));
     }, [state]);
 
-    const consumeFood = useCallback((newSnake: Position[]) => {
-        generateFood();
-        setState((prevState) => ({ ...prevState, snake: newSnake }));
-    }, [generateFood]);
+    const consumeFood = useCallback(
+        (newSnake: Position[]) => {
+            generateFood();
+            setState((prevState) => {
+                const { score } = prevState;
+                let newScore = score ? score + 1 : 1;
+                // Increase the number of food when reaching score milestones
+                let newFoodCount = prevState.foodCount || 1;
+                if (newScore === 2 || newScore === 5 || newScore === 8) {
+                    newFoodCount++;
+                }
+                return {
+                    ...prevState,
+                    snake: newSnake,
+                    score: newScore,
+                    foodCount: newFoodCount,
+                };
+            });
+        },
+        [generateFood]
+    );
 
-    const getCellStyle = useCallback((x: number, y: number) => {
-        const { snake, food } = state;
-        const isSnake = snake.some((pos) => pos.x === x && pos.y === y);
-        const isFood = food.x === x && food.y === y;
-        return classNames(
-            "border",
-            "border-gray-400",
-            "w-4",
-            "h-4",
-            "inline-block",
-            {
+    const getCellStyle = useCallback(
+        (x: number, y: number) => {
+            const { snake, food } = state;
+            const isSnake = snake.some((pos) => pos.x === x && pos.y === y);
+            const isFood = food.some((pos) => pos.x === x && pos.y === y);
+
+            return classNames("w-4", "h-4", "inline-block", {
                 "bg-green-500": isSnake,
                 "bg-red-500": isFood,
-            }
-        );
-    }, [state]);
+            });
+        },
+        [state]
+    );
 
     const startGame = () => {
         setState((prevState) => ({
@@ -93,20 +118,20 @@ const SnakeGame: React.FC = () => {
         }));
     };
 
-    const resetGame = () => {
+    const resetGame = useCallback(() => {
         setState((prevState) => ({
             ...initialState,
             boardSize: prevState.boardSize, // Preserve boardSize
         }));
-    };
+    }, []);
 
     const stopGame = () => {
         setState((prevState) => ({ ...prevState, running: false }));
     };
 
-    const pauseGame = () => {
+    const pauseGame = useCallback(() => {
         setState((prevState) => ({ ...prevState, running: !prevState.running }));
-    };
+    }, []);
 
     const checkSelfCollision = useCallback(() => {
         const { snake } = state;
@@ -120,6 +145,48 @@ const SnakeGame: React.FC = () => {
             running: false,
         }));
     }, []);
+
+    const handleKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            event.preventDefault(); // Prevent default behavior for the keys
+
+            switch (event.key) {
+                case "ArrowUp":
+                    setState((prevState) => ({
+                        ...prevState,
+                        direction: Direction.Up,
+                    }));
+                    break;
+                case "ArrowDown":
+                    setState((prevState) => ({
+                        ...prevState,
+                        direction: Direction.Down,
+                    }));
+                    break;
+                case "ArrowLeft":
+                    setState((prevState) => ({
+                        ...prevState,
+                        direction: Direction.Left,
+                    }));
+                    break;
+                case "ArrowRight":
+                    setState((prevState) => ({
+                        ...prevState,
+                        direction: Direction.Right,
+                    }));
+                    break;
+                case " ":
+                    // Space key - start/pause the game
+                    pauseGame();
+                    break;
+                case "Escape":
+                    // Escape key - reset the game
+                    resetGame();
+                    break;
+            }
+        },
+        [pauseGame, resetGame]
+    );
 
     const moveSnake = useCallback(() => {
         setState((prevState) => {
@@ -245,20 +312,22 @@ const SnakeGame: React.FC = () => {
         document.addEventListener("touchstart", handleTouchStart);
         document.addEventListener("touchmove", handleTouchMove);
         document.addEventListener("click", handleClick);
+        document.addEventListener("keydown", handleKeyDown);
 
         return () => {
             document.removeEventListener("touchstart", handleTouchStart);
             document.removeEventListener("touchmove", handleTouchMove);
             document.removeEventListener("click", handleClick);
+            document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [handleSwipe]);
+    }, [handleSwipe, handleKeyDown]);
 
     useEffect(() => {
         const boardWidth = Math.floor((innerWidth - BOARD_PADDING) / CELL_SIZE);
         const boardHeight = Math.floor((innerHeight - BOARD_PADDING) / CELL_SIZE);
         setState((prevState) => ({
             ...prevState,
-            boardSize: { innerWidth: boardWidth, innerHeight: boardHeight - 7 },
+            boardSize: { innerWidth: boardWidth, innerHeight: boardHeight - 8 },
         }));
     }, [innerWidth, innerHeight]);
 
@@ -276,46 +345,9 @@ const SnakeGame: React.FC = () => {
         };
     }, [state, moveSnake]);
 
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            switch (event.key) {
-                case "ArrowUp":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Up,
-                    }));
-                    break;
-                case "ArrowDown":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Down,
-                    }));
-                    break;
-                case "ArrowLeft":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Left,
-                    }));
-                    break;
-                case "ArrowRight":
-                    setState((prevState) => ({
-                        ...prevState,
-                        direction: Direction.Right,
-                    }));
-                    break;
-            }
-        };
-
-        document.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []); // Empty depen
-
     return (
-        <div className="flex flex-col items-center">
-            <div className="flex items-center">
+        <div className="flex flex-col items-center border shadow-xl p-2">
+            <div className="flex items-center border">
                 {renderControls()}
                 <input
                     type="range"
