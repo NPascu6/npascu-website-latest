@@ -362,8 +362,8 @@ const SnakeGame: React.FC = () => {
                     }
                 />
             </div>
-            <div className="mt-4" onClick={() => console.log(state)}>
-                <div className="score">Score: {state.score}</div>
+            <div className="mt-4 border" onClick={() => console.log(state)}>
+                <div className="score border">Score: {state.score}</div>
                 {Array.from({ length: state.boardSize.innerHeight }).map((_, y) => (
                     <div key={y} className="flex">
                         {Array.from({ length: state.boardSize.innerWidth }).map((_, x) => (
