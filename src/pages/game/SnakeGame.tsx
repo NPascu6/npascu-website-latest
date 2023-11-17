@@ -353,10 +353,10 @@ const SnakeGame: React.FC = () => {
         if (state.running) {
             return (
                 <>
-                    <button className="border m-1 p-1" onClick={stopGame}>
+                    <button style={{ color: 'red' }} className="bg-black border border-gray-500 m-1 p-1" onClick={stopGame}>
                         Stop
                     </button>
-                    <button className="border m-1 p-1" onClick={pauseGame}>
+                    <button style={{ color: 'green' }} className="bg-black border border-gray-500 m-1 p-1" onClick={pauseGame}>
                         {state.running ? "Pause" : "Resume"}
                     </button>
                 </>
@@ -364,10 +364,10 @@ const SnakeGame: React.FC = () => {
         } else {
             return (
                 <>
-                    {<button className="border m-1 p-1" onClick={startGame}>
+                    {<button style={{ color: 'green' }} className="bg-black border border-gray-500 m-1 p-1" onClick={startGame}>
                         Start
                     </button>}
-                    <button className="border m-1 p-1" onClick={resetGame}>
+                    <button style={{ color: 'orange' }} className="bg-black border border-gray-500 m-1 p-1" onClick={resetGame}>
                         Reset
                     </button>
                 </>
@@ -431,7 +431,7 @@ const SnakeGame: React.FC = () => {
     useEffect(() => {
         const cellSize = CELL_SIZE;
         const boardWidth = Math.floor((innerWidth - BOARD_PADDING) / cellSize);
-        const boardHeight = Math.floor((innerHeight - BOARD_PADDING) / cellSize - 9);
+        const boardHeight = Math.floor((innerHeight - BOARD_PADDING) / cellSize - 8);
 
         setState((prevState) => ({
             ...prevState,
@@ -458,10 +458,10 @@ const SnakeGame: React.FC = () => {
     }, []);
 
     return (
-        <div className="container p-2" ref={boardRef}>
-            <div className="flex flex-col justify-center items-center mt-4">
-                <div className="score border">Score: {state.score}</div>
-                <div className="border mt-1 p-1" style={{ background: "#2C3E50" }}>
+        <div className="container p-1 justify-center  items-center align-center flex flex-col" ref={boardRef}>
+            <div className="flex flex-col justify-center items-center">
+                <div className="score border p-1 bg-black border-gray-600" style={{ color: 'green' }}>Score: {state.score}</div>
+                <div className="border mt-1" style={{ background: "#2C3E50" }}>
                     {Array.from({ length: state.boardSize.innerHeight }).map((_, y) => (
                         <div key={y} className="flex">
                             {Array.from({ length: state.boardSize.innerWidth }).map((_, x) => (
@@ -473,21 +473,27 @@ const SnakeGame: React.FC = () => {
                 </div>
 
             </div>
-            <div className="flex items-center border">
-                {renderControls()}
-                <input
-                    type="range"
-                    min="1"
-                    max="40"
-                    step="1"
-                    value={state.speed}
-                    onChange={(event) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            speed: parseInt(event.target.value),
-                        }))
-                    }
-                />
+            <div className="flex items-center border justify-between w-full">
+                <div className="p-1 shadow-xl">
+                    {renderControls()}
+                </div>
+                <div className="p-3 shadow-xl">
+                    <input
+                        type="range"
+                        min="1"
+                        max="40"
+                        step="1"
+                        value={state.speed}
+                        onChange={(event) =>
+                            setState((prevState) => ({
+                                ...prevState,
+                                speed: parseInt(event.target.value),
+                            }))
+                        }
+                    />
+                </div>
+
+
             </div>
         </div>
     );
