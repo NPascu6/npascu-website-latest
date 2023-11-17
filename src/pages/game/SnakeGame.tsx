@@ -4,6 +4,34 @@ import useWindowSize from "../../hooks/useWindowSize";
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
 const fruitEmojis = ["🍎", "🍌", "🍇", "🍊", "🍓", "🍍"];
+const obstacleEmojis = ["🌵", "🌴", "🌲", "🌳", "🌱", "🌿"];
+
+interface SnakeBoardProps {
+    boardSize: {
+        innerWidth: number;
+        innerHeight: number;
+    };
+    getCellStyle: (x: number, y: number) => string;
+    renderFood: (x: number, y: number) => React.ReactNode;
+    renderObstacle: (x: number, y: number) => React.ReactNode;
+}
+
+const SnakeBoard: React.FC<SnakeBoardProps> = ({ boardSize, getCellStyle, renderFood, renderObstacle }) => {
+    return (
+        <div className="border border-gray-600 mt-1" style={{ background: "#2C3E50" }}>
+            {Array.from({ length: boardSize.innerHeight }).map((_, y) => (
+                <div key={y} className="flex">
+                    {Array.from({ length: boardSize.innerWidth }).map((_, x) => (
+                        <div key={x} className={getCellStyle(x, y)}>
+                            {renderFood(x, y)}
+                            {renderObstacle(x, y)}
+                        </div>
+                    ))}
+                </div>
+            ))}
+        </div>
+    );
+};
 
 enum Direction {
     Up,
@@ -30,6 +58,7 @@ type State = {
     running: boolean;
     score: number;
     foodCount: number;
+    obstaclesCount: number;
     obstacles: Position[];
 };
 
@@ -45,13 +74,17 @@ const initialState: State = {
     speed: 5,
     running: false,
     foodCount: 1,
-    obstacles: [],
+    obstaclesCount: 5,
+    obstacles: [
+
+    ],
 };
 
 const SnakeGame: React.FC = () => {
     const [state, setState] = useState<State>(initialState);
     const { innerWidth, innerHeight } = useWindowSize();
     const randomFruitRef = useRef<string | null>(null);
+    const randomObstacleRef = useRef<string | null>(null);
     const touchStartX = useRef<number | null>(null);
     const touchStartY = useRef<number | null>(null);
     const boardRef = useRef<any>(null);
@@ -124,20 +157,6 @@ const SnakeGame: React.FC = () => {
         const head = snake[snake.length - 1];
         return obstacles?.some((pos) => pos.x === head.x && pos.y === head.y);
     }, [state.snake, state.obstacles]);
-
-    const renderFood = useCallback((x: number, y: number) => {
-        const food = [...state.food];
-        const currentFood = food.find((pos) => pos.x === x && pos.y === y);
-
-        if (currentFood) {
-            return (
-                <div className="flex items-center justify-center h-full emoji-row" key={`${x}-${y}`}>
-                    {currentFood.emoji ?? randomFruitRef.current}
-                </div>
-            );
-        }
-        return null;
-    }, [state.food]);
 
     const getCellStyle = useCallback(
         (x: number, y: number) => {
@@ -349,7 +368,37 @@ const SnakeGame: React.FC = () => {
         });
     }, [consumeFood, checkSelfCollision, endGame, isCollidingWithFood, handleObstacleCollision]);
 
-    const renderControls = () => {
+    const renderFood = useCallback((x: number, y: number) => {
+        const food = [...state.food];
+        const currentFood = food.find((pos) => pos.x === x && pos.y === y);
+
+        if (currentFood) {
+            return (
+                <div className="flex items-center justify-center h-full emoji-row" key={`${x}-${y}`}>
+                    {currentFood.emoji ?? randomFruitRef.current}
+                </div>
+            );
+        }
+        return null;
+    }, [state.food]);
+
+    const renderObstacle = useCallback((x: number, y: number) => {
+        const obstacles = [...state.obstacles];
+        if (obstacles.length === 0) return null
+        const currentObstacle = obstacles.find((pos) => pos.x === x && pos.y === y);
+        debugger
+        if (currentObstacle) {
+            return (
+                <div className="flex items-center justify-center h-full emoji-row" key={`${x}-${y}`}>
+                    {currentObstacle.emoji ?? randomObstacleRef.current}
+                </div>
+            );
+        }
+
+        return null;
+    }, [state.obstacles]);
+
+    const renderControls = useCallback(() => {
         if (state.running) {
             return (
                 <>
@@ -373,7 +422,7 @@ const SnakeGame: React.FC = () => {
                 </>
             );
         }
-    };
+    }, [state.running, startGame, stopGame, pauseGame, resetGame]);
 
     useEffect(() => {
         const handleTouchStart = (e: TouchEvent) => {
@@ -455,30 +504,23 @@ const SnakeGame: React.FC = () => {
 
     useEffect(() => {
         randomFruitRef.current = fruitEmojis[Math.floor(Math.random() * fruitEmojis.length)];
+        randomObstacleRef.current = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
     }, []);
 
     return (
-        <div className="container p-1 justify-center  items-center align-center flex flex-col" ref={boardRef}>
+        <div className="container p-1 justify-center items-center align-center flex flex-col" ref={boardRef}>
             <div className="flex flex-col justify-center items-center">
-                <div className="score border p-1 bg-black border-gray-600" style={{ color: 'green' }}>Score: {state.score}</div>
-                <div className="border mt-1" style={{ background: "#2C3E50" }}>
-                    {Array.from({ length: state.boardSize.innerHeight }).map((_, y) => (
-                        <div key={y} className="flex">
-                            {Array.from({ length: state.boardSize.innerWidth }).map((_, x) => (
-                                <div key={x} className={getCellStyle(x, y)}>
-                                    {renderFood(x, y)}</div>
-                            ))}
-                        </div>
-                    ))}
+                <div className="score border p-1 bg-black border-gray-500" style={{ color: 'green' }}>
+                    Score: {state.score}
                 </div>
-
+                <SnakeBoard boardSize={state.boardSize} getCellStyle={getCellStyle} renderFood={renderFood} renderObstacle={renderObstacle} />
             </div>
-            <div className="flex items-center border justify-between w-full">
-                <div className="p-1 shadow-xl">
-                    {renderControls()}
-                </div>
+            <div className="flex items-center border border-gray-500 justify-between w-full">
+                <div className="p-1 shadow-xl">{renderControls()}</div>
                 <div className="p-3 shadow-xl">
                     <input
+                        style={{ color: 'green' }}
+                        className="bg-gray-500"
                         type="range"
                         min="1"
                         max="40"
@@ -492,8 +534,6 @@ const SnakeGame: React.FC = () => {
                         }
                     />
                 </div>
-
-
             </div>
         </div>
     );

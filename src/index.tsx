@@ -10,6 +10,7 @@ import store from './store/store';
 import './styles/darkTheme.css';
 import './styles/lightTheme.css';
 import './styles/snake.css';
+import './styles/sliderStyles.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
