@@ -7,6 +7,8 @@ import LinkedInIcon from "../../assets/icons/LinkedIn";
 import Facebook from "../../assets/icons/Facebook";
 import Instagram from "../../assets/icons/Instagram";
 import GitHub from "../../assets/icons/Github";
+import Email from "../../assets/icons/Email";
+import Phone from "../../assets/icons/Phone";
 
 const GithubProfileCard = () => {
     const { githubProfile } = useSelector((state: RootState) => state.app);
@@ -28,16 +30,21 @@ const GithubProfileCard = () => {
                 <div className="mt-2 mx-2">
                     <p className={`text-md font-bold`}>{githubProfile?.name}</p>
                     <p className={`text-sm`}>{`${githubProfile?.bio}Zurich`}</p>
-                    <hr className="p-2 border-b-1" />
-                    <p className="text-md">
+                    <p className="text-md flex border mt-2 p-1 justify-evenly">
                         <a href="mailto:norbipascu92@gmail.com" className={`font-bold`}>
                             norbipascu92@gmail.com
                         </a>
+                        <span>
+                            <Email />
+                        </span>
                     </p>
-                    <p className="text-md">
+                    <p className="text-md flex border p-1 justify-evenly">
                         <a href="tel:+41765951562" className={`font-bold`}>
                             +41765951562
                         </a>
+                        <span>
+                            <Phone />
+                        </span>
                     </p>
                 </div>
                 <img
@@ -45,13 +52,13 @@ const GithubProfileCard = () => {
                     alt="Profile"
                     style={{
                         width: "6rem",
-                        height: "6rem",
+                        height: "8rem",
                         objectFit: "cover",
                     }}
-                    className=" mx-auto mt-4 mr-4"
+                    className=" mx-auto mt-4 mr-13 mb-3"
                 />
             </div>
-            <div>
+            <div className="mb-4">
                 <div className="flex justify-center items-center w-full mt-2">
                     <div className="text-center w-full">
                         <a

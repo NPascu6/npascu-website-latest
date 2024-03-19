@@ -508,7 +508,7 @@ const SnakeGame: React.FC = () => {
     }, []);
 
     return (
-        <div className="container p-1 justify-center items-center align-center flex flex-col" ref={boardRef}>
+        <div className="container justify-center items-center align-center flex flex-col" ref={boardRef}>
             <div className="flex flex-col justify-center items-center">
                 <div className="score border p-1 bg-black border-gray-500" style={{ color: 'green' }}>
                     Score: {state.score}
