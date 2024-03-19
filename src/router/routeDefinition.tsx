@@ -21,13 +21,6 @@ export const routeDefinition: RouteDefinition[] = [
         element: <MainPage />,
     },
     {
-        path: '/about',
-        exact: true,
-        title: 'About',
-        icon: <Info />,
-        element: <AboutPage />,
-    },
-    {
         path: '/games/*',
         exact: true,
         title: 'Demo Games',
@@ -56,6 +49,14 @@ export const routeDefinition: RouteDefinition[] = [
             //     element: <BrickOutGame />,
             // }
         ],
+    },
+
+    {
+        path: '/about',
+        exact: true,
+        title: 'About',
+        icon: <Info />,
+        element: <AboutPage />,
     },
 ];
 

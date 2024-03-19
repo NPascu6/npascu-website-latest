@@ -4,12 +4,6 @@
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-.light-theme #side-bar {
-    background-color: rgb(247, 247, 247);
-    color: #333333;
-    z-index: 1;
-}
-
 .light-theme table {
     color: #333333;
     background-color: #ECEFF1;

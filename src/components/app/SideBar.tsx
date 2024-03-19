@@ -1,116 +1,68 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { routeDefinition } from '../../router/routeDefinition';
+import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { routeDefinition } from '../../router/routeDefinition';
+import { RouteDefinition } from '../../models/common/common';
 
-const Sidebar = ({ toggle, setToggle }: any) => {
-    const sideBarRef = React.useRef<HTMLDivElement>(null);
-    const [isOpen, setIsOpen] = useState(toggle);
+interface SidebarItemProps {
+    route: RouteDefinition;
+    isActive: boolean;
+    handleClick: () => void;
+}
+
+const SidebarItem = ({ route, isActive, handleClick }: SidebarItemProps) => {
+    return (
+        <li className={`sidebar-item ${isActive ? 'active' : ''}`} onClick={handleClick}>
+            <div className="sidebar-item-content">
+                <div>{route.icon}</div>
+                <div>{route.title}</div>
+            </div>
+        </li>
+    );
+};
+
+interface SidebarProps {
+    toggle: boolean;
+    setToggle: (toggle: boolean) => void;
+}
+
+const Sidebar = ({ toggle, setToggle }: SidebarProps) => {
+    const sideBarRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
     const location = useLocation();
-    const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
-    const [openSubRoute, setOpenSubRoute] = useState('' as string)
 
     useEffect(() => {
-        setIsOpen(toggle);
-    }, [toggle]);
-
-    useEffect(() => {
-        function handleClickOutside(event: any) {
-            if (sideBarRef.current && !sideBarRef.current.contains(event.target) && !event.target.classList.contains('sidebar')) {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (!sideBarRef.current?.contains(event.target as Node)) {
                 setToggle(false);
             }
-        }
-
-        // Add the event listener when the component mounts
-        document.addEventListener('mousedown', handleClickOutside);
-
-        // Remove the event listener when the component unmounts
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
         };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [setToggle]);
 
-    const handleNavigateToRoute = (e: any, path: string) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleNavigate = (path: string) => {
         navigate(path);
+        setToggle(false);
     };
 
-
-    useEffect(() => {
-        console.log(location.pathname.split("/")[2])
-        const subRoute = location.pathname.split("/")[2];
-        if (subRoute) {
-            setOpenSubRoute(subRoute);
-        }
-    }, [location])
-
-    const isRouteActive = useCallback((route: any) => {
-        return location.pathname === route.path || (location.pathname.includes(route.path.split("*")[0]) && route.path.includes("*"));
-    }, [location]);
+    const isRouteActive = (route: RouteDefinition) =>
+        location.pathname === route.path ||
+        (location.pathname.includes(route.path.split('*')[0]) && route.path.includes('*'));
 
     return (
-        <div
-            ref={sideBarRef}
-            id='side-bar'
-            className={`fixed top-12 left-2 w-38 transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-80'}`}
-        >
-            {routeDefinition.map((route, index) => (
-                <div key={index} onMouseEnter={() => {
-                    if (route?.routes) {
-                        setOpenSubRoute(route.path);
-                    }
-                }}
-                    onMouseLeave={(e) => {
-                        const target = e.relatedTarget as HTMLElement; // Use relatedTarget to get the element the mouse is leaving to
-
-                        // Check if the mouse is leaving to a sub-route element
-                        const isLeavingToSubRoute = target && target.classList.contains('sub-route-class'); // Replace 'sub-route-class' with the actual class of your sub-routes
-
-                        if (!isLeavingToSubRoute) {
-                            setOpenSubRoute('');
-                        }
-                    }}>
-                    <ul
-                        className='sidebar'
-                        style={{
-                            fontWeight: location.pathname === route.path ? 'bold' : 'normal',
-                            textDecoration: isRouteActive(route) ? 'underline' : 'none',
-                            minWidth: '8em',
-                            backgroundColor: isRouteActive(route) ? (isDarkTheme ? '#2d3748' : 'gray') : '',
-                            color: isRouteActive(route) ? (isDarkTheme ? '#edf2f7' : "white") : ''
-                        }}
-                        id={route.path}
-                        onClick={(e) => handleNavigateToRoute(e, route.path)}
-                    >
-                        <div className='sidebar flex items-center space-x-2 cursor-pointer p-3 mt-1 shadow-xl '>
-                            <div style={{ opacity: isRouteActive(route) ? 1 : 0.5 }}>{route.icon}</div>
-                            <div style={{ opacity: isRouteActive(route) ? 1 : 0.5 }}>{route.title}</div>
-                        </div>
-                    </ul>
-                    {openSubRoute && route?.routes?.map((subRoute, subIndex) => (
-                        <ul
-                            key={subIndex}
-                            className='sidebar sub-route-class shadow-xl'
-                            style={{
-                                fontWeight: isRouteActive(subRoute) ? 'bold' : 'normal',
-                                textDecoration: isRouteActive(subRoute) ? 'underline' : 'none',
-                                minWidth: '8em',
-                                backgroundColor: isRouteActive(subRoute) ? (isDarkTheme ? '#2d3748' : '#edf2f7') : '',
-                                color: isRouteActive(subRoute) ? (isDarkTheme ? '#edf2f7' : '#2d3748') : ''
-                            }}
-                            id={subRoute.path}
-                            onClick={(e) => handleNavigateToRoute(e, `/games/${subRoute.path}`)}
-                        >
-
-                            <div className='sidebar flex items-center space-x-2 cursor-pointer p-3 mt-1 shadow-xl ' style={{ height: '2.5em', fontSize: 13 }}>
-                                <div className='flex h-6' style={{ opacity: location.pathname === `${route.path.split("*")[0]}${subRoute.path}` ? 1 : 0.5 }}>{subRoute.icon}</div>
-                                <div style={{ opacity: location.pathname === `${route.path.split("*")[0]}${subRoute.path}` ? 1 : 0.5 }}>{subRoute.title}</div>
-                            </div>
-                        </ul>
-                    ))}
-                </div>
-            ))}
+        <div ref={sideBarRef} id="side-bar" className={`sidebar ${toggle ? 'open' : 'closed'}`}>
+            <ul className="sidebar-list">
+                {routeDefinition.map((route, index) => (
+                    <React.Fragment key={index}>
+                        <SidebarItem
+                            route={route}
+                            isActive={isRouteActive(route)}
+                            handleClick={() => handleNavigate(route.path)}
+                        />
+                    </React.Fragment>
+                ))}
+            </ul>
         </div>
     );
 };

@@ -1,0 +1,56 @@
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 2px;
+}
+
+.top-bar-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.start {
+    justify-content: start;
+}
+
+.center {
+    justify-content: center;
+}
+
+.end {
+    justify-content: end;
+}
+
+.favicon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    padding: 1px;
+    background-color: white;
+    box-shadow: 0px 0px 10px #ccc;
+}
+
+.sidebar-toggle-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transition: background-color 0.3s ease-in-out, width 0.3s ease;
+}
+
+.expanded {
+    opacity: 1;
+    width: 10em;
+    background-color: #8888;
+    /* Adjust as needed */
+}
+
+.collapsed {
+    opacity: 0.5;
+    width: 0.5em;
+    background-color: #8888;
+    /* Adjust as needed */
+}

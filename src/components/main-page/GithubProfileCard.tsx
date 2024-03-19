@@ -30,21 +30,22 @@ const GithubProfileCard = () => {
                 <div className="mt-2 mx-2">
                     <p className={`text-md font-bold`}>{githubProfile?.name}</p>
                     <p className={`text-sm`}>{`${githubProfile?.bio}Zurich`}</p>
-                    <p className="text-md flex border mt-2 p-1 justify-evenly">
-                        <a href="mailto:norbipascu92@gmail.com" className={`font-bold`}>
+                    <p className="text-md  border mt-2 p-1 ">
+                        <a href="mailto:norbipascu92@gmail.com" className={`font-bold flex justify-evenly`}>
                             norbipascu92@gmail.com
+                            <span>
+                                <Email />
+                            </span>
                         </a>
-                        <span>
-                            <Email />
-                        </span>
+
                     </p>
-                    <p className="text-md flex border p-1 justify-evenly">
-                        <a href="tel:+41765951562" className={`font-bold`}>
+                    <p className="text-md border mt-2 p-1">
+                        <a href="tel:+41765951562" className={`font-bold flex justify-evenly`}>
                             +41765951562
+                            <span>
+                                <Phone />
+                            </span>
                         </a>
-                        <span>
-                            <Phone />
-                        </span>
                     </p>
                 </div>
                 <img

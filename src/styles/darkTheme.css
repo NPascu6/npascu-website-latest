@@ -1,13 +1,7 @@
 .dark-theme {
     color: #ffffff;
     background-color: #1a1d24;
-    font-family: Georgia, 'Times New Roman', Times, serif;
-}
-
-.dark-theme #side-bar {
-    background-color: #20242c;
-    color: #ffffff;
-    z-index: 1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
 }
 
 .dark-theme table {
