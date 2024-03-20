@@ -1,5 +1,3 @@
-import React from "react";
-
 const EducationCard = () => {
     return (
         <div className="shadow-md p-3 m-3 card">

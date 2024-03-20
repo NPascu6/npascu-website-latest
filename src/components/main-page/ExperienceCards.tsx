@@ -1,5 +1,3 @@
-import React from "react";
-
 export const FintamaCard = () => {
     return (
         <div className="shadow-xl p-3 m-2 card">

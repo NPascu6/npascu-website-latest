@@ -1,4 +1,3 @@
-import React from "react";
 import { RootState } from "../../store/store";
 import { _githubAvatarUrl } from "../../_constant";
 import { useSelector } from 'react-redux';
