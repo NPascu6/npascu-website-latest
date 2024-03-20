@@ -22,8 +22,8 @@
 .sidebar-list {
     list-style: none;
     padding: 0;
+    background-color: darkgrey;
     margin: 0;
-    margin-top: 2.5em;
 }
 
 .sidebar-item {

@@ -82,7 +82,7 @@ const MainPage = () => {
                 <CollapsibleSection hideTitleOnOpen title="Support Technician (NewV Technologies)" subTitle="06/2015 - 06/2016">
                     <ItSupportTechnicianCard />
                 </CollapsibleSection>
-                <CollapsibleSection isCollapsed hideTitleOnOpen title={'Sample screens form previous work.'}>
+                <CollapsibleSection hideTitleOnOpen title={'Sample screens form previous work.'}>
                     {workImages?.length > 0 && <ImageSlider images={workImages} />}
                 </CollapsibleSection>
                 <CollapsibleSection isCollapsed hideTitleOnOpen title="Trading App (Crypto trading platform)">

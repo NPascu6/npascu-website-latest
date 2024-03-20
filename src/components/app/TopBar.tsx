@@ -29,7 +29,7 @@ const TopBar = () => {
                 {toggleSidebar && (
                     <Sidebar toggle={toggleSidebar} setToggle={setToggleSidebar} />
                 )}
-                <div className="ml-2">
+                <div className="">
                     <img
                         className="favicon"
                         src={Favicon32}

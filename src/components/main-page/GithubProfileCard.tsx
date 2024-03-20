@@ -12,36 +12,29 @@ import Phone from "../../assets/icons/Phone";
 const GithubProfileCard = () => {
     const { githubProfile } = useSelector((state: RootState) => state.app);
 
-    const onDownload = () => {
-        const link = document.createElement("a");
-        link.download = `PascuNorbertResumeEN.pdf`;
-        link.href = "./PascuNorbertresumeEN.pdf";
-        link.click();
-    };
-
     return (
         <div id="github-profile-card" className={`p-1 lg:w-1/3 shadow-xl`}>
-            <div className="text-center flex justify-between border border-green-600 p-1" onClick={onDownload}>
-                <div className="text-md text-green-600">Download CV</div>
-                <div><DownloadIcon color={'green'} /></div>
-            </div>
+            <a href="./PascuNorbertresumeEN.pdf" download={'PascuNorbertresumeEN.pdf'} rel="_noreferer" className="text-center flex justify-between border border-green-600 p-1">
+                Download CV
+                <span><DownloadIcon color={'green'} /></span>
+            </a>
             <div className="text-start flex items-center justify-center">
                 <div className="mt-2 mx-2">
                     <p className={`text-md font-bold`}>{githubProfile?.name}</p>
                     <p className={`text-sm`}>{`${githubProfile?.bio}Zurich`}</p>
                     <p className="text-md  border mt-2 p-1 ">
-                        <a href="mailto:norbipascu92@gmail.com" className={`font-bold flex justify-evenly`}>
+                        <a href="mailto:norbipascu92@gmail.com" className={`font-bold flex justify-between p-1`}>
                             norbipascu92@gmail.com
-                            <span>
+                            <span style={{ color: 'green' }}>
                                 <Email />
                             </span>
                         </a>
 
                     </p>
                     <p className="text-md border mt-2 p-1">
-                        <a href="tel:+41765951562" className={`font-bold flex justify-evenly`}>
+                        <a href="tel:+41765951562" className={`font-bold flex justify-between p-1`}>
                             +41765951562
-                            <span>
+                            <span style={{ color: 'green' }}>
                                 <Phone />
                             </span>
                         </a>
@@ -52,13 +45,13 @@ const GithubProfileCard = () => {
                     alt="Profile"
                     style={{
                         width: "6rem",
-                        height: "8rem",
+                        height: "10rem",
                         objectFit: "cover",
                     }}
-                    className=" mx-auto mt-4 mr-13 mb-3"
+                    className=" mx-auto mt-4 mr-13"
                 />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 mt-2">
                 <div className="flex justify-center items-center w-full mt-2">
                     <div className="text-center w-full">
                         <a
@@ -88,7 +81,7 @@ const GithubProfileCard = () => {
                         </a>
                     </div>
                 </div>
-                <div className="flex justify-center items-center w-full">
+                <div className="flex justify-center items-center w-full mt-2">
                     <div className="text-center w-full">
                         <a
                             href="https://www.facebook.com/norbi.pascu"

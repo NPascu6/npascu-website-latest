@@ -9,7 +9,6 @@ const FullScreenImage = ({ handlePrevClick, handleNextClick, toggleFullScreen, s
         <div
             id="full-screen-photo"
             className="flex fixed top-0 left-0 w-full h-full bg-black z-50 items-center justify-center"
-            onClick={toggleFullScreen}
         >
             <div className='flex items-center'>
                 {handlePrevClick && <span className="transform -translate-y-1/2 text-white" onClick={handlePrevClick}>

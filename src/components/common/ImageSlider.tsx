@@ -56,17 +56,18 @@ const ImageSlider = ({ images, autoSlideTimeout = 4000 }: ImageSliderProps) => {
 
         const clickEvent = new MouseEvent('click', {
             view: window,
-            bubbles: true,
+            bubbles: false,
             cancelable: true,
         });
         const autoSlideInterval = setInterval(() => {
+            if (isFullScreen) return;
             handleNextClickScoped(clickEvent); // Simulate a click on the next span
         }, autoSlideTimeout);
 
         return () => {
             clearInterval(autoSlideInterval);
         };
-    }, [currentImageIndex, autoSlideTimeout, images]);
+    }, [currentImageIndex, autoSlideTimeout, images, isFullScreen]);
 
     return (
         <div className='flex card items-center shadow-xl justify-center min-w-full align-center mt-2'>
