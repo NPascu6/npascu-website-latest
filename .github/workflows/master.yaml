@@ -8,9 +8,9 @@ name: 🚀 Deploy website on push
 jobs:
   web-deploy:
     name: 🎉 Deploy
-    runs:
-      using: 'node20'
-      
+
+    using: 'node20'
+
     runs-on: ubuntu-latest
 
     steps:
