@@ -11,6 +11,7 @@ const App = () => {
   const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
   const [toggleSidebar, setToggleSidebar] = useState(false);
   
+  
   useEffect(() => {
     const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
 
