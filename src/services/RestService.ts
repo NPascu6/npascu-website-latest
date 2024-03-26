@@ -32,7 +32,6 @@ export abstract class RestService {
             console.log(err.message);
             return err.message;
         }
-
     }
 
     /**

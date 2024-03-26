@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTheme } from './store/reducers/appReducer';
-import Toaster from './components/common/Toaster';
-import TopBar from './components/app/TopBar';
-import { RootState } from './store/store';
-import RoutesSwitch from './router/Router';
+import { setTheme } from '../store/reducers/appReducer';
+import Toaster from './common/Toaster';
+import TopBar from './app/TopBar';
+import { RootState } from '../store/store';
+import RoutesSwitch from '../router/Router';
 
-
-
-function App() {
+const App = () => {
   const dipatch = useDispatch()
   const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
-
+  const [toggleSidebar, setToggleSidebar] = useState(false);
+  
   useEffect(() => {
     const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
 
@@ -22,7 +21,7 @@ function App() {
 
   return (
     <div id='app' className={`${darkTheme ? 'dark' : 'light'}-theme app select-none`}>
-      <TopBar />
+      <TopBar toggleSidebar={toggleSidebar} setToggleSidebar={setToggleSidebar} />
       <div style={{ maxHeight: 'calc(100dvh - 4em)', overflowY: 'auto' }}>
         <RoutesSwitch />
       </div>

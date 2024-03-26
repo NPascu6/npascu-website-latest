@@ -51,7 +51,7 @@ const Sidebar = ({ toggle, setToggle }: SidebarProps) => {
         (location.pathname.includes(route.path.split('*')[0]) && route.path.includes('*'));
 
     return (
-        <div ref={sideBarRef} id="side-bar" className={`sidebar ${toggle ? 'open' : 'closed'}`}>
+        <div ref={sideBarRef} id="side-bar" data-testid="sidebar-test" className={`sidebar ${toggle ? 'open' : 'closed'}`}>
             <ul className="sidebar-list">
                 {routeDefinition.map((route, index) => (
                     <React.Fragment key={index}>

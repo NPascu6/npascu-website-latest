@@ -1,4 +1,4 @@
-export default function ToggleSvgDark() {
+const ToggleSvgDark = () => {
     return <svg className="h-8 w-8 text-black"
         viewBox="0 0 24 24" fill="none"
         stroke="currentColor"
@@ -9,3 +9,5 @@ export default function ToggleSvgDark() {
         <circle cx="16" cy="12" r="3" />
     </svg>
 }
+
+export default ToggleSvgDark

@@ -18,7 +18,7 @@ const useWindowSize = (): WindowInterface => {
 
 
     useDebounced(() => {
-        function handleWindowResize() {
+        const handleWindowResize = () => {
             setWindowSize(getWindowSize());
         }
 

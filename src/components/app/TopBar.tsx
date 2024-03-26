@@ -10,10 +10,14 @@ import Sidebar from './SideBar';
 import CommonDialog from '../common/CommonDialog';
 import LoginForm from '../auth/LoginForm';
 
-const TopBar = () => {
+interface TopBarProps {
+    toggleSidebar: boolean;
+    setToggleSidebar: (toggle: boolean) => void;
+}
+
+const TopBar = ({ toggleSidebar, setToggleSidebar}: TopBarProps) => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const dispatch = useDispatch();
-    const [toggleSidebar, setToggleSidebar] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
 
     const changeTheme = () => {
@@ -24,7 +28,7 @@ const TopBar = () => {
     };
 
     return (
-        <div id="top-bar" className="top-bar">
+        <div id="top-bar" data-testid="top-bar-test" className="top-bar">
             <div className='w-full'>
                 {toggleSidebar && (
                     <Sidebar toggle={toggleSidebar} setToggle={setToggleSidebar} />

@@ -11,7 +11,7 @@ interface CollapsibleSectionpProps {
     hideTitleOnOpen?: boolean
 }
 
-function CollapsibleSection({ title, children, isCollapsed = false, subTitle = "", hideTitleOnOpen = false }: CollapsibleSectionpProps) {
+const CollapsibleSection = ({ title, children, isCollapsed = false, subTitle = "", hideTitleOnOpen = false }: CollapsibleSectionpProps) => {
     const [isOpen, setIsOpen] = useState(isCollapsed);
 
     const toggleSection = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

@@ -1,9 +1,26 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from '../../App';
+import { render } from '@testing-library/react'
+import { describe, test, expect } from 'vitest'
+import App from '../../components/App';
+import { Provider } from 'react-redux';
+import store from '../../store/store';
+import { HashRouter } from 'react-router-dom';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('<App />', () => {
+  const wrapper = render(
+    <HashRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </HashRouter>
+
+  )
+
+  test('App mounts properly', () => {
+    expect(wrapper).toBeTruthy()
+  })
+
+  test('App has a top bar', () => {
+    const topBar = wrapper.getByTestId('top-bar-test')
+    expect(topBar).toBeTruthy()
+  })
 });

@@ -1,4 +1,4 @@
-export default function ToggleSvgLight() {
+const ToggleSvgLight = () => {
     return <svg className="h-8 w-8 text-white"
         viewBox="0 0 24 24"
         fill="none"
@@ -10,3 +10,5 @@ export default function ToggleSvgLight() {
         <circle cx="8" cy="12" r="3" />
     </svg>
 }
+
+export default ToggleSvgLight;

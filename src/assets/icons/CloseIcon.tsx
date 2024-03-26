@@ -1,4 +1,4 @@
-export default function CloseIcon() {
+export const CloseIcon = () => {
     return <svg className="h-4 w-4 text-black-500"
         cursor={'pointer'}
         width="24"
