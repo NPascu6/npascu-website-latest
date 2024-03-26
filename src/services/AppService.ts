@@ -1,6 +1,6 @@
 import { RestService } from "./RestService";
 
-const REACT_APP_SECRET = process.env.REACT_APP_SECRET
+const REACT_APP_SECRET = import.meta.env.REACT_APP_SECRET
 
 export class AppService extends RestService {
     private _baseUrl = 'https://api.github.com';

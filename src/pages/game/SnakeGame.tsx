@@ -489,7 +489,7 @@ const SnakeGame: React.FC = () => {
     }, [innerWidth, innerHeight]);
 
     useEffect(() => {
-        let intervalId: NodeJS.Timeout;
+        let intervalId = 0;
 
         if (state.running) {
             intervalId = setInterval(() => {
