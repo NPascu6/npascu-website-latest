@@ -8,17 +8,14 @@ name: 🚀 Deploy website on push
 jobs:
   web-deploy:
     name: 🎉 Deploy
-
-    using: 'node20'
-
     runs-on: ubuntu-latest
 
     steps:
           
       - name: 🚚 Get latest code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -33,7 +30,7 @@ jobs:
         run: yarn run build-production
 
       - name: 📂 Sync files pascu.io
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: 92.205.1.205
           username: ${{ secrets.ftp_username_1 }}
