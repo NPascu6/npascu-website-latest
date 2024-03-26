@@ -1,4 +1,4 @@
-export const CloseIcon = () => {
+const CloseIcon = () => {
     return <svg className="h-4 w-4 text-black-500"
         cursor={'pointer'}
         width="24"
@@ -14,3 +14,5 @@ export const CloseIcon = () => {
         <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
 }
+
+export default CloseIcon
