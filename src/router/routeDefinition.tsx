@@ -8,7 +8,7 @@ import { RouteDefinition } from "../models/common/common";
 import AboutPage from "../pages/AboutPage";
 import MainPage from "../pages/MainPage";
 import GamePage from "../pages/game/TicTacToeGame";
-import GamesCardPage from "../pages/game/GamesContainer";
+import GamesCardPage from "../components/main-page/GamesContainer";
 import SnakeGame from "../pages/game/SnakeGame";
 //import BrickOutGame from "../pages/game/BrickoutGame";
 

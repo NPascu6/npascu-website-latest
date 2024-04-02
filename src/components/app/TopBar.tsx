@@ -6,13 +6,13 @@ import ToggleSvgDark from '../../assets/icons/ToggleSvgDark';
 import ToggleSvgLight from '../../assets/icons/ToggleSvgLight';
 import UserIcon from '../../assets/icons/UserIcon';
 import Favicon32 from '../../assets/favicon-32x32.png';
-import Sidebar from './SideBar';
 import CommonDialog from '../common/CommonDialog';
 import LoginForm from '../auth/LoginForm';
 
 interface TopBarProps {
     toggleSidebar: boolean;
     setToggleSidebar: (toggle: boolean) => void;
+    
 }
 
 const TopBar = ({ toggleSidebar, setToggleSidebar}: TopBarProps) => {
@@ -30,21 +30,13 @@ const TopBar = ({ toggleSidebar, setToggleSidebar}: TopBarProps) => {
     return (
         <div id="top-bar" data-testid="top-bar-test" className="top-bar">
             <div className='w-full'>
-                {toggleSidebar && (
-                    <Sidebar toggle={toggleSidebar} setToggle={setToggleSidebar} />
-                )}
                 <div className="">
                     <img
                         className="favicon"
                         src={Favicon32}
                         alt="favicon"
-                        onClick={() => setToggleSidebar(!toggleSidebar)}
                     />
                 </div>
-                <div
-                    className={`sidebar-toggle-overlay ${toggleSidebar ? 'expanded' : 'collapsed'}`}
-                    onClick={() => setToggleSidebar(!toggleSidebar)}
-                ></div>
             </div>
 
             <div className="top-bar-section w-full">

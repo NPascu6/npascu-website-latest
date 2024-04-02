@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
+import { useNavigate } from "react-router-dom";
 
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
@@ -88,6 +89,7 @@ const SnakeGame: React.FC = () => {
     const touchStartX = useRef<number | null>(null);
     const touchStartY = useRef<number | null>(null);
     const boardRef = useRef<any>(null);
+    const navigate = useNavigate();
 
     const isCollidingWithFood = useCallback(
         (snake: Position[]) => {
@@ -510,9 +512,15 @@ const SnakeGame: React.FC = () => {
     return (
         <div className="container justify-center items-center align-center flex flex-col" ref={boardRef}>
             <div className="flex flex-col justify-center items-center">
-                <div className="score border p-1 bg-black border-gray-500" style={{ color: 'green' }}>
-                    Score: {state.score}
+                <div className="flex justify-between w-full">
+                    <div className="border p-1 bg-black border-gray-500 w-1/3" style={{ color: 'green' }}>
+                        Score: {state.score}
+                    </div>
+                    <div onClick={() => navigate('/')} className="flex cursor-pointer justify-end">
+                        x
+                    </div>
                 </div>
+
                 <SnakeBoard boardSize={state.boardSize} getCellStyle={getCellStyle} renderFood={renderFood} renderObstacle={renderObstacle} />
             </div>
             <div className="flex items-center border border-gray-500 justify-between w-full">

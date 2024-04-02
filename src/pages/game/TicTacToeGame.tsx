@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import useWindowSize from '../../hooks/useWindowSize';
 import TicTacToeIcon from '../../assets/icons/TicTacToe';
+import { useNavigate } from 'react-router-dom';
 
 type SquareValue = 'X' | 'O' | null;
 
 interface TicTacToeProps {
+    startGame: boolean;
+    setStartGame: React.Dispatch<React.SetStateAction<boolean>>;
     player1Symbol: SquareValue;
     player2Symbol: SquareValue;
     winner: SquareValue | null;
@@ -20,6 +23,7 @@ interface TicTacToeProps {
 }
 
 interface GameStatisticsProps {
+    startGame: boolean;
     currentPlayer: string;
     player1Stats: {
         currentPlayer: string;
@@ -33,27 +37,28 @@ interface GameStatisticsProps {
     };
 }
 
-const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer }) => (
+const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer, startGame }) => (
     <div className="text-center shadow-xl">
-        <h2 className="text-xl font-bold mb-2">Game Statistics</h2>
         <div className="flex justify-center">
             <div className="border mr-1 p-1" style={{ width: '11em' }}>
-                <p>Player 1:</p>
+                {!startGame && <p>Player 1:</p>}
                 <p className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
-                <p>Wins: {player1Stats.wins}</p>
-                <p>Draws: {player1Stats.draws}</p>
+                {!startGame && <p>Wins: {player1Stats.wins}</p>}
+                {!startGame && <p>Draws: {player1Stats.draws}</p>}
             </div>
             <div className="border ml-1 p-1" style={{ width: '11em' }}>
-                <p>Player 2:</p>
+                {!startGame && <p>Player 2:</p>}
                 <p className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
-                <p>Wins: {player2Stats.wins}</p>
-                <p>Draws: {player2Stats.draws}</p>
+                {!startGame && <p>Wins: {player2Stats.wins}</p>}
+                {!startGame && <p>Draws: {player2Stats.draws}</p>}
             </div>
         </div>
     </div>
 );
 
 const TicTacToe: React.FC<TicTacToeProps> = ({
+    startGame,
+    setStartGame,
     player1Symbol,
     player2Symbol,
     winner,
@@ -62,7 +67,6 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     currentPlayer,
     setBoard,
     setCurrentPlayer,
-    setResetButtonPresent,
     setWinner,
     setIsDraw
 }) => {
@@ -70,8 +74,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
     const handleClick = (e: any, index: number): void => {
         e.preventDefault();
         e.stopPropagation();
-
-        setResetButtonPresent && setResetButtonPresent(true);
+        setStartGame(true);
 
         if (board[index] || winner || isDraw) {
             return;
@@ -101,6 +104,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
                 const subsequence = sequence.slice(i, i + winningCondition);
                 if (isWinningSequence(subsequence)) {
                     setWinner(currentPlayer);
+                    setStartGame(false);
                     return true;
                 }
             }
@@ -113,6 +117,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
             const column = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
 
             if (checkSequence(row) || checkSequence(column)) {
+                setStartGame(false);
+
                 return true;
             }
         }
@@ -120,12 +126,16 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         // Check main diagonal
         const mainDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize + 1));
         if (checkSequence(mainDiagonal)) {
+            setStartGame(false);
+
             return true;
         }
 
         // Check secondary diagonal
         const secondaryDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize - 1) + (boardSize - 1));
         if (checkSequence(secondaryDiagonal)) {
+            setStartGame(false);
+
             return true;
         }
 
@@ -146,6 +156,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
                     // Check diagonals from left to right
                     if (j <= boardSize - winningCondition) {
                         if (checkAdditionalDiagonals(i, j, 1, 1)) {
+                            setStartGame(false);
+
                             return true;
                         }
                     }
@@ -153,6 +165,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
                     // Check diagonals from right to left
                     if (j >= winningCondition - 1) {
                         if (checkAdditionalDiagonals(i, j, 1, -1)) {
+                            setStartGame(false);
+
                             return true;
                         }
                     }
@@ -161,6 +175,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
                 // Check diagonals from top to bottom
                 if (j <= boardSize - winningCondition) {
                     if (checkAdditionalDiagonals(i, j, 1, 0)) {
+                        setStartGame(false);
+
                         return true;
                     }
                 }
@@ -170,6 +186,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         setCurrentPlayer(nextPlayer);
 
         if (board.every((square) => square !== null)) {
+            setStartGame(false);
             setIsDraw(true);
         }
 
@@ -181,7 +198,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
             <div
                 key={index}
                 className="border border-gray-400 font-bold flex items-center justify-center focus:outline-none overflow-hidden"
-                style={{ height: '100%' }}
+                style={{ height: '100%', minHeight: '1.4em', cursor: 'pointer' }}
                 onClick={(e: any) => handleClick(e, index)}
             >
                 {board[index] && <span style={{ margin: '-1em' }}> {board[index]}</span>}
@@ -201,10 +218,12 @@ const TicTacToeContainer: React.FC = () => {
     const [player1Stats, setPlayer1Stats] = useState({ currentPlayer: 'X', wins: 0, draws: 0 });
     const [player2Stats, setPlayer2Stats] = useState({ currentPlayer: 'O', wins: 0, draws: 0 });
     const windowSize = useWindowSize();
-    const [resetButtonPresent, setResetButtonPresent] = useState(false);
+    const [startGame, setStartGame] = useState(false);
+    const navigate = useNavigate();
 
     const handleReset = useCallback(() => {
         setBoard(initialBoard);
+        setStartGame(false);
         setCurrentPlayer('X');
         setWinner(null);
         setIsDraw(false);
@@ -241,18 +260,15 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     const getHeight = useCallback(() => {
-        return windowSize.innerHeight - 455;
+        return windowSize.innerHeight - 275;
     }, [windowSize]);
 
     return (
-        <div className="container mx-auto p-2 md:p-4">
+        <div className="">
             <div className="shadow-xl flex flex-col">
-                <div className="p-1 text-center">
-                    <h1 className="text-green text-xl md:text-md lg:text-lg font-bold mb-1">Tic Tac Toe</h1>
-                    <div className="flex justify-center">
-                        <TicTacToeIcon />
-                    </div>
-                    <div className="m-2">
+                {!startGame && <div className="p-1 text-center flex">
+                    <div className="m-2 w-full">
+                        <span>Select Board Size</span>
                         <select
                             className="mt-1 text-sm block w-full p-2 text-black border border-gray-300"
                             onChange={(e) => {
@@ -270,17 +286,23 @@ const TicTacToeContainer: React.FC = () => {
                             <option value="8">8x8</option>
                         </select>
                     </div>
-                    {currentPlayer && (
-                        <GameStatistics
-                            currentPlayer={currentPlayer}
-                            player1Stats={player1Stats}
-                            player2Stats={player2Stats}
-                        />
-                    )}
-                </div>
-                <div className="p-2 text-center">
-                    <div className="grid shadow-lg mb-2 min-h-max" style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '2px', height: getHeight() }}>
+                    <div onClick={() => navigate('/')}>
+                        x
+                    </div>
+                </div>}
+                {currentPlayer && (
+                    <GameStatistics
+                        startGame={startGame}
+                        currentPlayer={currentPlayer}
+                        player1Stats={player1Stats}
+                        player2Stats={player2Stats}
+                    />
+                )}
+                <div className="text-center">
+                    <div className="grid shadow-lg mb-2 min-h-max" style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '4px', height: getHeight() }}>
                         <TicTacToe
+                            startGame={startGame}
+                            setStartGame={setStartGame}
                             setIsDraw={setIsDraw}
                             setWinner={setWinner}
                             handleReset={handleReset}
@@ -292,16 +314,16 @@ const TicTacToeContainer: React.FC = () => {
                             winner={winner}
                             player1Symbol="X"
                             player2Symbol="O"
-                            setResetButtonPresent={setResetButtonPresent}
                         />
                     </div>
                 </div>
-                {resetButtonPresent && <div className="flex justify-center mt-2 mb-2">
-                    <button className="p-2 border-2 font-bold" onClick={handleReset}>
-                        Reset
-                    </button>
-                </div>}
+
             </div>
+            {startGame && <div className="flex justify-center mt-2 mb-2">
+                <button className="p-2 border-2 font-bold" onClick={handleReset}>
+                    Reset
+                </button>
+            </div>}
         </div>
     );
 

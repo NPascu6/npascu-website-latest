@@ -13,17 +13,21 @@ const GithubProfileCard = () => {
     const { githubProfile } = useSelector((state: RootState) => state.app);
 
     return (
-        <div id="github-profile-card" className={`p-1 lg:w-1/3 shadow-xl`}>
-            <a href="./PascuNorbertresumeEN.pdf" download={'PascuNorbertresumeEN.pdf'} rel="_noreferer" className="text-center flex justify-between border border-green-600 p-1">
+        <div id="github-profile-card" className={`p-1 shadow-xl`}>
+            <a href="./PascuNorbertresumeEN.pdf" download="PascuNorbertresumeEN.pdf" rel="noopener noreferrer"
+                className="text-center flex justify-between items-center border border-gray-600 p-2 bg-green-500 text-white hover:bg-green-700 transition-colors duration-300 ease-in-out">
                 Download CV
-                <span><DownloadIcon color={'green'} /></span>
+                <span className="flex items-center justify-center">
+                    <DownloadIcon className="text-white" />
+                </span>
             </a>
+
             <div className="text-start flex items-center justify-center">
                 <div className="mt-2 mx-2">
                     <p className={`text-md font-bold`}>{githubProfile?.name}</p>
                     <p className={`text-sm`}>{`${githubProfile?.bio}Zurich`}</p>
-                    <p className="text-md  border mt-2 p-1 ">
-                        <a href="mailto:norbipascu92@gmail.com" className={`font-bold flex justify-between p-1`}>
+                    <p className="text-md  mt-2 p-1 ">
+                        <a href="mailto:norbipascu92@gmail.com" className={`font-bold flex justify-between p-1 border border-gray-600 p-2 hover:text-white hover:bg-green-700 transition-colors duration-300 ease-in-out`}>
                             norbipascu92@gmail.com
                             <span style={{ color: 'green' }}>
                                 <Email />
@@ -31,8 +35,8 @@ const GithubProfileCard = () => {
                         </a>
 
                     </p>
-                    <p className="text-md border mt-2 p-1">
-                        <a href="tel:+41765951562" className={`font-bold flex justify-between p-1`}>
+                    <p className="text-md mt-2 p-1">
+                        <a href="tel:+41765951562" className={`font-bold flex justify-between p-1 border border-gray-600 p-2 hover:text-white hover:bg-green-700 transition-colors duration-300 ease-in-out`}>
                             +41765951562
                             <span style={{ color: 'green' }}>
                                 <Phone />
@@ -45,10 +49,10 @@ const GithubProfileCard = () => {
                     alt="Profile"
                     style={{
                         width: "6rem",
-                        height: "10rem",
+                        height: "8rem",
                         objectFit: "cover",
                     }}
-                    className=" mx-auto mt-4 mr-13"
+                    className="mx-auto mt-4 mr-13"
                 />
             </div>
             <div className="mb-4 mt-2">

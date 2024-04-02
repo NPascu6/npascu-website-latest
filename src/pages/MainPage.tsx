@@ -11,6 +11,7 @@ import HighlightedRepos from "../components/main-page/HighlightedRepos";
 import { workImages as images } from "../_constant";
 import { setWorkPhotos } from "../store/reducers/appReducer";
 import ImageSlider from "../components/common/ImageSlider";
+import GamesCardPage from "../components/main-page/GamesContainer";
 
 const MainPage = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -51,9 +52,15 @@ const MainPage = () => {
 
     return (
         <div className="p-4 md:p-10" id="main-page">
-            <div className="flex justify-center items-center">
-                <GithubProfileCard />
+            <div className="flex justify-evenly items-center xs:flex-col sm:flex-col md:flex-row lg:flex-row">
+                <div>
+                    <GithubProfileCard />
+                </div>
+                <CollapsibleSection hideTitleOnOpen title={'Sameple JS Games'}>
+                    <GamesCardPage />
+                </CollapsibleSection>
             </div>
+
             <div className="mt-2" >
                 <CollapsibleSection hideTitleOnOpen title="Education">
                     <EducationCard />
