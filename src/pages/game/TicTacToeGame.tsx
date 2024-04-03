@@ -38,17 +38,17 @@ interface GameStatisticsProps {
 }
 
 const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer, startGame }) => (
-    <div className="text-center shadow-xl">
-        <div className="flex justify-center">
-            <div className="border mr-1 p-1" style={{ width: '11em' }}>
-                {!startGame && <p>Player 1:</p>}
-                <p className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
+    <div className="text-center shadow-xl mb-2">
+        <div className="flex justify-between">
+            <div className="border mr-1 p-1" style={{ width: '14em' }}>
+                {!startGame && <p>Player 1: </p>}
+                <p style={{ color: currentPlayer === player1Stats.currentPlayer ? 'green' : 'gray' }} className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
                 {!startGame && <p>Wins: {player1Stats.wins}</p>}
                 {!startGame && <p>Draws: {player1Stats.draws}</p>}
             </div>
-            <div className="border ml-1 p-1" style={{ width: '11em' }}>
+            <div className="border ml-1 p-1" style={{ width: '14em' }}>
                 {!startGame && <p>Player 2:</p>}
-                <p className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
+                <p style={{ color: currentPlayer === player2Stats.currentPlayer ? 'green' : 'gray' }} className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
                 {!startGame && <p>Wins: {player2Stats.wins}</p>}
                 {!startGame && <p>Draws: {player2Stats.draws}</p>}
             </div>
@@ -264,9 +264,9 @@ const TicTacToeContainer: React.FC = () => {
     }, [windowSize]);
 
     return (
-        <div className="">
+        <div className="p-1">
             <div className="shadow-xl flex flex-col">
-                {!startGame && <div className="p-1 text-center flex">
+                {!startGame && <div className="text-center flex w-full">
                     <div className="m-2 w-full">
                         <span>Select Board Size</span>
                         <select

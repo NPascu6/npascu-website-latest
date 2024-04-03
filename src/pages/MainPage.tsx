@@ -51,14 +51,10 @@ const MainPage = () => {
     }, [dispatch])
 
     return (
-        <div className="p-4 md:p-10" id="main-page">
-            <div className="flex justify-evenly items-center xs:flex-col sm:flex-col md:flex-row lg:flex-row">
-                <div>
-                    <GithubProfileCard />
-                </div>
-                <CollapsibleSection hideTitleOnOpen title={'Sameple JS Games'}>
-                    <GamesCardPage />
-                </CollapsibleSection>
+        <div className="p-2 md:p-6" id="main-page">
+            <div className="grid grid-cols-2 gap-2 xs:grid-cols-1 sm:grid-cols-2 justify-evenly items-center">
+                <GithubProfileCard />
+                <GamesCardPage />
             </div>
 
             <div className="mt-2" >

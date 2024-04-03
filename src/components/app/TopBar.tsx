@@ -12,10 +12,10 @@ import LoginForm from '../auth/LoginForm';
 interface TopBarProps {
     toggleSidebar: boolean;
     setToggleSidebar: (toggle: boolean) => void;
-    
+
 }
 
-const TopBar = ({ toggleSidebar, setToggleSidebar}: TopBarProps) => {
+const TopBar = ({ toggleSidebar, setToggleSidebar }: TopBarProps) => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const dispatch = useDispatch();
     const [showLogin, setShowLogin] = useState(false);
@@ -32,6 +32,8 @@ const TopBar = ({ toggleSidebar, setToggleSidebar}: TopBarProps) => {
             <div className='w-full'>
                 <div className="">
                     <img
+                        height={16}
+                        width={16}
                         className="favicon"
                         src={Favicon32}
                         alt="favicon"

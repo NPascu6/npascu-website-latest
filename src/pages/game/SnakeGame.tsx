@@ -510,7 +510,7 @@ const SnakeGame: React.FC = () => {
     }, []);
 
     return (
-        <div className="container justify-center items-center align-center flex flex-col" ref={boardRef}>
+        <div className="justify-center items-center align-center flex flex-col" ref={boardRef}>
             <div className="flex flex-col justify-center items-center">
                 <div className="flex justify-between w-full">
                     <div className="border p-1 bg-black border-gray-500 w-1/3" style={{ color: 'green' }}>
@@ -524,8 +524,8 @@ const SnakeGame: React.FC = () => {
                 <SnakeBoard boardSize={state.boardSize} getCellStyle={getCellStyle} renderFood={renderFood} renderObstacle={renderObstacle} />
             </div>
             <div className="flex items-center border border-gray-500 justify-between w-full">
-                <div className="p-1 shadow-xl">{renderControls()}</div>
-                <div className="p-3 shadow-xl">
+                <div className="shadow-xl">{renderControls()}</div>
+                <div className="p-1 shadow-xl">
                     <input
                         style={{ color: 'green' }}
                         className="bg-gray-500"

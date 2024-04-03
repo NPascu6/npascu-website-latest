@@ -10,6 +10,9 @@ import MainPage from "../pages/MainPage";
 import GamePage from "../pages/game/TicTacToeGame";
 import GamesCardPage from "../components/main-page/GamesContainer";
 import SnakeGame from "../pages/game/SnakeGame";
+import Game from "../components/games/click-the-target/Game";
+import TicTacToeContainer from "../pages/game/TicTacToeGame";
+import ClickTheTarget from "../pages/game/ClickTheTarget";
 //import BrickOutGame from "../pages/game/BrickoutGame";
 
 export const routeDefinition: RouteDefinition[] = [
@@ -32,7 +35,7 @@ export const routeDefinition: RouteDefinition[] = [
                 exact: true,
                 title: 'Tic Tac Toe',
                 icon: <TicTacToeIcon />,
-                element: <GamePage />,
+                element: <TicTacToeContainer />,
             },
             {
                 path: 'snake', // Removed '/games/' from the child path
@@ -41,6 +44,13 @@ export const routeDefinition: RouteDefinition[] = [
                 icon: <SnakeIcon />,
                 element: <SnakeGame />,
             },
+            {
+                path: 'click-the-target', // Removed '/games/' from the child path
+                exact: true,
+                title: 'Click The Target',
+                icon: <SnakeIcon />,
+                element: <ClickTheTarget />,
+            }
             // {
             //     path: 'brick-out', // Removed '/games/' from the child path
             //     exact: true,
