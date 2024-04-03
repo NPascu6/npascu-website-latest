@@ -31,7 +31,7 @@ const CollapsibleSection = ({ title, children, isCollapsed = false, subTitle = "
                 </div>
                 <div > {isOpen ? <ChevronUp /> : <ChevronDown />}</div>
             </div>
-            <div className="shadow-xl collapsable-section-body p-1" style={{ marginTop: isOpen ? !subTitle ? '-1em' : '-1em' : '-0.5em' }}>
+            <div className="shadow-xl collapsable-section-body p-1" style={{ marginTop: isOpen ? !subTitle ? '-2em' : '-1em' : '-0.5em' }}>
                 {isOpen && children}
             </div>
         </div>

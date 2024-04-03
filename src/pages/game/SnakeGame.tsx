@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
 import { useNavigate } from "react-router-dom";
+import CloseIcon from "../../assets/icons/CloseIcon";
 
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
@@ -510,14 +511,14 @@ const SnakeGame: React.FC = () => {
     }, []);
 
     return (
-        <div className="justify-center items-center align-center flex flex-col" ref={boardRef}>
+        <div className="justify-center items-center align-center flex flex-col p-1" ref={boardRef}>
             <div className="flex flex-col justify-center items-center">
                 <div className="flex justify-between w-full">
                     <div className="border p-1 bg-black border-gray-500 w-1/3" style={{ color: 'green' }}>
                         Score: {state.score}
                     </div>
                     <div onClick={() => navigate('/')} className="flex cursor-pointer justify-end">
-                        x
+                        <CloseIcon />
                     </div>
                 </div>
 

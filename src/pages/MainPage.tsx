@@ -58,10 +58,10 @@ const MainPage = () => {
             </div>
 
             <div className="mt-2" >
-                <CollapsibleSection hideTitleOnOpen title="Education">
+                <CollapsibleSection hideTitleOnOpen title="Education" subTitle="Diploma, courses and specialization">
                     <EducationCard />
                 </CollapsibleSection>
-                <CollapsibleSection hideTitleOnOpen title={'Highlighted Github Repos'}>
+                <CollapsibleSection hideTitleOnOpen title={'Highlighted Github Repos'} subTitle="Github">
                     <HighlightedRepos />
                 </CollapsibleSection>
                 <CollapsibleSection hideTitleOnOpen title="Current employment (Fintama)" subTitle="02/2023 - current">

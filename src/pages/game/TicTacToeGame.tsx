@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useWindowSize from '../../hooks/useWindowSize';
 import TicTacToeIcon from '../../assets/icons/TicTacToe';
 import { useNavigate } from 'react-router-dom';
+import CloseIcon from '../../assets/icons/CloseIcon';
 
 type SquareValue = 'X' | 'O' | null;
 
@@ -287,7 +288,7 @@ const TicTacToeContainer: React.FC = () => {
                         </select>
                     </div>
                     <div onClick={() => navigate('/')}>
-                        x
+                        <CloseIcon />
                     </div>
                 </div>}
                 {currentPlayer && (
