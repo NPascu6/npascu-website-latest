@@ -6,7 +6,7 @@ import CloseIcon from "../../assets/icons/CloseIcon";
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
 const fruitEmojis = ["🍎", "🍌", "🍇", "🍊", "🍓", "🍍"];
-const obstacleEmojis = ["🌵", "🌴", "🌲", "🌳", "🌱", "🌿"];
+const obstacleEmojis = ["🌲", "🌳"];
 
 interface SnakeBoardProps {
     boardSize: {
@@ -78,7 +78,6 @@ const initialState: State = {
     foodCount: 1,
     obstaclesCount: 5,
     obstacles: [
-
     ],
 };
 
@@ -104,7 +103,7 @@ const SnakeGame: React.FC = () => {
     const generateFood = useCallback(
         (prevState: State) => {
             const boardSize = prevState.boardSize;
-            const newFood: Position[] = [];
+            const newFood = prevState.food;
 
             for (let i = 0; i < prevState.foodCount; i++) {
                 const x = Math.floor(Math.random() * boardSize.innerWidth);
@@ -119,40 +118,48 @@ const SnakeGame: React.FC = () => {
         []
     );
 
-    const consumeFood = useCallback(
-        (newSnake: Position[]) => {
-            setState((prevState) => {
-                const { food, score } = prevState;
-                const head = newSnake[newSnake.length - 1];
-                const consumedFoodIndex = food.findIndex((pos) => pos.x === head.x && pos.y === head.y);
+    const consumeFood = useCallback((newSnake: Position[]) => {
+        setState((prevState) => {
+            const { food, score } = prevState;
+            const head = newSnake[newSnake.length - 1];
+            const consumedFoodIndex = food.findIndex((pos) => pos.x === head.x && pos.y === head.y);
 
-                if (consumedFoodIndex !== -1) {
-                    const newFood = [...food];
-                    newFood.splice(consumedFoodIndex, 1);
+            if (consumedFoodIndex !== -1) {
+                const newFood = [...food];
+                newFood.splice(consumedFoodIndex, 1);
 
-                    let newScore = score + 1;
-                    let newFoodCount = prevState.foodCount || 1;
+                let newScore = score + 1;
+                let newFoodCount = prevState.foodCount - 1 === 0 ? 1 : prevState.foodCount - 1;
 
-                    if (newScore === 2 || newScore === 5 || newScore === 8) {
-                        newFoodCount++;
-                    }
-
-                    const newState = generateFood({
-                        ...prevState,
-                        snake: newSnake,
-                        score: newScore,
-                        foodCount: newFoodCount,
-                        food: newFood,
-                    });
-
-                    return newState;
+                if (newScore === 5 || newScore === 15 || newScore === 30) {
+                    newFoodCount++;
                 }
 
-                return prevState;
-            });
-        },
-        [generateFood]
-    );
+                const obstacles = [...prevState.obstacles];
+                const increaseObstacles = newScore % 5 === 0;
+                if (increaseObstacles) {
+                    const x = Math.floor(Math.random() * prevState.boardSize.innerWidth);
+                    const y = Math.floor(Math.random() * prevState.boardSize.innerHeight);
+                    const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
+
+                    obstacles.push({ x, y, emoji: randomEmoji });
+                }
+
+                const newState = generateFood({
+                    ...prevState,
+                    snake: newSnake,
+                    score: newScore,
+                    foodCount: newFoodCount,
+                    food: newFood,
+                    obstacles: increaseObstacles ? obstacles : prevState.obstacles,
+                });
+
+                return newState;
+            }
+
+            return prevState;
+        });
+    }, []);
 
     const handleObstacleCollision = useCallback(() => {
         const snake = state.snake
@@ -198,14 +205,23 @@ const SnakeGame: React.FC = () => {
     );
 
     const startGame = useCallback(() => {
+        const obstacles: any = [];
 
+        for (let i = 0; i < state.obstaclesCount; i++) {
+            const x = Math.floor(Math.random() * state.boardSize.innerWidth);
+            const y = Math.floor(Math.random() * state.boardSize.innerHeight);
+            const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
+
+            obstacles.push({ x, y, emoji: randomEmoji });
+        }
 
         setState((prevState) => ({
             ...prevState,
             running: true,
             score: 0,
+            obstacles: obstacles
         }));
-    }, []);
+    }, [state.obstaclesCount]);
 
     const resetGame = useCallback(() => {
         setState((prevState) => ({
@@ -213,10 +229,7 @@ const SnakeGame: React.FC = () => {
             boardSize: prevState.boardSize,
             foodCount: 1,
         }));
-
-        generateFood(initialState)
-
-    }, [generateFood]);
+    }, []);
 
     const stopGame = useCallback(() => {
         setState((prevState) => ({ ...prevState, running: false }));
@@ -405,10 +418,10 @@ const SnakeGame: React.FC = () => {
         if (state.running) {
             return (
                 <>
-                    <button style={{ color: 'red' }} className="bg-black border border-gray-500 m-1 p-1" onClick={stopGame}>
+                    <button style={{ color: 'red' }} className="bg-black border border-gray-500 p-0.5" onClick={stopGame}>
                         Stop
                     </button>
-                    <button style={{ color: 'green' }} className="bg-black border border-gray-500 m-1 p-1" onClick={pauseGame}>
+                    <button style={{ color: 'green' }} className="bg-black border border-gray-500 ml-1 p-0.5" onClick={pauseGame}>
                         {state.running ? "Pause" : "Resume"}
                     </button>
                 </>
@@ -416,10 +429,10 @@ const SnakeGame: React.FC = () => {
         } else {
             return (
                 <>
-                    {<button style={{ color: 'green' }} className="bg-black border border-gray-500 m-1 p-1" onClick={startGame}>
+                    {<button style={{ color: 'green' }} className="bg-black border border-gray-500 p-0.5" onClick={startGame}>
                         Start
                     </button>}
-                    <button style={{ color: 'orange' }} className="bg-black border border-gray-500 m-1 p-1" onClick={resetGame}>
+                    <button style={{ color: 'orange' }} className="bg-black border border-gray-500 ml-1 p-0.5" onClick={resetGame}>
                         Reset
                     </button>
                 </>
@@ -497,7 +510,7 @@ const SnakeGame: React.FC = () => {
         if (state.running) {
             intervalId = setInterval(() => {
                 moveSnake();
-            }, 1000 / state.speed);
+            }, 700 / state.speed);
         }
 
         return () => {
@@ -525,24 +538,22 @@ const SnakeGame: React.FC = () => {
                 <SnakeBoard boardSize={state.boardSize} getCellStyle={getCellStyle} renderFood={renderFood} renderObstacle={renderObstacle} />
             </div>
             <div className="flex items-center border border-gray-500 justify-between w-full">
-                <div className="shadow-xl">{renderControls()}</div>
-                <div className="p-1 shadow-xl">
-                    <input
-                        style={{ color: 'green' }}
-                        className="bg-gray-500"
-                        type="range"
-                        min="1"
-                        max="40"
-                        step="1"
-                        value={state.speed}
-                        onChange={(event) =>
-                            setState((prevState) => ({
-                                ...prevState,
-                                speed: parseInt(event.target.value),
-                            }))
-                        }
-                    />
-                </div>
+                {renderControls()}
+                <input
+                    style={{ color: 'green' }}
+                    className="bg-gray-500"
+                    type="range"
+                    min="1"
+                    max="40"
+                    step="1"
+                    value={state.speed}
+                    onChange={(event) =>
+                        setState((prevState) => ({
+                            ...prevState,
+                            speed: parseInt(event.target.value),
+                        }))
+                    }
+                />
             </div>
         </div>
     );

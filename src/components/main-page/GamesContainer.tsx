@@ -54,7 +54,7 @@ const GamesCardPage = () => {
         <div className="">
             <Routes>
                 {/* Parent route renders GamesCardPage component */}
-                <Route path="/*" element={<GameCard />} />
+                <Route path="*" element={<GameCard />} />
                 {/* Child routes */}
                 <Route path="tic-tac-toe" element={<GamePage />} />
                 <Route path="snake" element={<SnakeGame />} />

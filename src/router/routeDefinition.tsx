@@ -17,7 +17,7 @@ import ClickTheTarget from "../pages/game/ClickTheTarget";
 
 export const routeDefinition: RouteDefinition[] = [
     {
-        path: '/',
+        path: '*',
         exact: true,
         title: 'Main',
         icon: <MainIcon />,

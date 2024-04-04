@@ -261,8 +261,11 @@ const TicTacToeContainer: React.FC = () => {
     }, [boardSize]);
 
     const getHeight = useCallback(() => {
+        if (startGame) {
+            return windowSize.innerHeight - 190;
+        }
         return windowSize.innerHeight - 275;
-    }, [windowSize]);
+    }, [windowSize, startGame]);
 
     return (
         <div className="p-1">
@@ -300,7 +303,8 @@ const TicTacToeContainer: React.FC = () => {
                     />
                 )}
                 <div className="text-center">
-                    <div className="grid shadow-lg mb-2 min-h-max" style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '4px', height: getHeight() }}>
+                    <div className="grid shadow-lg mb-2 min-h-max"
+                        style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '4px', height: getHeight() }}>
                         <TicTacToe
                             startGame={startGame}
                             setStartGame={setStartGame}
