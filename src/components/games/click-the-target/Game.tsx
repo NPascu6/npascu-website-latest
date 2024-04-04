@@ -11,6 +11,9 @@ const colorPoints: any = {
     '#FF33FF': { points: 10, timer: 3 },
     '#FFFF33': { points: 2, timer: 8 },
     '#33FFFF': { points: 4, timer: 6 },
+    '#000000': { type: 'bomb', radius: 200, timer: 3 }, // Bomb target
+    '#16EA36': { type: 'timeBoost', timer: 3 }, // Time boost target
+    '#060606': { type: 'timePenalty', timer: 3 }, // Time penalty target
 };
 
 const getRandomColor = () => {
@@ -42,8 +45,8 @@ const Game = ({ setStarted }: GameProps) => {
     }
 
     useEffect(() => {
-        if(!start) return;
-        
+        if (!start) return;
+
         const interval = setInterval(() => {
             setTime(prevTime => {
                 if (prevTime <= 1) {
@@ -70,21 +73,6 @@ const Game = ({ setStarted }: GameProps) => {
         setTargets([{ id: Math.random(), color: getRandomColor(), position: getRandomPosition() }]);
     };
 
-    const handleClickTarget = useCallback((id: number, points: number) => {
-        setTargets(prevTargets => prevTargets.filter(target => target.id !== id));
-        setScore(score + points);
-
-        // Here's where we adjust the main game timer based on the points value
-        // For example, add half of the target's point value as extra seconds to the timer
-        if (points > 0) {
-            setTime(prevTime => prevTime + 1);
-        }
-
-        if (targets.length - 1 === 0) {
-            addTargetsBasedOnDifficulty();
-        }
-    }, [score, targets]);
-
     const addTargetsBasedOnDifficulty = () => {
         const additionalTargets = Math.min(Math.floor(score / 5) + 1, 15);
         setTargets([...Array(additionalTargets)].map(() => ({
@@ -93,6 +81,69 @@ const Game = ({ setStarted }: GameProps) => {
             position: getRandomPosition(),
         })));
     };
+
+    const handleClickTarget = useCallback((id: number, val?: number) => {
+        const targetIndex = targets.findIndex(target => target.id === id);
+
+        if (val === 0) {
+            setTargets(prevTargets => prevTargets.filter((_, i) => i !== targetIndex));
+            return
+        }
+
+        if (targetIndex === -1) return; // Target not found
+
+        const target = targets[targetIndex];
+        const targetDetails = colorPoints[target.color];
+
+        // Handle special target types
+        if (targetDetails.type) {
+            switch (targetDetails.type) {
+                case 'bomb':
+                    // Remove targets within the bomb's radius
+                    const bombPosition = target.position;
+
+                    const targetsInRadius = targets.filter(t => {
+                        const distance = Math.sqrt(Math.pow(t.position.x - bombPosition.x, 2) + Math.pow(t.position.y - bombPosition.y, 2));
+                        return distance <= targetDetails.radius;
+                    });
+
+                    const timeValue = targetsInRadius.reduce((acc, t) => {
+                        const tDetails = colorPoints[t.color];
+                        return acc + tDetails.timer;
+                    }, 0);
+
+                    setTime(prevTime => Math.max(0, prevTime + timeValue)); // Ensure time doesn't go below 0
+
+
+                    setTargets(prevTargets => prevTargets.filter(t => {
+                        const distance = Math.sqrt(Math.pow(t.position.x - bombPosition.x, 2) + Math.pow(t.position.y - bombPosition.y, 2));
+                        return distance > targetDetails.radius;
+                    }));
+                    break;
+                case 'timeBoost':
+                    setTime(prevTime => prevTime + targetDetails.timer);
+                    break;
+                case 'timePenalty':
+                    setTime(prevTime => Math.max(0, prevTime - targetDetails.timer)); // Ensure time doesn't go below 0
+                    break;
+                default:
+                    break; // No action for unknown types
+            }
+        } else {
+            // Regular target
+            setScore(prevScore => prevScore + targetDetails.points);
+            setTime(prevTime => prevTime + 1); // Adjusting the timer as per your existing logic
+        }
+
+        // Remove the clicked target
+        setTargets(prevTargets => prevTargets.filter((_, i) => i !== targetIndex));
+
+        // Generate new targets if needed
+        if (targets.length - 1 === 0) {
+            addTargetsBasedOnDifficulty();
+        }
+    }, [targets, setTargets, setScore, setTime, addTargetsBasedOnDifficulty]);
+
 
     useEffect(() => {
         if (targets.length === 0) {
@@ -118,12 +169,15 @@ const Game = ({ setStarted }: GameProps) => {
                     </div>
                     {targets.map((target) => (
                         <div key={target.id} style={{ left: `${target.position.x}px`, top: `${target.position.y}px`, position: 'absolute' }}>
+                            {/* Example: Adjusting styling based on target type */}
                             <Target
                                 colorPoints={colorPoints}
                                 id={target.id}
                                 color={target.color}
                                 timer={colorPoints[target.color].timer}
                                 onClick={handleClickTarget}
+                                // You might need to adjust the Target component to use these props:
+                                type={colorPoints[target.color].type}
                             />
                         </div>
                     ))}
