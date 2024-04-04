@@ -6,7 +6,7 @@ import CloseIcon from "../../assets/icons/CloseIcon";
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
 const fruitEmojis = ["🍎", "🍌", "🍇", "🍊", "🍓", "🍍"];
-const obstacleEmojis = ["🌲", "🌳"];
+const obstacleEmojis = ['🧱'];
 
 interface SnakeBoardProps {
     boardSize: {
@@ -64,25 +64,7 @@ type State = {
     obstacles: Position[];
 };
 
-const initialState: State = {
-    boardSize: {
-        innerWidth: 0,
-        innerHeight: 0,
-    },
-    score: 0,
-    snake: [{ x: 0, y: 0 }],
-    food: [{ x: 10, y: 10 }],
-    direction: Direction.Right,
-    speed: 5,
-    running: false,
-    foodCount: 1,
-    obstaclesCount: 5,
-    obstacles: [
-    ],
-};
-
 const SnakeGame: React.FC = () => {
-    const [state, setState] = useState<State>(initialState);
     const { innerWidth, innerHeight } = useWindowSize();
     const randomFruitRef = useRef<string | null>(null);
     const randomObstacleRef = useRef<string | null>(null);
@@ -91,6 +73,24 @@ const SnakeGame: React.FC = () => {
     const boardRef = useRef<any>(null);
     const navigate = useNavigate();
 
+    const initialState: State = {
+        boardSize: {
+            innerWidth: 0,
+            innerHeight: 0,
+        },
+        score: 0,
+        snake: [{ x: 0, y: 0 }],
+        food: [{ x: 10, y: 10 }],
+        direction: Direction.Right,
+        speed: 5,
+        running: false,
+        foodCount: 1,
+        obstaclesCount: 10,
+        obstacles: [
+        ],
+    };
+
+    const [state, setState] = useState<State>(initialState);
     const isCollidingWithFood = useCallback(
         (snake: Position[]) => {
             const { food } = state;
@@ -118,11 +118,31 @@ const SnakeGame: React.FC = () => {
         []
     );
 
+    const generateObstacles = useCallback(
+        (prevState: State) => {
+            const obstacles: any = [];
+
+            for (let i = 0; i < prevState.obstaclesCount; i++) {
+                const x = Math.floor(Math.random() * prevState.boardSize.innerWidth);
+                const y = Math.floor(Math.random() * prevState.boardSize.innerHeight);
+                const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
+
+                obstacles.push({ x, y, emoji: randomEmoji });
+            }
+
+            return { ...prevState, obstacles };
+        },
+        []
+    );
+
     const consumeFood = useCallback((newSnake: Position[]) => {
         setState((prevState) => {
             const { food, score } = prevState;
             const head = newSnake[newSnake.length - 1];
             const consumedFoodIndex = food.findIndex((pos) => pos.x === head.x && pos.y === head.y);
+            const obstacles = [...prevState.obstacles];
+            let obstacleCount = prevState.obstaclesCount;
+            let increaseObstacles = false;
 
             if (consumedFoodIndex !== -1) {
                 const newFood = [...food];
@@ -132,17 +152,19 @@ const SnakeGame: React.FC = () => {
                 let newFoodCount = prevState.foodCount - 1 === 0 ? 1 : prevState.foodCount - 1;
 
                 if (newScore === 5 || newScore === 15 || newScore === 30) {
+                    increaseObstacles = true;
+                    obstacleCount += 5;
                     newFoodCount++;
                 }
 
-                const obstacles = [...prevState.obstacles];
-                const increaseObstacles = newScore % 5 === 0;
                 if (increaseObstacles) {
-                    const x = Math.floor(Math.random() * prevState.boardSize.innerWidth);
-                    const y = Math.floor(Math.random() * prevState.boardSize.innerHeight);
-                    const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
+                    for (let i = 0; i < obstacleCount; i++) {
+                        const x = Math.floor(Math.random() * prevState.boardSize.innerWidth);
+                        const y = Math.floor(Math.random() * prevState.boardSize.innerHeight);
+                        const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
 
-                    obstacles.push({ x, y, emoji: randomEmoji });
+                        obstacles.push({ x, y, emoji: randomEmoji });
+                    }
                 }
 
                 const newState = generateFood({
@@ -153,6 +175,8 @@ const SnakeGame: React.FC = () => {
                     food: newFood,
                     obstacles: increaseObstacles ? obstacles : prevState.obstacles,
                 });
+
+                increaseObstacles = false;
 
                 return newState;
             }
@@ -205,23 +229,12 @@ const SnakeGame: React.FC = () => {
     );
 
     const startGame = useCallback(() => {
-        const obstacles: any = [];
-
-        for (let i = 0; i < state.obstaclesCount; i++) {
-            const x = Math.floor(Math.random() * state.boardSize.innerWidth);
-            const y = Math.floor(Math.random() * state.boardSize.innerHeight);
-            const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
-
-            obstacles.push({ x, y, emoji: randomEmoji });
-        }
-
         setState((prevState) => ({
             ...prevState,
             running: true,
-            score: 0,
-            obstacles: obstacles
+            obstacles: prevState.obstacles.length === 0 ? generateObstacles(prevState).obstacles : prevState.obstacles,
         }));
-    }, [state.obstaclesCount]);
+    }, []);
 
     const resetGame = useCallback(() => {
         setState((prevState) => ({
@@ -236,7 +249,11 @@ const SnakeGame: React.FC = () => {
     }, []);
 
     const pauseGame = useCallback(() => {
-        setState((prevState) => ({ ...prevState, running: !prevState.running }));
+        setState((prevState) => ({
+            ...prevState,
+            running: !prevState.running,
+            obstacles: prevState.obstacles.length === 0 ? generateObstacles(prevState).obstacles : prevState.obstacles,
+        }));
     }, []);
 
     const checkSelfCollision = useCallback(() => {
@@ -402,7 +419,7 @@ const SnakeGame: React.FC = () => {
         const obstacles = [...state.obstacles];
         if (obstacles.length === 0) return null
         const currentObstacle = obstacles.find((pos) => pos.x === x && pos.y === y);
-        debugger
+
         if (currentObstacle) {
             return (
                 <div className="flex items-center justify-center h-full emoji-row" key={`${x}-${y}`}>
@@ -442,14 +459,12 @@ const SnakeGame: React.FC = () => {
 
     useEffect(() => {
         const handleTouchStart = (e: TouchEvent) => {
-            e.preventDefault();
             e.stopPropagation();
             touchStartX.current = e.touches[0].clientX;
             touchStartY.current = e.touches[0].clientY;
         };
 
         const handleTouchMove = (e: TouchEvent) => {
-            e.preventDefault();
             e.stopPropagation();
             if (!touchStartX.current || !touchStartY.current) return;
 
