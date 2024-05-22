@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { ReusableColumn } from "./models/table"
 
 export const dateFormater = (date: string) => {
-    return dayjs(date).format("YYYY-MM-DD HH:mm")
+    return date ? dayjs(date).format("YYYY-MM-DD HH:mm") : 'N/A'
 }
 
 export const getCellWidth = (columns: ReusableColumn[], column: ReusableColumn) => {
