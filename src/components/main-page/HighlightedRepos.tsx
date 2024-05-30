@@ -27,7 +27,7 @@ const HighlightedRepos = () => {
             </a>
             <span>
                 - Created with .NET Core 7.0, Entity Framework Core, SQL Server, Swagger, JWT Authentication, and deployed to my personal azure container and application platform, which you can access by clicking:
-                <span className="font-bold ml-2 cursor-pointer" style={{ textDecoration: 'underline' }} onClick={() => window.open("https://npascu-api-v1.azurewebsites.net", "_blank")}>npascu-api-v1.azurewebsites.net</span>
+                <span className="font-bold ml-2 cursor-pointer" style={{ textDecoration: 'underline' }} onClick={() => window.open("https://norbert-pascu.com", "_blank")}>npascu-api-v1.azurewebsites.net</span>
             </span>
         </p>
         <hr className="p-2 border-b-1" />
