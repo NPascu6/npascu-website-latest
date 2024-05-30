@@ -1,7 +1,7 @@
 .dark-theme {
     color: #ffffff;
     background-color: #1a1d24;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+    font-family: "Nunito", sans-serif; 
 }
 
 .dark-theme table {
