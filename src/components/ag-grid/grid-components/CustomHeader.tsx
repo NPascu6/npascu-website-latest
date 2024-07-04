@@ -1,6 +1,5 @@
-import {  GridApi } from "ag-grid-community";
+import { GridApi } from "ag-grid-community";
 import React, { useEffect, useRef, useState } from "react";
-import "../styles/headerStyles.css";
 
 const CustomHeader = (props: {
   showColumnMenu: (arg0: null) => void;
@@ -69,17 +68,15 @@ const CustomHeader = (props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (props.enableMenu) {
-    menu = (
-      <div
-        ref={refButton}
-        className="icon-container"
-        onClick={() => onMenuClicked()}
-      >
-        <i className={`icon ${getClass()}`}></i>
-      </div>
-    );
-  }
+  menu = (
+    <div
+      ref={refButton}
+      className="icon-container"
+      onClick={() => onMenuClicked()}
+    >
+      <i className={`icon ${getClass()}`}></i>
+    </div>
+  );
 
   if (props.enableSorting) {
     sort = props?.filters &&

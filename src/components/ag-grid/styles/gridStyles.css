@@ -74,18 +74,6 @@ div.ag-root-wrapper {
   justify-content: flex-start;
 }
 
-.ag-header-cell-label {
-  display: flex;
-}
-
-.ag-header-cell-label .ag-header-cell-text {
-  justify-self: flex-start;
-}
-
-.ag-header-cell-label .ag-sort-indicator-container {
-  justify-self: flex-end;
-}
-
 .ag-cell {
   font-size: 12px;
 }
@@ -123,4 +111,21 @@ div.ag-root-wrapper {
 
 .ag-paging-panel {
   font-size: 11px;
+}
+
+.custom-ag-filter-menu {
+  position: relative;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.custom-ag-filter-menu input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.custom-ag-filter-menu button {
+  cursor: pointer;
 }

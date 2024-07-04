@@ -1,76 +1,51 @@
-import React, { useEffect, useImperativeHandle, useState } from "react";
-import { IDoesFilterPassParams, IFilterParams } from "ag-grid-community";
+import React, { useEffect, useState, useRef } from "react";
+import { IFilterParams } from "ag-grid-community";
 import { dateTimeValueFormatter } from "./helpers";
 import { checkIsDate } from "./customFilterMenuComponents/util";
 import FilterAscending from "./customFilterMenuComponents/buttons/FilterAscending";
 import FilterDescending from "./customFilterMenuComponents/buttons/FilterDescending";
 
-const CustomFilterMenu = React.forwardRef((props: IFilterParams, ref: any) => {
+const CustomFilterMenu = (props: IFilterParams) => {
   const [filterText, setFilterText] = useState<string | undefined>(undefined);
-  const [filtered, setFiltered] = useState<any[]>(["All"]);
-  const [colId, setColId] = useState<string>("");
-  const [filterActive, setFilterActive] = useState<string>("All");
-  const [hover, setHover] = useState<string>("");
   const [filterValues, setFilterValues] = useState<string[]>(["All"]);
   const [localItems, setLocalItems] = useState<any[]>([]);
+  const [colId, setColId] = useState<string>("");
 
-  // expose AG Grid Filter Lifecycle callbacks
-  useImperativeHandle(ref, () => ({
-    doesFilterPass(params: IDoesFilterPassParams) {
-      const { api, colDef, column, context } = props;
-      const { node } = params;
+  const filterMenuRef = useRef<HTMLDivElement>(null);
 
-      // make sure each word passes separately, ie search for firstname, lastname
-      let passed = true;
-      if (!filterText) {
-        return passed;
-      }
+  useEffect(() => {
+    if (props.colDef?.field) {
+      setColId(props.colDef?.field);
+    }
+  }, [props.colDef.field]);
 
-      filterText
-        .toLowerCase()
-        .split(" ")
-        .forEach((filterWord) => {
-          const value = props.valueGetter({
-            api,
-            colDef,
-            column,
-            context,
-            data: node.data,
-            getValue: (field) => node.data[field],
-            node,
-          });
+  useEffect(() => {
+    const tempItems: Array<any> = [];
+    if (colId) {
+      props.api.forEachNode(function (node) {
+        const tempItem = { ...node.data };
+        tempItems.push(tempItem);
+      });
+      setLocalItems(tempItems);
+    }
+  }, [props.api, colId]);
 
-          if (value.toString().toLowerCase().indexOf(filterWord) < 0) {
-            passed = false;
-          }
-        });
-
-      return passed;
-    },
-
-    isFilterActive() {
-      return filterText != null && filterText !== "";
-    },
-
-    getModel() {
-      if (!this.isFilterActive()) {
-        return null;
-      } else {
-        return { value: filterText };
-      }
-    },
-
-    setModel(model: any) {
-      setFilterText(model == null ? null : model.value);
-    },
-  }));
+  useEffect(() => {
+    if (filterText) {
+      applyQuickFilter([filterText]);
+    } else {
+      props.api.setFilterModel(null);
+    }
+  }, [filterText, props.api]);
 
   const handleFilterChange = (evt: any, checked: boolean) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+
     props.filterChangedCallback();
 
     if (!filterValues.includes("All") && evt.currentTarget.value === "All") {
       setFilterValues(["All"]);
-      setFiltered(["All"]);
       props.api.setFilterModel(null);
     } else {
       const newFilterValues = checked
@@ -79,9 +54,6 @@ const CustomFilterMenu = React.forwardRef((props: IFilterParams, ref: any) => {
             (filterValue) => filterValue !== evt.currentTarget.value
           );
       setFilterValues(
-        newFilterValues.filter((filterValue) => filterValue !== "All")
-      );
-      setFiltered(
         newFilterValues.filter((filterValue) => filterValue !== "All")
       );
       applyQuickFilter(newFilterValues);
@@ -109,27 +81,24 @@ const CustomFilterMenu = React.forwardRef((props: IFilterParams, ref: any) => {
       state: [{ colId: newColId, sort: order }],
       applyOrder: true,
     });
-    setFilterActive(order ?? "");
   };
 
   const onChange = (event: any) => {
+    event.preventDefault();
+    event.stopPropagation();
     setFilterText(event.target.value);
   };
 
-  const handleClearFilter = () => {
+  const handleClearFilter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     props.api.applyColumnState({
       state: [{ colId: colId, sort: undefined }],
       applyOrder: true,
     });
-    setFiltered([]);
     setFilterValues([]);
-    setFilterActive("");
     setFilterText("");
-    setHover("");
     props.api.setFilterModel(null);
-    props.api.forEachNode(function (node) {
-      node.setSelected(false);
-    });
   };
 
   useEffect(() => {
@@ -138,107 +107,91 @@ const CustomFilterMenu = React.forwardRef((props: IFilterParams, ref: any) => {
     }
   }, [filterValues, localItems, props.api]);
 
-  useEffect(() => {
-    if (filterText) {
-      setFiltered([filterText]);
-      applyQuickFilter([filterText]);
-    } else {
-      setFiltered([]);
-      props.api.setFilterModel(null);
-    }
-  }, [filterText, props.api]);
-
-  useEffect(() => {
-    if (props.colDef?.field) {
-      setColId(props.colDef?.field);
-    }
-  }, [props.colDef.field]);
-
-  useEffect(() => {
-    const tempItems: Array<any> = [];
-    if (colId) {
-      props.api.forEachNode(function (node) {
-        const tempItem = { ...node.data };
-        tempItems.push(tempItem);
-      });
-      setLocalItems(tempItems);
-    }
-  }, [props.api, colId]);
-
-  const key: string | undefined = props?.colDef?.field;
-
   return (
-    <div data-testid={"custom-ag-filter-menu"}>
-      <div>
+    <div
+      ref={filterMenuRef}
+      data-testid={"custom-ag-filter-menu"}
+      className="custom-ag-filter-menu"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
+      <div className="flex items-center justify-between">
         <FilterAscending
-          filterActive={filterActive}
-          hover={hover}
+          filterActive={"asc"}
+          hover={""}
           colId={colId}
-          setHover={setHover}
+          setHover={() => {}}
           onSortRequested={onSortRequested}
         />
         <FilterDescending
-          filterActive={filterActive}
-          hover={hover}
+          filterActive={"desc"}
+          hover={""}
           colId={colId}
-          setHover={setHover}
+          setHover={() => {}}
           onSortRequested={onSortRequested}
         />
       </div>
-      <div>
-        <div>
-          <input
-            value={filterText ?? ""}
-            onChange={onChange}
-            placeholder="Search a value..."
-          />
-        </div>
+      <div className="mt-2">
+        <input
+          value={filterText ?? ""}
+          onChange={onChange}
+          placeholder="Search a value..."
+          className="w-full p-2 border rounded"
+        />
       </div>
-      <div>
-        <div>
-          <div>
+      <div className="mt-2">
+        <div className="overflow-y-auto max-h-48">
+          <div className="flex items-center">
             <input
               type="checkbox"
               checked={filterValues.includes("All")}
               value={"All"}
               onChange={(e) => handleFilterChange(e, e.target.checked)}
             />
-            {"All"}
+            <label className="ml-2">All</label>
           </div>
           {props?.colDef?.field !== undefined &&
             localItems
               ?.filter(
                 (obj, index) =>
-                  key &&
-                  localItems.findIndex((item) => item[key] === obj[key]) ===
-                    index
+                  props?.colDef?.field &&
+                  localItems.findIndex(
+                    (item) =>
+                      item[props?.colDef?.field ?? 0] ===
+                      obj[props?.colDef?.field ?? 0]
+                  ) === index
               )
               .map((item: any, index) => (
-                <div key={index}>
+                <div key={index} className="flex items-center mt-2">
                   <input
                     type="checkbox"
                     checked={filterValues.includes(item[colId])}
                     value={item[colId]}
                     onChange={(e) => handleFilterChange(e, e.target.checked)}
                   />
-                  {checkIsDate(item[colId])
-                    ? dateTimeValueFormatter({ value: item[colId] })
-                    : item[colId]}
+                  <label className="ml-2">
+                    {checkIsDate(item[colId])
+                      ? dateTimeValueFormatter({ value: item[colId] })
+                      : item[colId]}
+                  </label>
                 </div>
               ))}
         </div>
       </div>
-      <div>
+      <div className="mt-4">
         <button
           id="filter-menu-button"
-          disabled={!filterActive && filtered?.length === 0}
+          disabled={!filterText}
           onClick={handleClearFilter}
+          className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Clear Filter
         </button>
       </div>
     </div>
   );
-});
+};
 
 export default CustomFilterMenu;

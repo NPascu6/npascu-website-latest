@@ -1,4 +1,4 @@
-const ArrowRight = ({ style }) => {
+const ArrowRight = ({ style }: any) => {
   const { height, width, ...rest } = style || {
     height: "16px",
     width: "16px",

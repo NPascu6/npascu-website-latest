@@ -25,8 +25,8 @@ import CustomHeader from "./grid-components/CustomHeader";
 
 const AGGridComponent = (props: AGGridProps) => {
   const gridRef = useRef<AgGridReact>(null);
-  const [gridApi, setGridApi] = React.useState<GridApi | undefined>();
-  const [filters, setFilters] = useState<any>({}); // filters state
+  const [gridApi, setGridApi] = useState<GridApi | undefined>();
+  const [filters, setFilters] = useState<any>({});
   const [paginationPageSize, setPaginationPageSize] = useState<number>(
     props.defaultRowsPerPage ?? 10
   );
@@ -34,16 +34,6 @@ const AGGridComponent = (props: AGGridProps) => {
   const [paginationTotalPages, setPaginationTotalPages] = useState<number>(0);
   const [lastPageFound, setLastPageFound] = useState<boolean>(false);
   const [, setLastButtonDisabled] = useState<boolean>(false);
-
-  const loadingOverlayComponent = () => {
-    ;
-    return (
-      <div style={{ backgroundColor: "white", height: "100%", width: "100%" }}>
-        Loading...
-        <div className="animate-spin" />
-      </div>
-    );
-  };
 
   const containerStyle: CSSProperties = useMemo(
     () => ({
@@ -67,9 +57,7 @@ const AGGridComponent = (props: AGGridProps) => {
 
   const onColumnResized = useCallback(
     (event: any) => {
-      // Check if the grid API is available
       if (gridApi) {
-        // Iterate through each row node and refresh the cell renderer to update tooltips
         gridApi.forEachNode((node) => {
           gridApi.refreshCells({
             rowNodes: [node],
@@ -94,16 +82,13 @@ const AGGridComponent = (props: AGGridProps) => {
       const cellValue = params.value.toString();
       const cellWidth = params.column?.actualWidth || 0;
 
-      // Create a temporary span element to measure the text width
       const tempSpan = document.createElement("span");
       tempSpan.innerText = cellValue;
       tempSpan.style.visibility = "hidden";
       document.body.appendChild(tempSpan);
 
-      // Check if the text width is greater than the cell width
       const cellContentWidth = tempSpan.offsetWidth > cellWidth - 30;
 
-      // Remove the temporary span element
       document.body.removeChild(tempSpan);
 
       if (cellContentWidth) {
@@ -126,7 +111,6 @@ const AGGridComponent = (props: AGGridProps) => {
     },
   };
 
-  // set background colour on even rows again, this looks bad, should be using CSS classes
   const getRowStyle: any = useCallback(
     (params: any) => {
       return { background: "white" };
@@ -134,13 +118,8 @@ const AGGridComponent = (props: AGGridProps) => {
     [props]
   );
 
-  /**
-   * Sets row id to each row in the ag grid
-   * @param params
-   */
   const getRowId = useCallback(
     (params: GetRowIdParams) => {
-      ;
       return params.data[props.rowKey];
     },
     [props]
@@ -199,7 +178,6 @@ const AGGridComponent = (props: AGGridProps) => {
   );
 
   const onPaginationChanged: any = useCallback(() => {
-    // Workaround for bug in events order
     if (gridRef?.current?.api) {
       const paginationGetTotalPages =
         gridRef.current.api.paginationGetTotalPages();
@@ -216,9 +194,9 @@ const AGGridComponent = (props: AGGridProps) => {
 
   useEffect(() => {
     if (props?.loading) {
-      gridApi?.setGridOption("loading", true);
+      gridApi?.showLoadingOverlay();
     } else {
-      gridApi?.setGridOption("loading", false);
+      gridApi?.hideOverlay();
     }
   }, [props?.loading, gridApi]);
 
@@ -250,7 +228,6 @@ const AGGridComponent = (props: AGGridProps) => {
           tooltipShowDelay={150}
           getRowId={getRowId}
           getRowStyle={getRowStyle}
-          loadingOverlayComponent={loadingOverlayComponent}
           onGridReady={onGridReady}
           onRowClicked={handleRowClick}
           onFirstDataRendered={onFirstDataRendered}
