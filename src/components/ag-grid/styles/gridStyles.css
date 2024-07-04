@@ -7,7 +7,6 @@
   --ag-header-column-separator-height: 0;
   --ag-header-column-separator-width: 0;
   --ag-header-column-separator-color: lightgray;
-  --ag-header-background-color: white;
   --ag-selected-row-background-color: transparent;
   --ag-alpine-active-color: transparent;
 }
@@ -118,7 +117,6 @@ div.ag-root-wrapper {
   background: white;
   border: 1px solid #ccc;
   padding: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
@@ -128,4 +126,12 @@ div.ag-root-wrapper {
 
 .custom-ag-filter-menu button {
   cursor: pointer;
+}
+
+.custom-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
 }

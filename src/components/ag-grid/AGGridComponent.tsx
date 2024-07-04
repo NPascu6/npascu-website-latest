@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import "./styles/iconStyles.css";
 import {
   GridApi,
@@ -22,8 +23,11 @@ import CustomFilterMenu from "./grid-components/CustomFilterMenu";
 import CustomPagination from "./grid-components/CustomPagination";
 import CustomTooltip from "./grid-components/CustomTooltip";
 import CustomHeader from "./grid-components/CustomHeader";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const AGGridComponent = (props: AGGridProps) => {
+  const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
   const gridRef = useRef<AgGridReact>(null);
   const [gridApi, setGridApi] = useState<GridApi | undefined>();
   const [filters, setFilters] = useState<any>({});
@@ -113,7 +117,7 @@ const AGGridComponent = (props: AGGridProps) => {
 
   const getRowStyle: any = useCallback(
     (params: any) => {
-      return { background: "white" };
+      return {};
     },
     [props]
   );
@@ -218,7 +222,10 @@ const AGGridComponent = (props: AGGridProps) => {
       style={props.containerStyle ?? containerStyle}
       data-testid={"AgGrid-container"}
     >
-      <div style={props?.gridStyle ?? gridStyle} className="ag-theme-alpine">
+      <div
+        style={props?.gridStyle ?? gridStyle}
+        className={isDarkTheme ? "ag-theme-alpine-dark" : "ag-theme-alpine"}
+      >
         <AgGridReact
           ref={gridRef}
           animateRows={true}
