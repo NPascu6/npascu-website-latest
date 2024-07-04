@@ -5,11 +5,18 @@ import ChevronDown from "../../assets/icons/ChevronDown";
 
 interface CollapsibleSectionpProps {
   title: string;
+  isCollapsed?: boolean;
+  subTitle?: string;
   children: JsxElement | any;
 }
 
-function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
-  const [isOpen, setIsOpen] = useState(false);
+function CollapsibleSection({
+  title,
+  subTitle,
+  children,
+  isCollapsed,
+}: CollapsibleSectionpProps) {
+  const [isOpen, setIsOpen] = useState(isCollapsed ?? false);
 
   const toggleSection = () => {
     setIsOpen(!isOpen);
@@ -21,7 +28,10 @@ function CollapsibleSection({ title, children }: CollapsibleSectionpProps) {
         className="p-2 flex space-between cursor-pointer"
         onClick={toggleSection}
       >
-        {!isOpen &&<div className="w-full">{title}</div>}
+        {!isOpen && <div className="w-full">{title}</div>}
+        {isOpen && subTitle && (
+          <div className="w-full font-bold">{subTitle}</div>
+        )}
         <div> {isOpen ? <ChevronUp /> : <ChevronDown />}</div>
       </div>
       {isOpen && children}
