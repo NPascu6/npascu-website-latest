@@ -11,3 +11,23 @@
 html {
   min-height: 100dvh;
 }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: #8888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: black;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  background: whitesmoke;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 5px;
+  cursor: pointer;
+}

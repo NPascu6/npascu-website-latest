@@ -1,104 +1,108 @@
 .dark-theme {
-    color: #ffffff;
-    background-color: #1a1d24;
-    font-family: "Nunito", sans-serif; 
+  color: #ffffff;
+  background-color: #1a1d24;
+  font-family: "Nunito", sans-serif;
 }
 
 .dark-theme table {
-    color: #ffffff;
-    background-color: #1a1d24;
-    padding: 1em
+  color: #ffffff;
+  background-color: #1a1d24;
+  padding: 1em;
 }
 
 .dark-theme .footer {
-    color: #ffffff;
-    background-color: #1a1d24;
+  color: #ffffff;
+  background-color: #1a1d24;
 }
 
 .dark-theme ::-webkit-scrollbar-thumb {
-    background-color: #8888;
-    border-radius: 4px;
+  background-color: #333333;
+  /* Scrollbar thumb color */
+  border-radius: 4px;
 }
 
 .dark-theme ::-webkit-scrollbar-thumb:hover {
-    background-color: black;
+  background-color: #444444;
+  /* Hover color for scrollbar thumb */
 }
 
 .dark-theme ::-webkit-scrollbar {
-    width: 4px;
-    background: #413b3b;
+  width: 6px;
+  /* Scrollbar width */
+  background: #292929;
+  /* Scrollbar background color */
 }
 
 #siteseal {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .dark-theme #selected-photo {
-    border: 1px solid #ffffff;
-    background-color: #1a1d24;
+  border: 1px solid #ffffff;
+  background-color: #1a1d24;
 }
 
 .dark-theme #photo-canvas-details {
-    background-color: #1a1d24;
-    color: #ffffff;
+  background-color: #1a1d24;
+  color: #ffffff;
 }
 
 .dark-theme #photo-canvas-details select {
-    background-color: #1a1d24;
-    color: #ffffff;
+  background-color: #1a1d24;
+  color: #ffffff;
 }
 
 .dark-theme #product-basket {
-    color: #1a1d24;
+  color: #1a1d24;
 }
 
 .dark-theme .collapsable-section {
-    background-color: #20242c
+  background-color: #20242c;
 }
 
 .dark-theme .collapsable-section .collapsable-section-header {
-    background-color: #20242c
+  background-color: #20242c;
 }
 
 .dark-theme .collapsable-section .collapsable-section-body {
-    background-color: #20242c;
+  background-color: #20242c;
 }
 
 .dark-theme .card {
-    background-color: #1a1d24;
-    color: #ffffff;
+  background-color: #1a1d24;
+  color: #ffffff;
 }
 
 .dark-theme .game-card {
-    background-color: #20242c
+  background-color: #20242c;
 }
 
 .dark-theme #github-profile-card {
-    background-color: #20242c;
-    color: #ffffff;
+  background-color: #20242c;
+  color: #ffffff;
 }
 
 .dark-theme #top-bar {
-    background-color: #20242c;
-    color: #ffffff;
+  background-color: #20242c;
+  color: #ffffff;
 }
 
 .dark-theme .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: #333333;
-    /* Dark background color for tooltip */
-    color: #ffffff;
-    /* White text color for tooltip */
-    text-align: center;
-    border-radius: 4px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    top: 125%;
-    left: 50%;
-    transform: translateX(-50%);
+  visibility: hidden;
+  width: 120px;
+  background-color: #333333;
+  /* Dark background color for tooltip */
+  color: #ffffff;
+  /* White text color for tooltip */
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
 }

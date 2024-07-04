@@ -1,0 +1,126 @@
+.ag-theme-alpine {
+  letter-spacing: 0.4px;
+  font-weight: 400;
+  font-size: 13;
+  font-family: Verlag;
+  --ag-header-column-separator-display: none;
+  --ag-header-column-separator-height: 0;
+  --ag-header-column-separator-width: 0;
+  --ag-header-column-separator-color: lightgray;
+  --ag-header-background-color: white;
+  --ag-selected-row-background-color: transparent;
+  --ag-alpine-active-color: transparent;
+}
+
+.ag-root-wrapper {
+  border: 0;
+}
+
+div.ag-root-wrapper {
+  border: 0;
+  overflow: visible;
+}
+
+.ag-body-vertical-scroll-viewport {
+  width: 8px;
+  min-width: none;
+  max-width: none;
+}
+
+.ag-body {
+  height: 14em;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.ag-menu {
+  max-height: none;
+}
+
+.ag-row-focus {
+  background-color: transparent;
+}
+
+.ag-root-wrapper-body.ag-focus-managed.ag-layout-normal {
+  height: 100%;
+  width: 100%;
+}
+
+.ag-cell-label-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ag-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-cell-label-container:nth-child(2) {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ag-header-cell-label {
+  display: flex;
+}
+
+.ag-header-cell-label .ag-header-cell-text {
+  justify-self: flex-start;
+}
+
+.ag-header-cell-label .ag-sort-indicator-container {
+  justify-self: flex-end;
+}
+
+.ag-cell {
+  font-size: 12px;
+}
+
+.ag-row:hover {
+  background-color: #efeee9;
+}
+
+.ag-header-active {
+  color: #001489;
+  margin-top: "1em";
+}
+
+.ag-header-cell {
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: -0.05px;
+  line-height: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Adjust this value as necessary to control the width */
+  padding: 0 10px; /* Optional: Add some padding for better spacing */
+}
+
+.tooltip {
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.active {
+  color: #001489;
+}
+
+.ag-paging-panel {
+  font-size: 11px;
+}
