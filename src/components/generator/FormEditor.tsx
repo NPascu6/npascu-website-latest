@@ -13,7 +13,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
   updateField,
 }) => {
   const [newField, setNewField] = useState<FormField>({
-    id: "",
+    id: 0,
     name: "",
     type: "text",
     placeholder: "",
@@ -35,9 +35,9 @@ const FormEditor: React.FC<FormEditorProps> = ({
   };
 
   const handleAddField = () => {
-    onAddField({ ...newField, id: Date.now().toString() });
+    onAddField({ ...newField, id: Date.now() });
     setNewField({
-      id: "",
+      id: 0,
       name: "",
       type: "text",
       placeholder: "",
@@ -56,7 +56,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
       updateField(newField);
       setEditingField(null);
       setNewField({
-        id: "",
+        id: 0,
         name: "",
         type: "text",
         placeholder: "",

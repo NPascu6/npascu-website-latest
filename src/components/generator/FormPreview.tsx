@@ -14,12 +14,12 @@ const FormJSONEditor: React.FC<FormJSONEditorProps> = ({
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    fieldId: string
+    fieldId: number
   ) => {
     const { name, value } = e.target;
     setFormFields((prevFields) =>
       prevFields.map((field) =>
-        field.id === fieldId ? { ...field, [name]: value } : field
+        field.id === +fieldId ? { ...field, [name]: value } : field
       )
     );
   };
