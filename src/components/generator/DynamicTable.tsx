@@ -85,7 +85,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tableId }) => {
 
   return (
     <div className="">
-      <div className="table-container mb-4">
+      <div className="mb-4">
         <div className="ag-theme-alpine">
           <AGGridComponent
             getColumnDefs={columnDefs}

@@ -26,16 +26,32 @@ export const formatFieldToUpperCaseAndBreakCammelCase = (field: string) => {
     .replace(/^./, (str) => str.toUpperCase());
 };
 
-export const parseCSV = (csvText: string) => {
-  const lines = csvText.split("\n");
-  const headers = lines[0].split(",").map((header: string) => header.trim());
-  const data = lines.slice(1).map((line: string) => {
-    const values = line.split(",").map((value: string) => value.trim());
-    const entry: any = {};
-    headers.forEach((header: any, index) => {
-      entry[header] = values[index];
+interface FormData {
+  id: number;
+  form_name: string;
+  form_definition: any;
+}
+
+export const parseCSV = (csvText: string): FormData[] => {
+  const lines = csvText.trim().split("\n");
+  const headers = lines[0]
+    .split(",")
+    .map((header) => header.replace(/^"(.*)"$/, "$1").trim());
+
+  const data: FormData[] = lines.slice(1).map((line: string) => {
+    const values = line.split(",");
+    const obj: any = {};
+
+    headers.forEach((header, index) => {
+      if (header  ) {
+        obj[header] = JSON.parse(values[index]);
+      } else {
+        obj[header] = values[index];
+      }
     });
-    return entry;
+
+    return obj;
   });
+
   return data;
 };

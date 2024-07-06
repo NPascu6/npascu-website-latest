@@ -7,7 +7,10 @@ interface InputFieldProps {
   required?: boolean;
   value?: string;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | unknown | any,
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | unknown
+      | any,
     key?: any,
     type?: string
   ) => void;
@@ -42,7 +45,7 @@ const InputField: React.FC<InputFieldProps> = ({
   }, [id]);
 
   return (
-    <div className="flex flex-col items-baseline relative text-black">
+    <div className="flex flex-col items-baseline relative text-black min-w-24">
       {type !== "textarea" ? (
         <>
           <input
@@ -60,7 +63,7 @@ const InputField: React.FC<InputFieldProps> = ({
           <label
             htmlFor={id}
             className={`absolute left-1 transition-all duration-200 ease-in-out rounded-sm ${
-              value || isFocused ? "-top-3 text-xs p-1" : "top-1/2 text-md"
+              value || isFocused ? "-top-3 text-xs p-1" : "top-1/2 text-sm"
             }`}
             style={{
               pointerEvents: "none",
@@ -85,12 +88,12 @@ const InputField: React.FC<InputFieldProps> = ({
               e.persist();
               onChange(e);
             }}
-            className="block w-full p-1 border border-gray-300 shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="block min-h-24 w-full p-1 border border-gray-300 shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
             htmlFor={id}
             className={`absolute left-1 transition-all duration-200 ease-in-out rounded-sm ${
-              value || isFocused ? "-top-2 text-xs p-1" : "top-1/2 text-md"
+              value || isFocused ? "-top-2 text-xs p-1" : "top-1 text-md"
             }`}
             style={{
               pointerEvents: "none",

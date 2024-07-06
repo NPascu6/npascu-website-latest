@@ -10,9 +10,11 @@ import FormPreview from "./FormPreview";
 import { formatFieldToUpperCaseAndBreakCammelCase } from "../../util";
 import InputField from "./inputs/InputField";
 import CloseIcon from "../../assets/icons/CloseIcon";
+import { formDb } from "../../assets/formDb";
+import CollapsibleSection from "../common/CollapsableSection";
 
 export interface FormField {
-  id: string;
+  id: number;
   name: string;
   type: string;
   placeholder?: string;
@@ -20,8 +22,12 @@ export interface FormField {
   required?: boolean;
 }
 
-const FormDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+type formDetailProps = {
+  id: number;
+  setActiveForm: (id: number) => void;
+};
+
+const FormDetail = ({ id, setActiveForm }: formDetailProps) => {
   const navigate = useNavigate();
   const [formFields, setFormFields] = useState<FormField[]>([]);
   const [formData, setFormData] = useState<{ [key: string]: any }>({});
@@ -31,15 +37,11 @@ const FormDetail: React.FC = () => {
   const [formName, setFormName] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/forms/${id}`)
-      .then((response) => {
-        setFormName(response.data.form_name);
-        setFormFields(response.data.form_definition.fields);
-      })
-      .catch((error) => {
-        console.error("Error fetching form fields:", error);
-      });
+    const form = formDb.find((form) => form.id === Number(id));
+    if (form) {
+      setFormName(form.form_name);
+      setFormFields(form.form_definition.fields);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -162,7 +164,7 @@ const FormDetail: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full">
       <div
         style={{
           display: "flex",
@@ -176,13 +178,13 @@ const FormDetail: React.FC = () => {
           style={{ alignSelf: "flex-end" }}
           type="button"
           className=" font-semibold rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          onClick={() => navigate(-1)}
+          onClick={() => setActiveForm(0)}
         >
           <CloseIcon />
         </button>
         <form onSubmit={handleSubmit} className="flex-1">
           <h1 className="text-xl font-bold mb-4">{formName}</h1>
-          <div className="grid grid-cols-2 gap-6 mt-4">
+          <div className="grid grid-cols-2 gap-5 mt-4">
             {formFields.map((field) => (
               <div key={field.id} className="relative">
                 {renderInput(field)}
@@ -212,12 +214,16 @@ const FormDetail: React.FC = () => {
           </div>
         </form>
       </div>
-      <FormEditor
-        onAddField={addFieldToForm}
-        formFields={formFields}
-        updateField={updateFieldInForm}
-      />
-      <FormPreview formFields={formFields} setFormFields={setFormFields} />
+      <CollapsibleSection title="Form Builder">
+        <FormEditor
+          onAddField={addFieldToForm}
+          formFields={formFields}
+          updateField={updateFieldInForm}
+        />
+      </CollapsibleSection>
+      <CollapsibleSection title="Form Preview">
+        <FormPreview formFields={formFields} setFormFields={setFormFields} />
+      </CollapsibleSection>
     </div>
   );
 };

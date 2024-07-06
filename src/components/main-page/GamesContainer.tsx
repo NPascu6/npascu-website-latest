@@ -55,7 +55,7 @@ const GameCard = () => {
           }`}
           onClick={() => handleTabClick()}
         >
-          Grid Generator
+          Generator
         </div>
       </div>
       {isGamesActive ? (
