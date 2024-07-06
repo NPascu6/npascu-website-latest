@@ -172,7 +172,7 @@ const FormDetail = ({ id, setActiveForm }: formDetailProps) => {
           gap: "1rem",
           border: "1px solid #e2e8f0",
         }}
-        className="max-w-2xl mr-6 ml-6 w-full p-8 shadow-md rounded-lg"
+        className="max-w-2xl mr-6 ml-6 w-full p-8 shadow-md"
       >
         <button
           style={{ alignSelf: "flex-end" }}
