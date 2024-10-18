@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../store/reducers/appReducer";
 import Toaster from "./common/Toaster";
@@ -7,7 +7,7 @@ import { RootState } from "../store/store";
 import RoutesSwitch from "../router/Router";
 
 const App = () => {
-  const dipatch = useDispatch();
+  const dispatch = useDispatch();
   const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
   const [toggleSidebar, setToggleSidebar] = useState(false);
 
@@ -16,8 +16,8 @@ const App = () => {
 
     const theme = !isDarkTheme ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", theme);
-    dipatch(setTheme(isDarkTheme));
-  }, [dipatch]);
+    dispatch(setTheme(isDarkTheme));
+  }, [dispatch]);
 
   return (
     <div
@@ -28,7 +28,7 @@ const App = () => {
         toggleSidebar={toggleSidebar}
         setToggleSidebar={setToggleSidebar}
       />
-      <div style={{ maxHeight: "calc(100dvh - 3.8em)", overflowY: "auto" }}>
+      <div style={{ maxHeight: "calc(100dvh - 3.8em)", overflowY: "auto", width: '100%' }}>
         <RoutesSwitch />
       </div>
       <Toaster />

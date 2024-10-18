@@ -71,9 +71,11 @@ const FormEditor: React.FC<FormEditorProps> = ({
       className="p-1 shadow-md rounded-lg mr-2"
       style={{
         border: "1px solid #e2e8f0",
-        height: "calc(100dvh - 8em)",
+        maxHeight: "calc(100dvh - 22em)",
         overflow: "auto",
-        width: "38em",
+        width: "20em",
+        marginLeft: "1em",
+        marginBottom: "1em",
       }}
     >
       <h2 className="text-lg font-semibold mb-2">

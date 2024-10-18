@@ -31,9 +31,10 @@
 }
 
 .game-button {
-  display: inline-block;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   padding: 10px 20px;
-  margin: 0 10px;
   text-decoration: none;
   transition: background-color 0.3s;
 }

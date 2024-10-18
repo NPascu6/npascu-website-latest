@@ -55,7 +55,7 @@ const GameCard = () => {
           }`}
           onClick={() => handleTabClick()}
         >
-          Generator
+          Dynamic Components
         </div>
       </div>
       {isGamesActive ? (
@@ -63,7 +63,7 @@ const GameCard = () => {
           <div className="w-full">
             <Link
               to="games/tic-tac-toe"
-              className="flex items-center text-center game-button border shadow-xl p-6 m-4 w-full mt-4 hover:text-black"
+              className="flex border shadow-xl p-2 hover:text-black"
             >
               <div className="flex align-center justify-between items-center">
                 <h2 className="">Tic Tac Toe</h2>
@@ -76,7 +76,7 @@ const GameCard = () => {
           <div className="mt-1 w-full">
             <Link
               to="games/snake"
-              className="flex items-center text-center game-button border shadow-xl p-10 m-8 w-full mt-4 hover:text-black"
+              className="flex border shadow-xl p-2 hover:text-black"
             >
               <div className=" flex align-center justify-between items-center">
                 <h2>Snake</h2>
@@ -89,7 +89,7 @@ const GameCard = () => {
           <div className="mt-1 w-full">
             <Link
               to="games/click-the-target"
-              className="flex items-center text-center game-button border shadow-xl p-10 m-8 w-full mt-4 hover:text-black"
+              className="flex border shadow-xl p-2 hover:text-black"
             >
               <div className=" flex align-center justify-between items-center">
                 <h2>Click The Target</h2>

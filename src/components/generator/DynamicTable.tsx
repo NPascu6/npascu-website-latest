@@ -56,7 +56,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tableId }) => {
             const idColumn = columns.find((col) =>
               col.field.toLowerCase().includes("id")
             );
-            ;
             setRowKey(idColumn ? idColumn.field : null);
             setColumnDefs(columns);
             setRowData(tableDefinition.data);
@@ -84,7 +83,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tableId }) => {
   };
 
   return (
-    <div className="">
+    <div className="flex flex-col">
       <div className="mb-4">
         <div className="ag-theme-alpine">
           <AGGridComponent
@@ -95,7 +94,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tableId }) => {
           />
         </div>
       </div>
-      <CollapsibleSection title="Column Customizer">
+      <CollapsibleSection title="Column Customizing">
         <GridCustomizer columnDefs={columnDefs} setColumnDefs={setColumnDefs} />
       </CollapsibleSection>
     </div>

@@ -58,13 +58,13 @@ const MainPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-2 md:p-6" id="main-page">
-      <div className="grid grid-cols-2 gap-2 xs:grid-cols-1 sm:grid-cols-2 justify-evenly items-center">
+    <div className="p-1 md:p-4" id="main-page">
+      <div className="grid grid-cols-2 gap-1 xs:grid-cols-1 sm:grid-cols-2 justify-evenly items-center">
         <GithubProfileCard />
         <GamesCardPage />
       </div>
 
-      <div className="mt-2">
+      <div className="mt-1">
         <CollapsibleSection
           title="Education"
           subTitle="Diploma, courses and specialization"

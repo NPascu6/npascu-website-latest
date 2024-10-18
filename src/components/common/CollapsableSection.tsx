@@ -23,7 +23,7 @@ function CollapsibleSection({
   };
 
   return (
-    <div className="border m-1 select-none w-full">
+    <div className="border select-none w-full">
       <div
         className="p-2 flex space-between cursor-pointer"
         onClick={toggleSection}

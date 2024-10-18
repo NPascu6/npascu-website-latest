@@ -169,10 +169,9 @@ const FormDetail = ({ id, setActiveForm }: formDetailProps) => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
           border: "1px solid #e2e8f0",
         }}
-        className="max-w-2xl mr-6 ml-6 w-full p-8 shadow-md"
+        className="max-w-2xl mr-2 ml-2 w-full p-2 shadow-md"
       >
         <button
           style={{ alignSelf: "flex-end" }}
