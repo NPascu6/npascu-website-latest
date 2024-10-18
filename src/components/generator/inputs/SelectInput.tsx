@@ -23,7 +23,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
       {value && (
         <label
           htmlFor={id}
-          className={`absolute left-1 transition-all duration-200 ease-in-out ${
+          className={`absolute left-1 transition-all duration-200 rounded-md ease-in-out ${
             value ? "-top-3 text-xs p-1" : "top-1/2 text-md"
           }`}
           style={{

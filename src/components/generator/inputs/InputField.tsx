@@ -62,13 +62,12 @@ const InputField: React.FC<InputFieldProps> = ({
           />
           <label
             htmlFor={id}
-            className={`absolute left-1 transition-all duration-200 ease-in-out rounded-sm ${
+            className={`absolute left-1 transition-all duration-200 ease-in-out rounded-md ${
               value || isFocused ? "-top-3 text-xs p-1" : "top-1/2 text-sm"
             }`}
             style={{
               pointerEvents: "none",
               lineHeight: "10px",
-              borderRadius: "7px",
               backgroundColor: "white",
             }}
           >
@@ -92,7 +91,7 @@ const InputField: React.FC<InputFieldProps> = ({
           />
           <label
             htmlFor={id}
-            className={`absolute left-1 transition-all duration-200 ease-in-out rounded-sm ${
+            className={`absolute left-1 transition-all duration-200 ease-in-out rounded-md ${
               value || isFocused ? "-top-2 text-xs p-1" : "top-1 text-md"
             }`}
             style={{

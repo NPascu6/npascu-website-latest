@@ -73,7 +73,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
         border: "1px solid #e2e8f0",
         maxHeight: "calc(100dvh - 22em)",
         overflow: "auto",
-        width: "20em",
+        width: "24em",
         marginLeft: "1em",
         marginBottom: "1em",
       }}
@@ -83,7 +83,6 @@ const FormEditor: React.FC<FormEditorProps> = ({
       </h2>
       <div
         style={{
-          height: "calc(100dvh - 12em)",
           overflow: "auto",
           padding: "0.4rem",
         }}
