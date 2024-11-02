@@ -5,7 +5,7 @@ const InternalServerError = () => {
             <p className="text-lg text-gray-600">
                 Oops! Something went wrong on our server. Please try again later.
             </p>
-            <img src="/500-image.png" alt="500 Illustration" className="mt-8 max-w-xs" />
+            <img src="/500-image.png" alt="500 Illustration" className="mt-8 max-w-xs"/>
         </div>
     );
 }

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import useWindowSize from '../../hooks/useWindowSize';
-import TicTacToeIcon from '../../assets/icons/TicTacToe';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import CloseIcon from '../../assets/icons/CloseIcon';
 
 type SquareValue = 'X' | 'O' | null;
@@ -38,18 +37,22 @@ interface GameStatisticsProps {
     };
 }
 
-const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2Stats, currentPlayer, startGame }) => (
+const GameStatistics: React.FC<GameStatisticsProps> = ({player1Stats, player2Stats, currentPlayer, startGame}) => (
     <div className="text-center shadow-xl mb-2">
         <div className="flex justify-between">
-            <div className="border mr-1 p-1" style={{ width: '14em' }}>
+            <div className="border mr-1 p-1" style={{width: '14em'}}>
                 {!startGame && <p>Player 1: </p>}
-                <p style={{ color: currentPlayer === player1Stats.currentPlayer ? 'green' : 'gray' }} className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player1Stats.currentPlayer}</p>
+                <p style={{color: currentPlayer === player1Stats.currentPlayer ? 'green' : 'gray'}}
+                   className={`${currentPlayer === player1Stats.currentPlayer ? "font-bold" : ""}`}>Current
+                    Player: {player1Stats.currentPlayer}</p>
                 {!startGame && <p>Wins: {player1Stats.wins}</p>}
                 {!startGame && <p>Draws: {player1Stats.draws}</p>}
             </div>
-            <div className="border ml-1 p-1" style={{ width: '14em' }}>
+            <div className="border ml-1 p-1" style={{width: '14em'}}>
                 {!startGame && <p>Player 2:</p>}
-                <p style={{ color: currentPlayer === player2Stats.currentPlayer ? 'green' : 'gray' }} className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current Player: {player2Stats.currentPlayer}</p>
+                <p style={{color: currentPlayer === player2Stats.currentPlayer ? 'green' : 'gray'}}
+                   className={`${currentPlayer === player2Stats.currentPlayer ? "font-bold" : ""}`}>Current
+                    Player: {player2Stats.currentPlayer}</p>
                 {!startGame && <p>Wins: {player2Stats.wins}</p>}
                 {!startGame && <p>Draws: {player2Stats.draws}</p>}
             </div>
@@ -58,19 +61,19 @@ const GameStatistics: React.FC<GameStatisticsProps> = ({ player1Stats, player2St
 );
 
 const TicTacToe: React.FC<TicTacToeProps> = ({
-    startGame,
-    setStartGame,
-    player1Symbol,
-    player2Symbol,
-    winner,
-    isDraw,
-    board,
-    currentPlayer,
-    setBoard,
-    setCurrentPlayer,
-    setWinner,
-    setIsDraw
-}) => {
+                                                 startGame,
+                                                 setStartGame,
+                                                 player1Symbol,
+                                                 player2Symbol,
+                                                 winner,
+                                                 isDraw,
+                                                 board,
+                                                 currentPlayer,
+                                                 setBoard,
+                                                 setCurrentPlayer,
+                                                 setWinner,
+                                                 setIsDraw
+                                             }) => {
 
     const handleClick = (e: any, index: number): void => {
         e.preventDefault();
@@ -114,8 +117,8 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
         // Check rows and columns
         for (let i = 0; i < boardSize; i++) {
-            const row = Array.from({ length: boardSize }, (_, index) => i * boardSize + index);
-            const column = Array.from({ length: boardSize }, (_, index) => i + index * boardSize);
+            const row = Array.from({length: boardSize}, (_, index) => i * boardSize + index);
+            const column = Array.from({length: boardSize}, (_, index) => i + index * boardSize);
 
             if (checkSequence(row) || checkSequence(column)) {
                 setStartGame(false);
@@ -125,7 +128,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         }
 
         // Check main diagonal
-        const mainDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize + 1));
+        const mainDiagonal = Array.from({length: boardSize}, (_, index) => index * (boardSize + 1));
         if (checkSequence(mainDiagonal)) {
             setStartGame(false);
 
@@ -133,7 +136,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         }
 
         // Check secondary diagonal
-        const secondaryDiagonal = Array.from({ length: boardSize }, (_, index) => index * (boardSize - 1) + (boardSize - 1));
+        const secondaryDiagonal = Array.from({length: boardSize}, (_, index) => index * (boardSize - 1) + (boardSize - 1));
         if (checkSequence(secondaryDiagonal)) {
             setStartGame(false);
 
@@ -143,7 +146,7 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
         // Check additional diagonals in both directions
         const checkAdditionalDiagonals = (startRow: any, startCol: any, rowIncrement: any, colIncrement: any) => {
             const additionalDiagonal = Array.from(
-                { length: winningCondition },
+                {length: winningCondition},
                 (_, index) => (startRow + index * rowIncrement) * boardSize + (startCol + index * colIncrement)
             );
 
@@ -199,10 +202,10 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
             <div
                 key={index}
                 className="border border-gray-400 font-bold flex items-center justify-center focus:outline-none overflow-hidden"
-                style={{ height: '100%', minHeight: '1.4em', cursor: 'pointer' }}
+                style={{height: '100%', minHeight: '1.4em', cursor: 'pointer'}}
                 onClick={(e: any) => handleClick(e, index)}
             >
-                {board[index] && <span style={{ margin: '-1em' }}> {board[index]}</span>}
+                {board[index] && <span style={{margin: '-1em'}}> {board[index]}</span>}
             </div>
         )}
     </>
@@ -210,14 +213,14 @@ const TicTacToe: React.FC<TicTacToeProps> = ({
 
 const TicTacToeContainer: React.FC = () => {
     const [boardSize, setBoardSize] = useState(3);
-    const initialBoard: SquareValue[] = Array.from({ length: boardSize * boardSize }, () => null);
+    const initialBoard: SquareValue[] = Array.from({length: boardSize * boardSize}, () => null);
     const [board, setBoard] = useState<SquareValue[]>(initialBoard);
     const [winner, setWinner] = useState<SquareValue | null>(null);
     const [isDraw, setIsDraw] = useState(false);
     const [currentPlayer, setCurrentPlayer] = useState<SquareValue>('X');
-    const [gameStats, setGameStats] = useState({ currentPlayer: 'X', wins: 0, draws: 0 });
-    const [player1Stats, setPlayer1Stats] = useState({ currentPlayer: 'X', wins: 0, draws: 0 });
-    const [player2Stats, setPlayer2Stats] = useState({ currentPlayer: 'O', wins: 0, draws: 0 });
+    const [gameStats, setGameStats] = useState({currentPlayer: 'X', wins: 0, draws: 0});
+    const [player1Stats, setPlayer1Stats] = useState({currentPlayer: 'X', wins: 0, draws: 0});
+    const [player2Stats, setPlayer2Stats] = useState({currentPlayer: 'O', wins: 0, draws: 0});
     const windowSize = useWindowSize();
     const [startGame, setStartGame] = useState(false);
     const navigate = useNavigate();
@@ -233,13 +236,13 @@ const TicTacToeContainer: React.FC = () => {
     const updateGameStats = useCallback(() => {
         if (!currentPlayer) return;
 
-        if (isDraw) return setGameStats({ currentPlayer, wins: gameStats.wins, draws: gameStats.draws + 1 });
+        if (isDraw) return setGameStats({currentPlayer, wins: gameStats.wins, draws: gameStats.draws + 1});
         if (currentPlayer === 'X') {
-            setPlayer1Stats({ currentPlayer, wins: player1Stats.wins + 1, draws: player1Stats.draws });
-            setGameStats({ currentPlayer, wins: player1Stats.wins + 1, draws: gameStats.draws });
+            setPlayer1Stats({currentPlayer, wins: player1Stats.wins + 1, draws: player1Stats.draws});
+            setGameStats({currentPlayer, wins: player1Stats.wins + 1, draws: gameStats.draws});
         } else {
-            setPlayer2Stats({ currentPlayer, wins: player2Stats.wins + 1, draws: player2Stats.draws });
-            setGameStats({ currentPlayer, wins: player2Stats.wins + 1, draws: gameStats.draws });
+            setPlayer2Stats({currentPlayer, wins: player2Stats.wins + 1, draws: player2Stats.draws});
+            setGameStats({currentPlayer, wins: player2Stats.wins + 1, draws: gameStats.draws});
         }
     }, [currentPlayer, player1Stats, player2Stats, gameStats, isDraw]);
 
@@ -257,7 +260,7 @@ const TicTacToeContainer: React.FC = () => {
     }, [winner, isDraw, currentPlayer, handleReset, updateGameStats]);
 
     useEffect(() => {
-        setBoard(Array.from({ length: boardSize * boardSize }, () => null));
+        setBoard(Array.from({length: boardSize * boardSize}, () => null));
     }, [boardSize]);
 
     const getHeight = useCallback(() => {
@@ -277,7 +280,7 @@ const TicTacToeContainer: React.FC = () => {
                             className="mt-1 text-sm block w-full p-2 text-black border border-gray-300"
                             onChange={(e) => {
                                 const newSize = parseInt(e.target.value, 10);
-                                setGameStats({ currentPlayer: 'X', wins: 0, draws: 0 });
+                                setGameStats({currentPlayer: 'X', wins: 0, draws: 0});
                                 setBoardSize(newSize);
                                 handleReset();
                             }}
@@ -291,7 +294,7 @@ const TicTacToeContainer: React.FC = () => {
                         </select>
                     </div>
                     <div onClick={() => navigate('/')}>
-                        <CloseIcon />
+                        <CloseIcon/>
                     </div>
                 </div>}
                 {currentPlayer && (
@@ -304,7 +307,7 @@ const TicTacToeContainer: React.FC = () => {
                 )}
                 <div className="text-center">
                     <div className="grid shadow-lg mb-2 min-h-max"
-                        style={{ gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '4px', height: getHeight() }}>
+                         style={{gridTemplateColumns: `repeat(${boardSize}, 1fr)`, gap: '4px', height: getHeight()}}>
                         <TicTacToe
                             startGame={startGame}
                             setStartGame={setStartGame}

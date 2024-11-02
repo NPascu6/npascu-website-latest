@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { routeDefinition } from './routeDefinition';
+import React, {Suspense} from 'react';
+import {Route, Routes} from 'react-router-dom';
+import {routeDefinition} from './routeDefinition';
 import Loading from '../pages/generic/Loading';
-import { RouteDefinition } from '../models/common/common';
+import {RouteDefinition} from '../models/common/common';
 
 const renderRoutes = (routes: RouteDefinition[]) => {
     return routes.map((route: RouteDefinition, index) => (
@@ -18,7 +18,7 @@ const renderRoutes = (routes: RouteDefinition[]) => {
 
 const RoutesSwitch = () => {
     return (
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading/>}>
             <Routes>
                 {renderRoutes(routeDefinition)}
             </Routes>

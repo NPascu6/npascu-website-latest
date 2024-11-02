@@ -1,5 +1,14 @@
-import { ColDef, ColGroupDef, GridApi, RowStyle, ITooltipParams, FilterChangedEvent, CellEditingStartedEvent, CellEditingStoppedEvent } from "ag-grid-community";
-import { CSSProperties } from "react";
+import {
+    CellEditingStartedEvent,
+    CellEditingStoppedEvent,
+    ColDef,
+    ColGroupDef,
+    FilterChangedEvent,
+    GridApi,
+    ITooltipParams,
+    RowStyle
+} from "ag-grid-community";
+import {CSSProperties} from "react";
 
 /**
  * Aggrid props
@@ -17,7 +26,6 @@ import { CSSProperties } from "react";
  * @param rowHeight?: number - row height
  * @param cancelFilterIcon?: any - cancel filter icon
  * @param suppressMenu?: boolean - suppress menu
- * @param showLoadingOverlay?: boolean - show loading overlay
  * @param enableRangeSelection?: boolean - enable range selection
  * @param showHeaderFilterIcon?: boolean - show header filter icon
  * @param noRowsMessage?: string - no rows message
@@ -50,7 +58,6 @@ export interface AGGridProps {
     rowHeight?: number;
     cancelFilterIcon?: any;
     suppressMenu?: boolean;
-    showLoadingOverlay?: boolean;
     enableRangeSelection?: boolean;
     showHeaderFilterIcon?: boolean;
     noRowsMessage?: string;

@@ -1,12 +1,15 @@
 ## npascu-website-latest
+
 https://pascu.io
 
 ## Title
-Norbert Pascu's website 
+
+Norbert Pascu's website
 
 **Version:** 0.1.0
 
-This project is marked as private and serves as a boilerplate for a modern web application built with React, Redux, and TypeScript. It includes various essential libraries and tools to kickstart your development process.
+This project is marked as private and serves as a boilerplate for a modern web application built with React, Redux, and
+TypeScript. It includes various essential libraries and tools to kickstart your development process.
 
 ### Available Scripts
 
@@ -17,7 +20,8 @@ This project is marked as private and serves as a boilerplate for a modern web a
 
 ### Usage
 
-This project is a great starting point for building modern web applications with a focus on React, Redux, and TypeScript. Feel free to customize and expand it to meet your specific project requirements.
+This project is a great starting point for building modern web applications with a focus on React, Redux, and
+TypeScript. Feel free to customize and expand it to meet your specific project requirements.
 
 ### Browser Support
 
@@ -47,7 +51,8 @@ This project is a great starting point for building modern web applications with
 
 ### Development Dependencies
 
-- **@babel/plugin-proposal-private-property-in-object** (v7.21.11): A Babel plugin for private properties in JavaScript objects.
+- **@babel/plugin-proposal-private-property-in-object** (v7.21.11): A Babel plugin for private properties in JavaScript
+  objects.
 - **tailwindcss** (v3.3.3): A highly customizable, low-level CSS framework.
 
 Please refer to the official documentation of each dependency for more information and guidance.

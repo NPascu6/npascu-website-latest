@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { useDebounced } from "./useDebounceHook";
+import {useCallback, useState} from "react";
+import {useDebounced} from "./useDebounceHook";
 
 export interface WindowInterface {
     innerWidth: number,
@@ -9,8 +9,8 @@ export interface WindowInterface {
 
 const useWindowSize = (): WindowInterface => {
     const getWindowSize = useCallback(() => {
-        const { innerWidth, innerHeight } = window;
-        return { innerWidth, innerHeight };
+        const {innerWidth, innerHeight} = window;
+        return {innerWidth, innerHeight};
     }, [])
 
 

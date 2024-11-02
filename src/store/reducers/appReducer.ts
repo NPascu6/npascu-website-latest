@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 interface AppState {
     isDarkTheme: boolean;
@@ -45,5 +45,5 @@ const appSlice = createSlice({
     },
 });
 
-export const { setTheme, setShowToaster, setToasterMessage, setGithubProfile, setWorkPhotos } = appSlice.actions;
+export const {setTheme, setShowToaster, setToasterMessage, setGithubProfile, setWorkPhotos} = appSlice.actions;
 export default appSlice.reducer;

@@ -1,4 +1,4 @@
-import { ValueFormatterParams } from "ag-grid-community";
+import {ValueFormatterParams} from "ag-grid-community";
 import dayjs from "dayjs";
 
 import utc from 'dayjs/plugin/utc';

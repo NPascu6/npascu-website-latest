@@ -9,13 +9,15 @@ export const FintamaCard = () => {
                     Building and maintaining UI features in React 17.
                 </li>
                 <li>
-                    Building and maintaining UI npm internal component library for JB using Rollup for bundling and Storybook for presentation.
+                    Building and maintaining UI npm internal component library for JB using Rollup for bundling and
+                    Storybook for presentation.
                 </li>
                 <li>
                     Migrating Material UI 5 to 6.
                 </li>
                 <li>
-                    Refactoring react-query, rxjs, and epic middleware (all in one project) to use simple Redux-thunk API calls.
+                    Refactoring react-query, rxjs, and epic middleware (all in one project) to use simple Redux-thunk
+                    API calls.
                 </li>
                 <li>
                     Refactored routing for internal components to be lazy loaded.
@@ -28,16 +30,19 @@ export const FintamaCard = () => {
                 </li>
             </ul>
             <p className="mt-4">
-                <strong>Technology Stack:</strong> React 17, 18, Material UI 4, 5, 6, rxjs, react-query, redux, epic middleware, Rollup, npm, Storybook.
+                <strong>Technology Stack:</strong> React 17, 18, Material UI 4, 5, 6, rxjs, react-query, redux, epic
+                middleware, Rollup, npm, Storybook.
             </p>
             <p>
-                <strong>Sprint:</strong> Jira, Two-week iterations. Part of a team of 14 working on two major backoffice components.
+                <strong>Sprint:</strong> Jira, Two-week iterations. Part of a team of 14 working on two major backoffice
+                components.
             </p>
             <p>
                 <strong>CI/CD:</strong> Octopus, Bitbucket, Internal npm registry.
             </p>
             <p>
-                <strong>Back End:</strong> Java, also React apps are compiled within java.jar to communicate between IFrame components.
+                <strong>Back End:</strong> Java, also React apps are compiled within java.jar to communicate between
+                IFrame components.
             </p>
         </div>
     );
@@ -62,13 +67,15 @@ export const CovarioCard = () => {
                     Responsible for creating and coordinating tickets regarding UI features.
                 </li>
                 <li>
-                    Creating and maintaining an administrative portal to manage parts of the business logic individually.
+                    Creating and maintaining an administrative portal to manage parts of the business logic
+                    individually.
                 </li>
                 <li>
                     Creating and maintaining internal UI tools.
                 </li>
                 <li>
-                    Understanding business requirements, investigating, and tackling business challenges that the real-time data feed produces for front-end applications.
+                    Understanding business requirements, investigating, and tackling business challenges that the
+                    real-time data feed produces for front-end applications.
                 </li>
                 <li>
                     Translating Crypto Venues API and translating it to the internal middle office structure.
@@ -80,11 +87,13 @@ export const CovarioCard = () => {
                     Merging and deploying test and production versions of the web applications.
                 </li>
                 <li>
-                    Building and maintaining an Openfin trading app. (Openfin is something like Electron on which the container is based).
+                    Building and maintaining an Openfin trading app. (Openfin is something like Electron on which the
+                    container is based).
                 </li>
             </ul>
             <p className="mt-4">
-                <strong>Technology Stack:</strong> .Net Core, React 17, 18, Material UI 5, 6. Rxjs, Redux-Thunk, C#, SignalR, AgGrid, Material UI, Openfin.
+                <strong>Technology Stack:</strong> .Net Core, React 17, 18, Material UI 5, 6. Rxjs, Redux-Thunk, C#,
+                SignalR, AgGrid, Material UI, Openfin.
             </p>
             <p>
                 <strong>DevOps:</strong> Docker, Kubernetes.
@@ -103,10 +112,12 @@ export const AmarisCard = () => {
             <p className="">Amaris Consulting - Zurich, Switzerland</p>
             <ul className="list-disc ml-6 mt-4">
                 <li>
-                    Development of .NET Core API with CRUD features, for the purpose of getting and sending data to an SQL Server, using Entity Framework Code First with Repository design pattern.
+                    Development of .NET Core API with CRUD features, for the purpose of getting and sending data to an
+                    SQL Server, using Entity Framework Code First with Repository design pattern.
                 </li>
                 <li>
-                    Development of CRUD features (front-end), using Vue JS, with Vuetify as a reusable component-based progressive web application.
+                    Development of CRUD features (front-end), using Vue JS, with Vuetify as a reusable component-based
+                    progressive web application.
                 </li>
                 <li>
                     Creating and editing storyboards, tasks in Azure DevOps.
@@ -171,7 +182,8 @@ export const CognizantCard = () => {
                     Cross-platform, mobile, and web development.
                 </li>
                 <li>
-                    Creating and maintaining UI / UX features in React Native as a proof of concept in migrating React web app code into React Native mobile app.
+                    Creating and maintaining UI / UX features in React Native as a proof of concept in migrating React
+                    web app code into React Native mobile app.
                 </li>
                 <li>
                     Controlling a unified Redux flow within two different apps with the same store base.
@@ -179,7 +191,7 @@ export const CognizantCard = () => {
             </ul>
             <p className="mt-4">
                 <strong>Technology Stack:</strong> React 16, .Net 5, Vue 1, 2, Redux, React-Native with Redux-Saga.
-                <br />
+                <br/>
                 <strong>Node.js as server-side technology.</strong>
             </p>
         </div>
@@ -194,12 +206,22 @@ export const BoschCard = () => {
             <p className="text-sm mt-2">
                 <span className="font-semibold">Responsibilities:</span>
                 <ul className="list-disc ml-8">
-                    <li>Tool Development: Full Stack Web Applications using the .Net Framework. C#, MVC, VueJS and React, and refactoring Vanilla JS or jQuery code.</li>
+                    <li>Tool Development: Full Stack Web Applications using the .Net Framework. C#, MVC, VueJS and
+                        React, and refactoring Vanilla JS or jQuery code.
+                    </li>
                     <li>Handling deployment and release of new versions of .NET-based web applications.</li>
-                    <li>Data visualization and management, web-based software, implemented and maintained using React and Node.js.</li>
-                    <li>SQL Database and Web Service Development, Windows Server management, handling of deployments and releases.</li>
-                    <li>JIRA Setup and Configuration for Software Development Cycle. Creating and maintaining the agile environment.</li>
-                    <li>Creating and customizing tools for other software developers to simplify and improve the speed of developing embedded or model-based software.</li>
+                    <li>Data visualization and management, web-based software, implemented and maintained using React
+                        and Node.js.
+                    </li>
+                    <li>SQL Database and Web Service Development, Windows Server management, handling of deployments and
+                        releases.
+                    </li>
+                    <li>JIRA Setup and Configuration for Software Development Cycle. Creating and maintaining the agile
+                        environment.
+                    </li>
+                    <li>Creating and customizing tools for other software developers to simplify and improve the speed
+                        of developing embedded or model-based software.
+                    </li>
                 </ul>
             </p>
         </div>
@@ -216,8 +238,12 @@ export const DVSECard = () => {
                 <ul className="list-disc ml-8">
                     <li>Bug fixing and feature development for Web-Based Applications.</li>
                     <li>CSS and JS refactoring.</li>
-                    <li>Creating and maintaining features within the .NET MVC framework, using Entity Framework and Knockout.js, and basic Angular.js features.</li>
-                    <li>Implementing and maintaining new features with React.js and Redux, following the MVC/MVVM design pattern on back-end services.</li>
+                    <li>Creating and maintaining features within the .NET MVC framework, using Entity Framework and
+                        Knockout.js, and basic Angular.js features.
+                    </li>
+                    <li>Implementing and maintaining new features with React.js and Redux, following the MVC/MVVM design
+                        pattern on back-end services.
+                    </li>
                 </ul>
             </div>
         </div>
@@ -233,8 +259,12 @@ export const ItSupportTechnicianCard = () => {
             <div className="text-sm mt-2">
                 <span className="font-semibold">Responsibilities:</span>
                 <ul className="list-disc ml-8">
-                    <li>Basic troubleshooting of applications and personalizing them to the specifications of the client.</li>
-                    <li>Setting up and maintaining personal applications for specific users, including AutoCAD, Photoshop, Canon photography, and Microsoft Office applications.</li>
+                    <li>Basic troubleshooting of applications and personalizing them to the specifications of the
+                        client.
+                    </li>
+                    <li>Setting up and maintaining personal applications for specific users, including AutoCAD,
+                        Photoshop, Canon photography, and Microsoft Office applications.
+                    </li>
                     <li>Administrating Active Directory and Exchange servers.</li>
                     <li>Basic website administration.</li>
                     <li>Troubleshooting and fixing networking issues.</li>
