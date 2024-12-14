@@ -24,7 +24,7 @@ export interface FormField {
 
 type formDetailProps = {
   id: number;
-  setActiveForm: (id: number) => void;
+  setActiveForm: (id: number | null) => void;
 };
 
 const FormDetail = ({ id, setActiveForm }: formDetailProps) => {
@@ -165,54 +165,56 @@ const FormDetail = ({ id, setActiveForm }: formDetailProps) => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          border: "1px solid #e2e8f0",
-        }}
-        className="max-w-2xl mr-2 ml-2 w-full p-2 shadow-md"
-      >
-        <button
-          style={{ alignSelf: "flex-end" }}
-          type="button"
-          className=" font-semibold rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          onClick={() => setActiveForm(0)}
+      {
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            border: "1px solid #e2e8f0",
+          }}
+          className="max-w-2xl mr-2 ml-2 w-full p-2 shadow-md"
         >
-          <CloseIcon />
-        </button>
-        <form onSubmit={handleSubmit} className="flex-1">
-          <h1 className="text-xl font-bold mb-4">{formName}</h1>
-          <div className="grid grid-cols-2 gap-5 mt-4">
-            {formFields.map((field) => (
-              <div key={field.id} className="relative">
-                {renderInput(field)}
-                {errors[field.name] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors[field.name]}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-          {validationMessage && (
-            <p className="text-red-500 text-xs mt-1">{validationMessage}</p>
-          )}
-          <div className="flex justify-between mt-6">
-            <button
-              type="submit"
-              disabled={!isValid}
-              className={`py-2 px-4 ${
-                isValid
-                  ? "bg-indigo-600 hover:bg-indigo-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              } text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+          <button
+            style={{ alignSelf: "flex-end" }}
+            type="button"
+            className=" font-semibold rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            onClick={() => setActiveForm(null)}
+          >
+            <CloseIcon />
+          </button>
+          <form onSubmit={handleSubmit} className="flex-1">
+            <h1 className="text-xl font-bold mb-4">{formName}</h1>
+            <div className="grid grid-cols-2 gap-5 mt-4">
+              {formFields.map((field) => (
+                <div key={field.id} className="relative">
+                  {renderInput(field)}
+                  {errors[field.name] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+            {validationMessage && (
+              <p className="text-red-500 text-xs mt-1">{validationMessage}</p>
+            )}
+            <div className="flex justify-between mt-6">
+              <button
+                type="submit"
+                disabled={!isValid}
+                className={`py-2 px-4 ${
+                  isValid
+                    ? "bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                } text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      }
       <CollapsibleSection title="Form Builder">
         <FormEditor
           onAddField={addFieldToForm}

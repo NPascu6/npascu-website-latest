@@ -26,9 +26,9 @@ function CollapsibleSection({
 
   useEffect(() => {
     if (setCollapsed) {
-      toggleSection();
+      setCollapsed(true);
     }
-  }, []);
+  }, [isOpen]);
 
   return (
     <div className="border select-none w-full mt-1 p-1">
