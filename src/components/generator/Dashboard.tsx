@@ -76,7 +76,7 @@ const FormList: React.FC = () => {
       {activeForm === null && (
         <div className="w-full">
           <CollapsibleSection
-            setCollapsed={(isCollapsed) => handleCollapse(isCollapsed)}
+            setCollapsed={(isCollapsed: any) => handleCollapse(isCollapsed)}
             title="Dynamic Forms"
           >
             <div className="w-full p-1 shadow-md rounded-lg">

@@ -6,9 +6,10 @@ import { RootState } from "../../store/store";
 
 interface CollapsibleSectionProps {
   title: string;
-  isCollapsed?: boolean;
+  isCollapsed?: any;
   subTitle?: string;
   children: ReactNode;
+  setCollapsed?: any;
 }
 
 function CollapsibleSection({
