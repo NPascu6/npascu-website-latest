@@ -610,7 +610,7 @@ const SnakeGame: React.FC = () => {
 
     return (
         <div
-            className="justify-center items-center align-center flex flex-col p-1"
+            className="justify-center items-center align-center flex flex-col"
             ref={boardRef}
         >
             <div className="flex flex-col justify-center items-center">
