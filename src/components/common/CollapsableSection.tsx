@@ -10,6 +10,7 @@ interface CollapsibleSectionProps {
   subTitle?: string;
   children: ReactNode;
   setCollapsed?: any;
+  className?: string;
 }
 
 function CollapsibleSection({
@@ -17,6 +18,7 @@ function CollapsibleSection({
   subTitle,
   children,
   isCollapsed = false,
+  className = "",
 }: CollapsibleSectionProps) {
   // Default to open unless explicitly collapsed
   const [isOpen, setIsOpen] = useState(!isCollapsed);
@@ -26,7 +28,7 @@ function CollapsibleSection({
 
   return (
     <div
-      className={`border ${
+      className={`${className} border ${
         isDarkTheme ? "border-gray-700" : "border-gray-300"
       }  shadow-sm overflow-hidden`}
     >

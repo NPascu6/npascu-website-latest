@@ -81,7 +81,7 @@ const GameCard: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className="p-4">
+        <div className="p-2">
           <FormList />
         </div>
       )}

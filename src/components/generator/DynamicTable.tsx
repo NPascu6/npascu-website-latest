@@ -94,7 +94,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tableId }) => {
           />
         </div>
       </div>
-      <CollapsibleSection title="Column Customizing">
+      <CollapsibleSection title="Column Customizing" className="w-full">
         <GridCustomizer columnDefs={columnDefs} setColumnDefs={setColumnDefs} />
       </CollapsibleSection>
     </div>
