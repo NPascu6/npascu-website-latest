@@ -39,7 +39,7 @@ const TopBar = () => {
       </div>
 
       <div className="top-bar-section w-full">
-        <button onClick={changeTheme}>
+        <button name="toggle-theme" onClick={changeTheme}>
           {isDarkTheme ? <ToggleSvgLight /> : <ToggleSvgDark />}
         </button>
       </div>
