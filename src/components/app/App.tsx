@@ -6,6 +6,7 @@ import TopBar from "./TopBar";
 import { RootState } from "../../store/store";
 import RoutesSwitch from "../../router/Router";
 import SideBar from "./SideBar";
+import InstallPWAButton from "./InstallPWAButton";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ const App = () => {
         <RoutesSwitch />
       </div>
       <Toaster />
+      <InstallPWAButton />
     </div>
   );
 };
