@@ -46,7 +46,11 @@ const GameCard: React.FC = () => {
   ];
 
   return (
-    <div className="game-card shadow-xl rounded-md overflow-hidden">
+    <div
+      id="game-card"
+      className={`p-2 shadow-xl`}
+      style={{ height: "-webkit-fill-available" }}
+    >
       <div className="flex items-center justify-center">
         <div
           className={tabClass("games")}
@@ -62,7 +66,7 @@ const GameCard: React.FC = () => {
         </div>
       </div>
       {activeTab === "games" ? (
-        <div className="p-4 flex flex-col gap-2 text-center">
+        <div className="p-2 flex flex-col gap-2 text-center">
           {gameLinks.map(({ to, label, Icon }) => (
             <Link
               key={to}
@@ -87,14 +91,12 @@ const GameCard: React.FC = () => {
 
 const GamesCardPage: React.FC = () => {
   return (
-    <div className="p-2">
-      <Routes>
-        <Route path="*" element={<GameCard />} />
-        <Route path="tic-tac-toe" element={<TicTacToeGame />} />
-        <Route path="snake" element={<SnakeGame />} />
-        <Route path="click-the-target" element={<ClickTheTarget />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="*" element={<GameCard />} />
+      <Route path="tic-tac-toe" element={<TicTacToeGame />} />
+      <Route path="snake" element={<SnakeGame />} />
+      <Route path="click-the-target" element={<ClickTheTarget />} />
+    </Routes>
   );
 };
 

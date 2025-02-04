@@ -30,7 +30,7 @@ const FormList: React.FC = () => {
       {!selectedTableId && (
         <div className="w-full">
           <CollapsibleSection title="Dynamic Forms">
-            <div className="w-full p-1 shadow-md rounded-lg">
+            <div className="w-full p-1 shadow-md ">
               <h1 className="text-md font-bold mb-2">Select a Form</h1>
               <ul className="grid grid-cols-1 w-full">
                 {formDb?.length > 0 &&
@@ -67,7 +67,7 @@ const FormList: React.FC = () => {
                 {selectedTableId && (
                   <button
                     onClick={() => setSelectedTableId(undefined)}
-                    className="p-1 rounded-md shadow-md mx-2"
+                    className="p-1  shadow-md mx-2"
                   >
                     <CloseIcon />
                   </button>
@@ -76,7 +76,7 @@ const FormList: React.FC = () => {
 
               <button
                 onClick={toggleView}
-                className="px-2 mt-2 text-xs font-semibold rounded-md shadow-md mx-2"
+                className="px-2 mt-2 text-xs font-semibold  shadow-md mx-2"
               >
                 {useTabs ? "Switch to Dropdown" : "Switch to Tabs"}
               </button>
@@ -106,7 +106,7 @@ const FormList: React.FC = () => {
               <select
                 onChange={handleTableChange}
                 value={selectedTableId}
-                className="w-4/6 border shadow-sm text-black p-1 rounded-md"
+                className="w-4/6 border shadow-sm text-black p-1 "
               >
                 {tables.map((table) => (
                   <option key={table.id} value={table.id}>

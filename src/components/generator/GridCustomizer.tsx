@@ -67,7 +67,7 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
   return (
     <div className="flex flex-col md:flex-row items-center justify-center w-full">
       <CollapsibleSection title="Column Customizer">
-        <div className="p-1 border rounded-md shadow-sm w-full overflow-auto">
+        <div className="p-1 border  shadow-sm w-full overflow-auto">
           <div className="mb-4 flex flex-col">
             <input
               type="text"
@@ -77,7 +77,7 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
               onChange={(e) =>
                 setNewColumn({ ...newColumn, field: e.target.value })
               }
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm mb-2 p-2"
+              className="mt-1 block w-full border-gray-300  shadow-sm mb-2 p-2"
             />
             <input
               type="text"
@@ -87,7 +87,7 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
               onChange={(e) =>
                 setNewColumn({ ...newColumn, headerName: e.target.value })
               }
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm mb-2 p-2"
+              className="mt-1 block w-full border-gray-300  shadow-sm mb-2 p-2"
             />
             <select
               name="type"
@@ -95,7 +95,7 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
               onChange={(e) =>
                 setNewColumn({ ...newColumn, type: e.target.value })
               }
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm mb-2 p-2"
+              className="mt-1 block w-full border-gray-300  shadow-sm mb-2 p-2"
             >
               <option value="text">Text</option>
               <option value="number">Number</option>
@@ -130,7 +130,7 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
             </div>
             <button
               onClick={handleAddColumn}
-              className="mt-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md w-full"
+              className="mt-2 bg-indigo-600 text-white font-semibold  shadow-md w-full"
             >
               Add Column
             </button>
@@ -138,13 +138,13 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
         </div>
       </CollapsibleSection>
       <CollapsibleSection title="Existing Columns">
-        <div className="p-1 border rounded-md shadow-sm w-full overflow-auto">
+        <div className="p-1 border  shadow-sm w-full overflow-auto">
           <h3 className="text-md font-semibold mb-2">Existing Columns</h3>
           <div className="h-[calc(100dvh-30em)] overflow-auto">
             {columnDefs.map((column) => (
               <div
                 key={column.colId}
-                className="mb-4 p-1 border rounded-md shadow-sm text-black"
+                className="mb-4 p-1 border  shadow-sm text-black"
               >
                 <button
                   onClick={() => handleRemoveColumn(+column.colId)}
@@ -157,20 +157,20 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
                   name="field"
                   value={column.field}
                   onChange={(e) => handleColumnChange(e, +column.colId)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm mb-2 p-2"
+                  className="mt-1 block w-full border-gray-300  shadow-sm mb-2 p-2"
                 />
                 <input
                   type="text"
                   name="headerName"
                   value={column.headerName}
                   onChange={(e) => handleColumnChange(e, +column.colId)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm mb-2 p-2"
+                  className="mt-1 block w-full border-gray-300  shadow-sm mb-2 p-2"
                 />
                 <select
                   name="type"
                   value={column.type || ""}
                   onChange={(e) => handleColumnChange(e, +column.colId)}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm mb-2 p-2"
+                  className="mt-1 block w-full border-gray-300  shadow-sm mb-2 p-2"
                 >
                   <option value="text">Text</option>
                   <option value="number">Number</option>
@@ -213,9 +213,9 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
         </div>
       </CollapsibleSection>
       <CollapsibleSection title="JSON">
-        <div className="p-1 border rounded-md shadow-sm w-full overflow-auto">
+        <div className="p-1 border  shadow-sm w-full overflow-auto">
           <h3 className="text-md font-semibold">JSON Representation</h3>
-          <pre className="p-1 rounded-lg overflow-x-auto h-[calc(100dvh-30em)]">
+          <pre className="p-1  overflow-x-auto h-[calc(100dvh-30em)]">
             {JSON.stringify(columnDefs, null, 2)}
           </pre>
         </div>

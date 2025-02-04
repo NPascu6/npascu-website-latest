@@ -86,7 +86,7 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
       </span>
             <div className="flex items-center justify-center align-center p-4">
                 <div
-                    className="relative flex justify-center rounded-lg min-w-full"
+                    className="relative flex justify-center  min-w-full"
                     style={{height: "18em", minWidth: "70dvw"}}
                     onClick={toggleFullScreen}
                     onTouchStart={handleTouchStart}
@@ -96,7 +96,7 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
                         loading="lazy"
                         src={images[currentImageIndex]}
                         alt={`${currentImageIndex + 1}`}
-                        className="w-full rounded-lg object-contain p-1"
+                        className="w-full  object-contain p-1"
                     />
                 </div>
             </div>

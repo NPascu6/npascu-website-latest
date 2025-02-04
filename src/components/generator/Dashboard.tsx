@@ -79,7 +79,7 @@ const FormList: React.FC = () => {
             setCollapsed={(isCollapsed: any) => handleCollapse(isCollapsed)}
             title="Dynamic Forms"
           >
-            <div className="w-full p-1 shadow-md rounded-lg">
+            <div className="w-full p-1 shadow-md ">
               <h1 className="text-md font-bold mb-2">Select a Form</h1>
               <ul className="grid grid-cols-1 w-full">
                 {formDb.map((form) => (
@@ -114,13 +114,13 @@ const FormList: React.FC = () => {
               </h1>
               <button
                 onClick={toggleView}
-                className="px-1 text-sm font-semibold rounded-md shadow-md mr-2"
+                className="px-1 text-sm font-semibold  shadow-md mr-2"
               >
                 {useTabs ? "Switch to Dropdown" : "Switch to Tabs"}
               </button>
               <button
                 type="button"
-                className="font-semibold rounded-md hover:bg-gray-400 mr-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="font-semibold  hover:bg-gray-400 mr-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                 onClick={() => setActiveForm(null)}
               >
                 <CloseIcon />

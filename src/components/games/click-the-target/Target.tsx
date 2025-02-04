@@ -46,7 +46,7 @@ const Target: React.FC<TargetProps> = ({onClick, color, timer, id, type}) => {
 
     return (
         <button
-            className={`w-12 h-12 rounded-full focus:outline-none text-lg font-bold ${
+            className={`w-12 h-12  focus:outline-none text-lg font-bold ${
                 targetType ? "text-white" : "text-gray-500"
             }`}
             style={{backgroundColor: color}}

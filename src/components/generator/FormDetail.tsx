@@ -163,7 +163,7 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
             <button
               type="button"
               onClick={() => setActiveForm(0)}
-              className="self-end p-1 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="self-end p-1  hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               <CloseIcon />
             </button>
@@ -188,7 +188,7 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
             <button
               type="submit"
               disabled={!isValid}
-              className={`py-2 px-4 text-white font-semibold rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+              className={`py-2 px-4 text-white font-semibold  shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
                 isValid
                   ? "bg-indigo-600 hover:bg-indigo-700"
                   : "bg-gray-400 cursor-not-allowed"

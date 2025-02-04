@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setTheme } from "../store/reducers/appReducer";
-import Toaster from "./common/Toaster";
-import TopBar from "./app/TopBar";
-import { RootState } from "../store/store";
-import RoutesSwitch from "../router/Router";
-import SideBar from "./app/SideBar";
+import { setTheme } from "../../store/reducers/appReducer";
+import Toaster from "../common/Toaster";
+import TopBar from "./TopBar";
+import { RootState } from "../../store/store";
+import RoutesSwitch from "../../router/Router";
+import SideBar from "./SideBar";
 
 const App = () => {
   const dispatch = useDispatch();

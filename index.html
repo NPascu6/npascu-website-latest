@@ -3,28 +3,46 @@
 
 <head>
     <meta charset="utf-8"/>
-    <link href="/favicon.ico" rel="icon"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta content="#000000" name="theme-color"/>
-    <meta content="Norbert Pascu's personal website created for presenting his skills and projects.
-      It is a React app created with vite and deployed on Godaddy.
-      It is a SPA with a responsive design and a dark theme.
-      It uses React Router for routing, React Redux with Redux Thunk for state management,
-      React Hooks for state and side effects, React Lazy for code splitting,
-      " name="description"/>
-    <link href="/logo192.png" rel="apple-touch-icon"/>
-    <link href="/manifest.json" rel="manifest"/>
-    <link href="https://fonts.googleapis.com" rel="preconnect">
-    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
-          rel="stylesheet">
-    <title>Norbert Pascu's website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"/>
+    
+    <!-- PWA Settings -->
+    <meta name="theme-color" content="#000000"/>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pascu.io">
+    
+    <!-- SEO and Metadata -->
+    <meta name="description" content="Norbert Pascu's personal portfolio website, showcasing his skills, projects, and experience. Built with React, Vite, and hosted on GoDaddy.">
+    <meta name="author" content="Norbert Pascu">
+    <meta name="keywords" content="Norbert Pascu, Portfolio, Developer, React, Frontend, Web Development">
+    
+    <!-- Open Graph for Social Media -->
+    <meta property="og:title" content="Norbert Pascu's Portfolio">
+    <meta property="og:description" content="Showcasing Norbert Pascu's projects and skills in web development.">
+    <meta property="og:image" content="/icons/icon-512x512.png">
+    <meta property="og:url" content="https://www.pascu.io">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Icons -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="32x32" href="favicon-32x32.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json"/>
+    
+    <!-- Preload Google Fonts for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <title>Norbert Pascu's Portfolio</title>
 </head>
 
 <body>
-<noscript>You need to enable JavaScript to run this app.</noscript>
-<div id="root"></div>
-<script src="/src/index.tsx" type="module"></script>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script src="/src/index.tsx" type="module"></script>
 </body>
 
 </html>

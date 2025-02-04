@@ -49,7 +49,7 @@ const InputField: React.FC<InputFieldProps> = ({
             value={value}
             required={required}
             onChange={onChange}
-            className="block w-full p-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="block w-full p-1 border border-gray-300  shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
             htmlFor={id}
@@ -74,7 +74,7 @@ const InputField: React.FC<InputFieldProps> = ({
             required={required}
             placeholder=" "
             onChange={onChange}
-            className="block w-full min-h-[6rem] p-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="block w-full min-h-[6rem] p-1 border border-gray-300  shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
           <label
             htmlFor={id}

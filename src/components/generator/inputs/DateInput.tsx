@@ -49,7 +49,7 @@ const DateInput: React.FC<DateInputProps> = ({
       <Datepicker
         useRange={false}
         asSingle={true}
-        inputClassName="p-1 w-full border border-gray-300 shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        inputClassName="p-1 w-full border border-gray-300 shadow-sm  focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         value={
           {
             startDate: value ? new Date(value) : null,

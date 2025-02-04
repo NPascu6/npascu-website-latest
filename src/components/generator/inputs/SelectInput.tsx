@@ -23,7 +23,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
       {value && (
         <label
           htmlFor={id}
-          className={`absolute left-1 transition-all duration-200 rounded-md ${
+          className={`absolute left-1 transition-all duration-200  ${
             value ? "-top-3 text-xs p-1" : "top-1/2 text-md"
           }`}
           style={{ pointerEvents: "none", backgroundColor: "white" }}
@@ -38,7 +38,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
         required={required}
         onChange={onChange}
         style={{ height: "2.5rem", border: "1px solid #e2e8f0" }}
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        className="mt-1 block w-full  border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
       >
         <option value="" disabled hidden>
           {placeholder}

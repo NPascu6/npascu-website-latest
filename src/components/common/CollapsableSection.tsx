@@ -28,7 +28,7 @@ function CollapsibleSection({
     <div
       className={`border ${
         isDarkTheme ? "border-gray-700" : "border-gray-300"
-      } rounded-lg shadow-sm overflow-hidden`}
+      }  shadow-sm overflow-hidden`}
     >
       <div
         className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors dark:bg-gray-700 "

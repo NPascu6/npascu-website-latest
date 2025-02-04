@@ -51,7 +51,7 @@ const MainPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-2" id="main-page">
+    <div className="p-1" id="main-page">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
         <GithubProfileCard />
         <GamesCardPage />

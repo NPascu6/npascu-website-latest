@@ -68,7 +68,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
 
   return (
     <div
-      className="p-1 shadow-md rounded-lg border border-gray-300 mx-2"
+      className="p-1 shadow-md  border border-gray-300 mx-2"
       style={{
         maxHeight: "calc(100dvh - 22em)",
         overflow: "auto",
@@ -86,7 +86,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
             name="name"
             value={newField.name}
             onChange={handleFieldChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            className="mt-1 block w-full border-gray-300  shadow-sm"
           />
         </div>
         <div className="mb-2">
@@ -95,7 +95,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
             name="type"
             value={newField.type}
             onChange={handleFieldChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            className="mt-1 block w-full border-gray-300  shadow-sm"
           >
             <option value="text">Text</option>
             <option value="number">Number</option>
@@ -122,7 +122,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
                   e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                 )
               }
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              className="mt-1 block w-full border-gray-300  shadow-sm"
             />
           </div>
         )}
@@ -133,7 +133,7 @@ const FormEditor: React.FC<FormEditorProps> = ({
             name="placeholder"
             value={newField.placeholder}
             onChange={handleFieldChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            className="mt-1 block w-full border-gray-300  shadow-sm"
           />
         </div>
         <div className="mb-2">
@@ -149,14 +149,14 @@ const FormEditor: React.FC<FormEditorProps> = ({
         {editingField ? (
           <button
             onClick={handleUpdateField}
-            className="mt-2 w-full bg-indigo-600 text-white font-semibold rounded-md shadow-md"
+            className="mt-2 w-full bg-indigo-600 text-white font-semibold  shadow-md"
           >
             Update Field
           </button>
         ) : (
           <button
             onClick={handleAddField}
-            className="mt-2 w-full bg-indigo-600 text-white font-semibold rounded-md shadow-md"
+            className="mt-2 w-full bg-indigo-600 text-white font-semibold  shadow-md"
           >
             Add Field
           </button>
