@@ -1,35 +1,56 @@
-import {useCallback, useState} from "react";
-import {useDebounced} from "./useDebounceHook";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export interface WindowInterface {
-    innerWidth: number,
-    innerHeight: number
+  innerWidth: number;
+  innerHeight: number;
 }
 
+/**
+ * Returns the current window size (width and height), with a debounced
+ * listener for the 'resize' event.
+ *
+ * @param debounceMs Number of milliseconds to wait after the last resize event
+ * before updating state.
+ */
+export default function useWindowSize(debounceMs = 300): WindowInterface {
+  const [windowSize, setWindowSize] = useState<WindowInterface>({
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+  });
 
-const useWindowSize = (): WindowInterface => {
-    const getWindowSize = useCallback(() => {
-        const {innerWidth, innerHeight} = window;
-        return {innerWidth, innerHeight};
-    }, [])
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Create a stable callback for handling resize, debounced by `debounceMs`.
+  const handleResize = useCallback(() => {
+    // Clear any pending timer so we don't update multiple times
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
-    const [windowSize, setWindowSize] = useState<WindowInterface>(getWindowSize());
+    // Set a new debounce timer
+    timerRef.current = setTimeout(() => {
+      setWindowSize({
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+      });
+    }, debounceMs);
+  }, [debounceMs]);
 
+  useEffect(() => {
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
 
-    useDebounced(() => {
-        const handleWindowResize = () => {
-            setWindowSize(getWindowSize());
-        }
+    // Initial check in case the window size changed between mount and now
+    handleResize();
 
-        window.addEventListener('resize', handleWindowResize);
+    return () => {
+      // Cleanup on unmount
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [handleResize]);
 
-        return () => {
-            window.removeEventListener('resize', handleWindowResize);
-        };
-    }, 1000);
-
-    return windowSize
+  return windowSize;
 }
-
-export default useWindowSize

@@ -8,6 +8,7 @@ const InternalServerError = () => {
         Oops! Something went wrong on our server. Please try again later.
       </p>
       <img
+        loading="lazy"
         src="/500-image.png"
         alt="500 Illustration"
         className="mt-8 max-w-xs"

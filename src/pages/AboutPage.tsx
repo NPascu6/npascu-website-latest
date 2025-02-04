@@ -7,6 +7,7 @@ const AboutPage = () => {
       <div className="max-w-3xl mx-auto p-6 shadow-xl">
         <div className="mb-4 max-h-1/3 flex justify-center">
           <img
+            loading="lazy"
             id="about-image"
             src={InstagramImage}
             style={{ height: "24em" }}

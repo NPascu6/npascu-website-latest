@@ -43,6 +43,7 @@ const GithubProfileCard = () => {
           </p>
         </div>
         <img
+          loading="lazy"
           src={_githubAvatarUrl}
           alt="Profile"
           style={{
