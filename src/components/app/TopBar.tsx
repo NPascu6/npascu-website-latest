@@ -23,7 +23,7 @@ const TopBar = () => {
   return (
     <div id="top-bar" data-testid="top-bar-test" className="top-bar">
       <div className="w-full">
-        <div className="w-1/4">
+        <div style={{ width: "10em" }}>
           <a
             href="./PascuNorbertresumeEN.pdf"
             download="PascuNorbertresumeEN.pdf"
