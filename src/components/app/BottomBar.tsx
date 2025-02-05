@@ -36,7 +36,7 @@ const BottomBar = () => {
           </a>
         </div>
       </div>
-      <div className="flex justify-evenly w-full mt-2">
+      <div className="flex justify-evenly w-full mt-4">
         <div className="text-center w-full">
           <a
             href="https://www.facebook.com/norbi.pascu"

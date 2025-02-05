@@ -1,5 +1,5 @@
 .ag-theme-alpine {
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
     font-weight: 400;
     font-size: 13;
     font-family: Verlag;
@@ -27,7 +27,7 @@ div.ag-root-wrapper {
 }
 
 .ag-body {
-    height: 14em;
+    height: 32em;
     overflow: auto;
     scrollbar-width: thin;
 }

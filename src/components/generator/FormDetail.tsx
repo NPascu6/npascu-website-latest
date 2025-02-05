@@ -158,7 +158,7 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
     <div className="flex flex-col justify-center items-center w-full p-2">
       {id && (
         <div className="w-full shadow-xl">
-          <form onSubmit={handleSubmit} className="flex-1">
+          <form onSubmit={handleSubmit} className="flex-1 p-2">
             <div className="flex justify-center items-center">
               <h1 className="text-xl font-bold">{formName}</h1>
             </div>
@@ -178,13 +178,13 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
               <p className="text-red-500 text-xs mt-1">{validationMessage}</p>
             )}
             {id && (
-              <div className="flex justify-between mt-6">
+              <div className="flex justify-between mt-6 mb-2">
                 <button
                   type="submit"
                   disabled={!isValid}
-                  className={`py-2 px-4 text-white font-semibold  shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                  className={`py-2 px-4 text-white font-semibold  shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 ${
                     isValid
-                      ? "bg-indigo-600 hover:bg-indigo-700"
+                      ? "bg-gray-600 hover:bg-gray-700"
                       : "bg-gray-400 cursor-not-allowed"
                   }`}
                 >

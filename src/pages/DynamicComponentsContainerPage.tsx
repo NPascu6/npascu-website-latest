@@ -11,8 +11,12 @@ const DynamicComponentsContainerPage = () => {
 
   return (
     <div
-      style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
-      className={` flex flex-col justify-center items-center transition-colors ${
+      style={{
+        height: "calc(100vh - 6rem)",
+        overflow: "auto",
+        display: "flex",
+      }}
+      className={` flex flex-col justify-start items-center transition-colors ${
         isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
@@ -23,9 +27,8 @@ const DynamicComponentsContainerPage = () => {
         </div>
       </div>
       <div
-        className={`w-4/5  shadow-xl  ${
-          isDarkTheme ? "bg-gray-800" : "bg-white"
-        }`}
+        style={{ width: "94%" }}
+        className={`  shadow-xl  ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}
       >
         {/* Tab Navigation */}
         <div className="flex">
@@ -52,10 +55,7 @@ const DynamicComponentsContainerPage = () => {
         </div>
 
         {/* Tab Content */}
-        <div
-          className="p-1"
-          style={{ height: "calc(100vh - 14rem)", overflow: "auto" }}
-        >
+        <div className="p-1">
           {activeTab === "form" ? <FormList /> : <DynamicTableContainer />}
         </div>
       </div>

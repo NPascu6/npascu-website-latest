@@ -90,10 +90,10 @@ function CollapsibleSection({
       </div>
       <div
         className={`transition-[max-height] duration-300 ease-in-out overflow-hidden ${
-          internalCollapsed ? "max-h-0" : "max-h-screen"
+          internalCollapsed ? "max-h-0" : ""
         }`}
       >
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-2 border-t border-gray-200 dark:border-gray-700">
           {children}
         </div>
       </div>
