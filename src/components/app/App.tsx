@@ -1,49 +1,68 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../../store/reducers/appReducer";
+import { RootState } from "../../store/store";
+import { useSwipeable } from "react-swipeable";
+
 import Toaster from "../common/Toaster";
 import TopBar from "./TopBar";
-import { RootState } from "../../store/store";
-import RoutesSwitch from "../../router/Router";
 import SideBar from "./SideBar";
 import InstallPWAButton from "./InstallPWAButton";
+import RoutesSwitch from "../../router/Router";
 
-const App = () => {
+const App: React.FC = () => {
   const dispatch = useDispatch();
   const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleSidebarClose = () => setIsSidebarOpen(false);
-  const handleSidebarOpen = () => setIsSidebarOpen(true);
+  const closeSidebar = useCallback(() => {
+    setIsDrawerOpen(false);
+  }, []);
 
+  const openSidebar = useCallback(() => {
+    setIsDrawerOpen(true);
+  }, []);
+
+  // Global swipe handler for the entire app
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: closeSidebar,
+    onSwipedRight: openSidebar,
+    trackMouse: true,
+    preventScrollOnSwipe: true,
+  });
+
+  // Load theme from localStorage once
   useEffect(() => {
-    const isDarkTheme = localStorage.getItem("isDarkTheme") === "true";
-    const theme = !isDarkTheme ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", theme);
-    dispatch(setTheme(isDarkTheme));
-  }, [dispatch]);
+    const savedTheme = localStorage.getItem("isDarkTheme") === "true";
+    if (savedTheme !== darkTheme) {
+      dispatch(setTheme(savedTheme));
+    }
+    document.documentElement.setAttribute(
+      "data-theme",
+      savedTheme ? "dark" : "light"
+    );
+  }, [dispatch, darkTheme]);
 
   return (
     <div
       id="app"
+      {...swipeHandlers} // Attach swipe gestures to the whole app
       className={`${darkTheme ? "dark" : "light"}-theme app select-none`}
     >
       <TopBar />
-      <SideBar
-        isOpen={isSidebarOpen}
-        onClose={handleSidebarClose}
-        onOpen={handleSidebarOpen}
-      />
-      <div
-        style={{
-          maxHeight: "calc(100dvh - 2.8em)",
-          overflowY: "auto",
-          width: "100%",
-        }}
-      >
+
+      {/* Sidebar */}
+      <SideBar isDrawerOpen={isDrawerOpen} closeSidebar={closeSidebar} />
+
+      {/* Main Content */}
+      <main className="main-content">
         <RoutesSwitch />
-      </div>
+      </main>
+
+      {/* Toaster Notifications */}
       <Toaster />
+
+      {/* PWA Install Button */}
       <InstallPWAButton />
     </div>
   );

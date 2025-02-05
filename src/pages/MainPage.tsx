@@ -4,6 +4,7 @@ import { AppDispatch, RootState } from "../store/store";
 import { fetchGithubUserProfile } from "../store/thunks/appThunk";
 import { workImages as images } from "../_constant";
 import { setWorkPhotos } from "../store/reducers/appReducer";
+import Loading from "./generic/Loading";
 
 // --- Lazy Imports ---
 const EducationCard = lazy(
@@ -109,128 +110,126 @@ const MainPage = () => {
     <div className="p-1" id="main-page">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
         {/* Wrap each lazy component in Suspense */}
-        <Suspense fallback={<div>Loading profile...</div>}>
+        <Suspense fallback={<Loading />}>
           <GithubProfileCard />
-        </Suspense>
-
-        <Suspense fallback={<div>Loading games...</div>}>
-          <GamesCardPage />
         </Suspense>
       </div>
 
       <div className="mt-4 space-y-4">
         {/* Example: Wrap CollapsibleSection in Suspense or only the card inside */}
-        <Suspense fallback={<div>Loading section...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="Education"
             subTitle="Diploma, courses and specialization"
           >
-            <Suspense fallback={<div>Loading education card...</div>}>
+            <Suspense fallback={<Loading />}>
               <EducationCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
-        <Suspense fallback={<div>Loading repos...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="Highlighted Github Repos"
             subTitle="Github"
           >
-            <Suspense fallback={<div>Loading highlighted repos...</div>}>
+            <Suspense fallback={<Loading />}>
               <HighlightedRepos />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* Fintama */}
-        <Suspense fallback={<div>Loading Fintama card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="Current employment (Fintama)"
             subTitle="02/2023 - current"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <FintamaCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* Covario */}
-        <Suspense fallback={<div>Loading Covario card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="TL / Senior Developer (Covario)"
             subTitle="03/2021 - 01/2023"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <CovarioCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* Amaris */}
-        <Suspense fallback={<div>Loading Amaris card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="IT Consultant (Amaris)"
             subTitle="04/2020 - 03/2021"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <AmarisCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* Cognizant */}
-        <Suspense fallback={<div>Loading Cognizant card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="Mobile / BE Developer (Cognizant)"
             subTitle="06/2019 - 04/2020"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <CognizantCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* Bosch */}
-        <Suspense fallback={<div>Loading Bosch card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="Software Development Engineer (BOSCH)"
             subTitle="07/2018 - 06/2019"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <BoschCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* DVSE */}
-        <Suspense fallback={<div>Loading DVSE card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="First Developer Job (DVSE.ro)"
             subTitle="06/2016 - 07/2018"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <DVSECard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* IT Support */}
-        <Suspense fallback={<div>Loading IT Support Technician card...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection
             title="Support Technician (NewV Technologies)"
             subTitle="06/2015 - 06/2016"
           >
-            <Suspense fallback={<div>Loading card...</div>}>
+            <Suspense fallback={<Loading />}>
               <ItSupportTechnicianCard />
             </Suspense>
           </CollapsibleSection>
         </Suspense>
 
         {/* Sample Screens */}
-        <Suspense fallback={<div>Loading image slider...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection title="Sample screens from previous work.">
             {!!workImages?.length && (
-              <Suspense fallback={<div>Loading slider...</div>}>
+              <Suspense fallback={<Loading />}>
                 <ImageSlider images={workImages} />
               </Suspense>
             )}
@@ -238,9 +237,9 @@ const MainPage = () => {
         </Suspense>
 
         {/* Trading App */}
-        <Suspense fallback={<div>Loading trading app video...</div>}>
+        <Suspense fallback={<Loading />}>
           <CollapsibleSection title="Trading App (Crypto trading platform)">
-            <Suspense fallback={<div>Loading video link...</div>}>
+            <Suspense fallback={<Loading />}>
               <YoutubeVideoLink />
             </Suspense>
           </CollapsibleSection>

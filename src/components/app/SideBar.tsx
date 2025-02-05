@@ -1,67 +1,101 @@
-import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../store/store";
-import {Link} from "react-router-dom";
-import {useSwipeable} from "react-swipeable";
+import React, { lazy, Suspense } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
+
+// Lazy load GamesCardPage
+const GamesCardPage = lazy(() => import("../main-page/GamesContainer"));
 
 interface SideBarProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onOpen: () => void;
+  isDrawerOpen: boolean;
+  closeSidebar: () => void;
 }
 
-const SideBar: React.FC<SideBarProps> = ({isOpen, onClose, onOpen}) => {
-    const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(isOpen);
+const SideBar: React.FC<SideBarProps> = ({ isDrawerOpen, closeSidebar }) => {
+  const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
-    const handlers = useSwipeable({
-        onSwipedLeft: () => setIsDrawerOpen(false),
-        onSwipedRight: () => setIsDrawerOpen(true),
-    });
+  return (
+    <AnimatePresence>
+      {isDrawerOpen && (
+        <>
+          {/* Overlay */}
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeSidebar}
+          />
 
-    useEffect(() => {
-        setIsDrawerOpen(isOpen);
-    }, [isOpen]);
-
-    useEffect(() => {
-        if (isDrawerOpen) {
-            onOpen();
-        } else {
-            onClose();
-        }
-    }, [isDrawerOpen, onClose, onOpen]);
-
-    return (
-        <div
-            {...handlers}
-            className={`fixed top-0 left-0 h-full transition-transform transform ${
-                isDrawerOpen ? "translate-x-0" : "-translate-x-full"
-            } ${isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-black"} shadow-lg w-64`}
-        >
-            <div className="p-4">
-                <h2 className="text-2xl font-bold">SideBar</h2>
-                <nav className="mt-4">
-                    <ul>
-                        <li className="mb-2">
-                            <Link to="/" className="hover:underline">
-                                Home
-                            </Link>
-                        </li>
-                        <li className="mb-2">
-                            <Link to="/about" className="hover:underline">
-                                About
-                            </Link>
-                        </li>
-                        <li className="mb-2">
-                            <Link to="/contact" className="hover:underline">
-                                Contact
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
+          {/* Sidebar */}
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className={`fixed top-0 left-0 h-full w-42 z-50 shadow-xl ${
+              isDarkTheme ? "bg-gray-900 text-white" : "bg-white text-black"
+            }`}
+          >
+            {/* Sidebar Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-600">
+              <h2 className="text-2xl font-bold">Menu</h2>
+              <button
+                onClick={closeSidebar}
+                className="p-2 rounded-md hover:bg-gray-700 transition"
+              >
+                <X size={24} />
+              </button>
             </div>
-        </div>
-    );
+
+            {/* Navigation Links */}
+            <nav className="mt-4">
+              <ul className="space-y-4 px-4">
+                <li>
+                  <Link
+                    to="/"
+                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    onClick={closeSidebar}
+                  >
+                    🏠 Home
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/games"
+                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    onClick={closeSidebar}
+                  >
+                    🚀 Games
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dynamic-components"
+                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    onClick={closeSidebar}
+                  >
+                    ⚙️ Dynamic components
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/about"
+                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    onClick={closeSidebar}
+                  >
+                    ℹ️ About Me
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
 };
 
 export default SideBar;
