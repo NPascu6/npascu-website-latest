@@ -11,9 +11,9 @@ const GithubProfileCard = () => {
   return (
     <div
       id="github-profile-card"
-      className={`shadow-xl text-start flex flex-col items-center justify-center`}
+      className={`shadow-xl text-start flex flex-col items-center justify-center p-3`}
     >
-      <div className="text-start flex items-center justify-evenly w-full">
+      <div className="text-start flex items-center w-full">
         <div className="mt-2">
           <div className="pl-3">
             <p className={`text-md font-bold`}>{githubProfile?.name}</p>

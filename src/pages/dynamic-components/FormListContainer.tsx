@@ -32,6 +32,7 @@ const FormList: React.FC = () => {
                     <span className="text-xs text-indigo-600 hover:underline">
                       {form.form_name}
                     </span>
+                    f
                   </li>
                 ))}
             </ul>
@@ -40,18 +41,7 @@ const FormList: React.FC = () => {
 
         {/* Show FormDetail only if a form is selected */}
         {activeForm !== null && (
-          <div
-            style={{ height: "calc(100dvh - 13em)", overflow: "auto" }}
-            className="shadow-xl p-4 border rounded-lg bg-white"
-          >
-            <button
-              className="mb-2 p-1 bg-red-500 text-white rounded hover:bg-red-600 transition-all"
-              onClick={() => setActiveForm(null)} // Allow closing the form
-            >
-              Close Form
-            </button>
-            <FormDetail id={activeForm} setActiveForm={setActiveForm} />
-          </div>
+          <FormDetail id={activeForm} setActiveForm={setActiveForm} />
         )}
       </div>
     </div>

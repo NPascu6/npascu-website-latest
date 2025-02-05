@@ -5,6 +5,7 @@ import { fetchGithubUserProfile } from "../store/thunks/appThunk";
 import { workImages as images } from "../_constant";
 import { setWorkPhotos } from "../store/reducers/appReducer";
 import Loading from "./generic/Loading";
+import { Link } from "react-router-dom";
 
 // --- Lazy Imports ---
 const EducationCard = lazy(
@@ -104,17 +105,44 @@ const MainPage = () => {
 
   return (
     <div
-      className="p-1"
+      className="p-2"
       id="main-page"
       style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
     >
-      <div className="grid grid-cols-1 items-center">
+      <div className="flex items-center justify-center">
         {/* Wrap each lazy component in Suspense */}
         <Suspense fallback={<Loading />}>
           <GithubProfileCard />
         </Suspense>
       </div>
+      {/* Interactive Sections */}
+      <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-center">
+        {/* Dynamic Components */}
+        <Link
+          to="/dynamic-components"
+          className="group block transform transition-all hover:scale-105"
+        >
+          <div className="shadow-lg p-3 border flex flex-col items-center justify-center space-y-2">
+            <div className="text-xl font-semibold">⚙️ Dynamic Components</div>
+            <p className="text-sm text-gray-600 group-hover:underline">
+              Explore dynamically generated UI elements
+            </p>
+          </div>
+        </Link>
 
+        {/* Browser Games */}
+        <Link
+          to="/games"
+          className="group block transform transition-all hover:scale-105"
+        >
+          <div className="shadow-lg p-3 border flex flex-col items-center justify-center space-y-2">
+            <div className="text-xl font-semibold">🎮 Browser Games</div>
+            <p className="text-sm text-gray-600 group-hover:underline">
+              Play simple browser-based games
+            </p>
+          </div>
+        </Link>
+      </div>
       <div className="mt-1 space-y-1">
         {/* Example: Wrap CollapsibleSection in Suspense or only the card inside */}
         <Suspense fallback={<Loading />}>
@@ -144,6 +172,7 @@ const MainPage = () => {
         {/* Fintama */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="Current employment (Fintama)"
             subTitle="02/2023 - current"
           >
@@ -156,6 +185,7 @@ const MainPage = () => {
         {/* Covario */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="TL / Senior Developer (Covario)"
             subTitle="03/2021 - 01/2023"
           >
@@ -168,6 +198,7 @@ const MainPage = () => {
         {/* Amaris */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="IT Consultant (Amaris)"
             subTitle="04/2020 - 03/2021"
           >
@@ -180,6 +211,7 @@ const MainPage = () => {
         {/* Cognizant */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="Mobile / BE Developer (Cognizant)"
             subTitle="06/2019 - 04/2020"
           >
@@ -192,6 +224,7 @@ const MainPage = () => {
         {/* Bosch */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="Software Development Engineer (BOSCH)"
             subTitle="07/2018 - 06/2019"
           >
@@ -204,6 +237,7 @@ const MainPage = () => {
         {/* DVSE */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="First Developer Job (DVSE.ro)"
             subTitle="06/2016 - 07/2018"
           >
@@ -216,6 +250,7 @@ const MainPage = () => {
         {/* IT Support */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection
+            isCollapsed={true}
             title="Support Technician (NewV Technologies)"
             subTitle="06/2015 - 06/2016"
           >

@@ -157,7 +157,7 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
   return (
     <div className="flex flex-col justify-center items-center w-full">
       {id && (
-        <div className="w-full p-2 shadow-md border border-gray-300 mx-2">
+        <div className="w-full p-2 shadow-md mx-2">
           <form onSubmit={handleSubmit} className="flex-1">
             <div className="flex justify-between items-center">
               <h1 className="text-xl font-bold">{formName}</h1>
@@ -205,11 +205,7 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
       )}
       <div className="flex flex-row w-full mt-4">
         {id && (
-          <CollapsibleSection
-            className="w-full mr-4"
-            title="Form Builder"
-            isCollapsed={true}
-          >
+          <CollapsibleSection className="w-full mr-4" title="Form Builder">
             <FormEditor
               onAddField={addFieldToForm}
               formFields={formFields}
@@ -218,11 +214,7 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
           </CollapsibleSection>
         )}
         {id && (
-          <CollapsibleSection
-            className="w-full"
-            title="Form Preview"
-            isCollapsed={true}
-          >
+          <CollapsibleSection className="w-full" title="Form Preview">
             <FormPreview
               formFields={formFields}
               setFormFields={setFormFields}

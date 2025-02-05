@@ -11,23 +11,23 @@ const AboutPage = () => {
 
   return (
     <div
-      style={{ height: "calc(100vh - 4rem)", overflow: "auto" }}
-      className={`flex items-center justify-center min-h-screen transition-colors ${
+      style={{ height: "calc(100vh - 5.5rem)", overflow: "auto" }}
+      className={`flex items-center justify-center transition-colors ${
         isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
       <div
-        className={`max-w-3xl mx-auto p-6 shadow-xl rounded-2xl transition-colors ${
+        className={`max-w-xl shadow-xl p-2 transition-colors ${
           isDarkTheme ? "bg-gray-800" : "bg-white"
         }`}
       >
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center">
           <div></div>
           <div className="cursor-pointer" onClick={() => nav("/")}>
             <CloseIcon />
           </div>
         </div>
-        <div className="mb-4 flex justify-center">
+        <div className="mb-2 flex justify-center">
           <img
             loading="lazy"
             id="about-image"
@@ -37,14 +37,7 @@ const AboutPage = () => {
             alt="instagram-alt"
           />
         </div>
-        <div className="flex flex-col items-center text-center space-y-4">
-          <h1
-            className={`text-3xl font-bold ${
-              isDarkTheme ? "text-indigo-400" : "text-indigo-600"
-            }`}
-          >
-            Norbert Pascu
-          </h1>
+        <div className="flex flex-col items-center text-center space-y-3">
           <p
             className={`text-lg ${
               isDarkTheme ? "text-gray-300" : "text-gray-700"
@@ -75,52 +68,6 @@ const AboutPage = () => {
           >
             Let’s build something amazing.
           </p>
-          <div className="flex space-x-4 mt-4">
-            <a
-              href="https://github.com/NPascu6"
-              target="_blank"
-              className={`transition ${
-                isDarkTheme
-                  ? "text-gray-400 hover:text-indigo-400"
-                  : "text-gray-600 hover:text-indigo-600"
-              }`}
-            >
-              GitHub
-            </a>
-            <a
-              href="https://pascu.io"
-              target="_blank"
-              className={`transition ${
-                isDarkTheme
-                  ? "text-gray-400 hover:text-indigo-400"
-                  : "text-gray-600 hover:text-indigo-600"
-              }`}
-            >
-              Portfolio
-            </a>
-            <a
-              href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
-              target="_blank"
-              className={`transition ${
-                isDarkTheme
-                  ? "text-gray-400 hover:text-indigo-400"
-                  : "text-gray-600 hover:text-indigo-600"
-              }`}
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://www.instagram.com/norbipascu/?hl=en"
-              target="_blank"
-              className={`transition ${
-                isDarkTheme
-                  ? "text-gray-400 hover:text-indigo-400"
-                  : "text-gray-600 hover:text-indigo-600"
-              }`}
-            >
-              Instagram
-            </a>
-          </div>
         </div>
       </div>
     </div>
