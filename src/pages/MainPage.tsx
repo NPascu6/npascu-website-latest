@@ -122,7 +122,7 @@ const MainPage = () => {
           to="/dynamic-components"
           className="group block transform transition-all hover:scale-105"
         >
-          <div className="shadow-lg p-3 border flex flex-col items-center justify-center space-y-2">
+          <div className="shadow-lg p-3 flex flex-col items-center justify-center space-y-2">
             <div className="text-xl font-semibold">⚙️ Dynamic Components</div>
             <p className="text-sm text-gray-600 group-hover:underline">
               Explore dynamically generated UI elements
@@ -135,7 +135,7 @@ const MainPage = () => {
           to="/games"
           className="group block transform transition-all hover:scale-105"
         >
-          <div className="shadow-lg p-3 border flex flex-col items-center justify-center space-y-2">
+          <div className="shadow-lg p-3 flex flex-col items-center justify-center space-y-2">
             <div className="text-xl font-semibold">🎮 Browser Games</div>
             <p className="text-sm text-gray-600 group-hover:underline">
               Play simple browser-based games

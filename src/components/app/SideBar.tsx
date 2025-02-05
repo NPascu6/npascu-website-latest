@@ -53,7 +53,7 @@ const SideBar: React.FC<SideBarProps> = ({ isDrawerOpen, closeSidebar }) => {
                 <li>
                   <Link
                     to="/"
-                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    className="flex items-center text-lg  transition"
                     onClick={closeSidebar}
                   >
                     🏠 Home
@@ -62,7 +62,7 @@ const SideBar: React.FC<SideBarProps> = ({ isDrawerOpen, closeSidebar }) => {
                 <li>
                   <Link
                     to="/games"
-                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    className="flex items-center text-lg  transition"
                     onClick={closeSidebar}
                   >
                     🚀 Games
@@ -71,7 +71,7 @@ const SideBar: React.FC<SideBarProps> = ({ isDrawerOpen, closeSidebar }) => {
                 <li>
                   <Link
                     to="/dynamic-components"
-                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    className="flex items-center text-lg  transition"
                     onClick={closeSidebar}
                   >
                     ⚙️ Dynamic components
@@ -80,7 +80,7 @@ const SideBar: React.FC<SideBarProps> = ({ isDrawerOpen, closeSidebar }) => {
                 <li>
                   <Link
                     to="/about"
-                    className="flex items-center text-lg hover:text-blue-400 transition"
+                    className="flex items-center text-lg  transition"
                     onClick={closeSidebar}
                   >
                     ℹ️ About Me

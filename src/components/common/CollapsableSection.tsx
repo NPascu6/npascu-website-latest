@@ -48,24 +48,43 @@ function CollapsibleSection({
       } shadow-xl overflow-hidden transition-all`}
     >
       <div
-        className="flex justify-between items-center p-4 cursor-pointer bg-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors dark:bg-gray-700"
+        style={{
+          backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+          color: isDarkTheme ? "#f3f4f6" : "#374151",
+        }}
+        className="flex justify-between items-center p-3 cursor-pointer"
         onClick={toggleCollapse}
       >
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          <h3
+            className="text-xl font-semibold"
+            style={{
+              backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+              color: isDarkTheme ? "#f3f4f6" : "#374151",
+            }}
+          >
             {title}
           </h3>
           {subTitle && (
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p
+              className="text-sm"
+              style={{ color: isDarkTheme ? "#f3f4f6" : "#344151" }}
+            >
               {subTitle}
             </p>
           )}
         </div>
-        <div className="flex-shrink-0">
+        <div
+          className="flex-shrink-0"
+          style={{
+            backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+            color: isDarkTheme ? "#f3f4f6" : "#374151",
+          }}
+        >
           {internalCollapsed ? (
-            <ChevronDown className="w-5 h-5 text-gray-700 dark:text-gray-300 transition-transform duration-300" />
+            <ChevronDown className="w-5 h-5  transition-transform duration-300" />
           ) : (
-            <ChevronUp className="w-5 h-5 text-gray-700 dark:text-gray-300 transition-transform duration-300" />
+            <ChevronUp className="w-5 h-5  transition-transform duration-300" />
           )}
         </div>
       </div>

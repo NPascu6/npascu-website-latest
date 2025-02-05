@@ -155,22 +155,14 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full p-2">
       {id && (
-        <div className="w-full p-2 shadow-md mx-2">
+        <div className="w-full shadow-xl">
           <form onSubmit={handleSubmit} className="flex-1">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-center items-center">
               <h1 className="text-xl font-bold">{formName}</h1>
-              <button
-                type="button"
-                onClick={() => setActiveForm(null)}
-                className="self-end p-1  hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              >
-                <CloseIcon />
-              </button>
             </div>
-
-            <div className="grid grid-cols-2 gap-5 mt-4">
+            <div className="grid grid-cols-2 gap-4 mt-2">
               {formFields.map((field) => (
                 <div key={field.id} className="relative">
                   {renderInput(field)}
@@ -205,7 +197,11 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
       )}
       <div className="flex flex-row w-full mt-4">
         {id && (
-          <CollapsibleSection className="w-full mr-4" title="Form Builder">
+          <CollapsibleSection
+            isCollapsed
+            className="w-full mr-4"
+            title="Form Builder"
+          >
             <FormEditor
               onAddField={addFieldToForm}
               formFields={formFields}
@@ -214,7 +210,11 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
           </CollapsibleSection>
         )}
         {id && (
-          <CollapsibleSection className="w-full" title="Form Preview">
+          <CollapsibleSection
+            isCollapsed
+            className="w-full"
+            title="Form Preview"
+          >
             <FormPreview
               formFields={formFields}
               setFormFields={setFormFields}

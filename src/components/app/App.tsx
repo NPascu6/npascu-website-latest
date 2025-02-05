@@ -24,13 +24,23 @@ const App: React.FC = () => {
     setIsDrawerOpen(true);
   }, []);
 
-  // Global swipe handler for the entire app
+  // Global swipe handler for the entire app with default behavior prevention
   const swipeHandlers = useSwipeable({
     onSwipedLeft: closeSidebar,
     onSwipedRight: openSidebar,
     trackMouse: true,
-    preventScrollOnSwipe: true,
+    preventScrollOnSwipe: true, // Prevent scrolling while swiping
+    delta: 10, // Reduce sensitivity (prevents accidental swipes)
   });
+
+  // Prevent body scrolling when sidebar is open
+  useEffect(() => {
+    if (isDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [isDrawerOpen]);
 
   // Load theme from localStorage once
   useEffect(() => {
@@ -47,8 +57,9 @@ const App: React.FC = () => {
   return (
     <div
       id="app"
-      {...swipeHandlers} // Attach swipe gestures to the whole app
+      {...swipeHandlers} // Attach swipe gestures
       className={`${darkTheme ? "dark" : "light"}-theme app select-none`}
+      style={{ touchAction: "none" }} // Prevent system gestures like back swipe
     >
       <TopBar />
 

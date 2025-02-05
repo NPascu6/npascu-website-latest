@@ -12,29 +12,29 @@ const DynamicComponentsContainerPage = () => {
   return (
     <div
       style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
-      className={` flex flex-col transition-colors ${
+      className={` flex flex-col justify-center items-center transition-colors ${
         isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      <div className="flex justify-between items-center p-2 border-b">
-        <h2 className="text-2xl font-semibold p-2">Dynamic Components</h2>
+      <div className="flex justify-between items-center p-2 w-full">
+        <h2 className="text-2xl font-semibold p-1"></h2>
         <div className="cursor-pointer" onClick={() => window.history.back()}>
           <CloseIcon />
         </div>
       </div>
       <div
-        className={` shadow-xl transition-colors ${
+        className={`w-4/5  shadow-xl  ${
           isDarkTheme ? "bg-gray-800" : "bg-white"
         }`}
       >
         {/* Tab Navigation */}
-        <div className="flex border-b border-gray-600">
+        <div className="flex">
           <button
             onClick={() => setActiveTab("form")}
             className={`flex-1 py-3 text-center font-semibold transition ${
               activeTab === "form"
-                ? "border-b-4 border-indigo-500 text-indigo-400"
-                : "text-gray-400 hover:text-indigo-300"
+                ? "border-b-2"
+                : "text-gray-400 hover:text-gray-300"
             }`}
           >
             📝 Form List
@@ -43,8 +43,8 @@ const DynamicComponentsContainerPage = () => {
             onClick={() => setActiveTab("table")}
             className={`flex-1 py-3 text-center font-semibold transition ${
               activeTab === "table"
-                ? "border-b-4 border-indigo-500 text-indigo-400"
-                : "text-gray-400 hover:text-indigo-300"
+                ? "border-b-2"
+                : "text-gray-400 hover:text-gray-300"
             }`}
           >
             📊 Data Table
@@ -53,7 +53,7 @@ const DynamicComponentsContainerPage = () => {
 
         {/* Tab Content */}
         <div
-          className="p-6"
+          className="p-1"
           style={{ height: "calc(100vh - 14rem)", overflow: "auto" }}
         >
           {activeTab === "form" ? <FormList /> : <DynamicTableContainer />}
