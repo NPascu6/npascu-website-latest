@@ -5,9 +5,6 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-// Lazy load GamesCardPage
-const GamesCardPage = lazy(() => import("../main-page/GamesContainer"));
-
 interface SideBarProps {
   isDrawerOpen: boolean;
   closeSidebar: () => void;

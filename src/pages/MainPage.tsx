@@ -29,10 +29,6 @@ const HighlightedRepos = lazy(
 
 const ImageSlider = lazy(() => import("../components/common/ImageSlider"));
 
-const GamesCardPage = lazy(
-  () => import("../components/main-page/GamesContainer")
-);
-
 // Each experience card is a named export from ExperienceCards, so we can import them individually
 const AmarisCard = lazy(() =>
   import("../components/main-page/ExperienceCards").then((mod) => ({
@@ -107,15 +103,19 @@ const MainPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-1" id="main-page">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+    <div
+      className="p-1"
+      id="main-page"
+      style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
+    >
+      <div className="grid grid-cols-1 items-center">
         {/* Wrap each lazy component in Suspense */}
         <Suspense fallback={<Loading />}>
           <GithubProfileCard />
         </Suspense>
       </div>
 
-      <div className="mt-4 space-y-4">
+      <div className="mt-1 space-y-1">
         {/* Example: Wrap CollapsibleSection in Suspense or only the card inside */}
         <Suspense fallback={<Loading />}>
           <CollapsibleSection

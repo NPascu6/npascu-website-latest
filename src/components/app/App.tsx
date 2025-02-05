@@ -9,6 +9,7 @@ import TopBar from "./TopBar";
 import SideBar from "./SideBar";
 import InstallPWAButton from "./InstallPWAButton";
 import RoutesSwitch from "../../router/Router";
+import BottomBar from "./BottomBar";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ const App: React.FC = () => {
       <main className="main-content">
         <RoutesSwitch />
       </main>
+      <BottomBar />
 
       {/* Toaster Notifications */}
       <Toaster />

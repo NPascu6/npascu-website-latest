@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { formDb } from "../../assets/formDb";
 import CollapsibleSection from "../../components/common/CollapsableSection";
 import FormDetail from "../../components/generator/FormDetail";
 
 const FormList: React.FC = () => {
-  const [activeForm, setActiveForm] = useState<number>(0);
+  const [activeForm, setActiveForm] = useState<number | null>(null);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-center w-full">
       <div className="w-full">
-        <CollapsibleSection title="Dynamic Forms">
+        <CollapsibleSection title="Dynamic Forms" isCollapsed={collapsed}>
           <div className="w-full p-1 shadow-md ">
             <h1 className="text-md font-bold mb-2">Select a Form</h1>
             <ul className="grid grid-cols-1 w-full">
@@ -17,7 +18,10 @@ const FormList: React.FC = () => {
                 formDb.map((form) => (
                   <li
                     key={form.id}
-                    onClick={() => setActiveForm(form.id)}
+                    onClick={() => {
+                      setActiveForm(form.id);
+                      setCollapsed(true);
+                    }}
                     className="flex items-center w-full p-1 border-b border-gray-300 cursor-pointer"
                   >
                     <span className="text-xs">{form.id}. </span>

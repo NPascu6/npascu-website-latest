@@ -66,7 +66,11 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
 
   return (
     <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-1 items-center justify-center ">
-      <CollapsibleSection title="Column Customizer" className="w-full h-full">
+      <CollapsibleSection
+        isCollapsed={true}
+        title="Column Customizer"
+        className="w-full h-full"
+      >
         <div className="overflow-auto h-[calc(100dvh-26em)]">
           <input
             type="text"
@@ -135,7 +139,11 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
           </button>
         </div>
       </CollapsibleSection>
-      <CollapsibleSection title="Existing Columns" className="w-full h-full">
+      <CollapsibleSection
+        isCollapsed={true}
+        title="Existing Columns"
+        className="w-full h-full"
+      >
         <div className="overflow-auto h-[calc(100dvh-26em)]">
           {columnDefs.map((column) => (
             <div
@@ -207,7 +215,11 @@ const GrcolIdCustomizer: React.FC<GrcolIdCustomizerProps> = ({
           ))}
         </div>
       </CollapsibleSection>
-      <CollapsibleSection title="JSON Representation" className="w-full h-full">
+      <CollapsibleSection
+        isCollapsed={true}
+        title="JSON Representation"
+        className="w-full h-full"
+      >
         <pre className="overflow-auto h-[calc(100dvh-26em)]">
           {JSON.stringify(columnDefs, null, 2)}
         </pre>

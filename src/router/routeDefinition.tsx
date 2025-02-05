@@ -1,8 +1,8 @@
 import { RouteDefinition } from "../models/common/common";
 import AboutPage from "../pages/AboutPage";
 import MainPage from "../pages/MainPage";
-import GamesCardPage from "../components/main-page/GamesContainer";
 import DynamicComponentsContainerPage from "../pages/DynamicComponentsContainerPage";
+import GamesCardPage from "../pages/GamesContainer";
 
 export const routeDefinition: RouteDefinition[] = [
   {

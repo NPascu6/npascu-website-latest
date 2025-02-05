@@ -10,12 +10,13 @@ const DynamicComponentsContainerPage = () => {
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center justify-center p-1 transition-colors ${
+      style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
+      className={` flex flex-col transition-colors ${
         isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
       <div
-        className={`w-full rounded-lg shadow-xl transition-colors ${
+        className={` shadow-xl transition-colors ${
           isDarkTheme ? "bg-gray-800" : "bg-white"
         }`}
       >

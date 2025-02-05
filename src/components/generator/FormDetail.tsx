@@ -14,7 +14,7 @@ import { formDb } from "../../assets/formDb";
 import CollapsibleSection from "../common/CollapsableSection";
 
 export interface FormField {
-  id: number;
+  id: number | null;
   name: string;
   type: string;
   placeholder?: string;
@@ -23,8 +23,8 @@ export interface FormField {
 }
 
 interface FormDetailProps {
-  id: number;
-  setActiveForm: (id: number) => void;
+  id: number | null;
+  setActiveForm: (id: number | null) => void;
 }
 
 const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
@@ -156,59 +156,80 @@ const FormDetail: React.FC<FormDetailProps> = ({ id, setActiveForm }) => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      <div className="max-w-2xl w-full p-2 shadow-md border border-gray-300 mx-2">
-        <form onSubmit={handleSubmit} className="flex-1">
-          <div className="flex justify-between items-center">
-            <h1 className="text-xl font-bold">{formName}</h1>
-            <button
-              type="button"
-              onClick={() => setActiveForm(0)}
-              className="self-end p-1  hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              <CloseIcon />
-            </button>
-          </div>
+      {id && (
+        <div className="w-full p-2 shadow-md border border-gray-300 mx-2">
+          <form onSubmit={handleSubmit} className="flex-1">
+            <div className="flex justify-between items-center">
+              <h1 className="text-xl font-bold">{formName}</h1>
+              <button
+                type="button"
+                onClick={() => setActiveForm(null)}
+                className="self-end p-1  hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              >
+                <CloseIcon />
+              </button>
+            </div>
 
-          <div className="grid grid-cols-2 gap-5 mt-4">
-            {formFields.map((field) => (
-              <div key={field.id} className="relative">
-                {renderInput(field)}
-                {errors[field.name] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors[field.name]}
-                  </p>
-                )}
+            <div className="grid grid-cols-2 gap-5 mt-4">
+              {formFields.map((field) => (
+                <div key={field.id} className="relative">
+                  {renderInput(field)}
+                  {errors[field.name] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name]}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+            {validationMessage && (
+              <p className="text-red-500 text-xs mt-1">{validationMessage}</p>
+            )}
+            {id && (
+              <div className="flex justify-between mt-6">
+                <button
+                  type="submit"
+                  disabled={!isValid}
+                  className={`py-2 px-4 text-white font-semibold  shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    isValid
+                      ? "bg-indigo-600 hover:bg-indigo-700"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  Submit
+                </button>
               </div>
-            ))}
-          </div>
-          {validationMessage && (
-            <p className="text-red-500 text-xs mt-1">{validationMessage}</p>
-          )}
-          <div className="flex justify-between mt-6">
-            <button
-              type="submit"
-              disabled={!isValid}
-              className={`py-2 px-4 text-white font-semibold  shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                isValid
-                  ? "bg-indigo-600 hover:bg-indigo-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+            )}
+          </form>
+        </div>
+      )}
+      <div className="flex flex-row w-full mt-4">
+        {id && (
+          <CollapsibleSection
+            className="w-full mr-4"
+            title="Form Builder"
+            isCollapsed={true}
+          >
+            <FormEditor
+              onAddField={addFieldToForm}
+              formFields={formFields}
+              updateField={updateFieldInForm}
+            />
+          </CollapsibleSection>
+        )}
+        {id && (
+          <CollapsibleSection
+            className="w-full"
+            title="Form Preview"
+            isCollapsed={true}
+          >
+            <FormPreview
+              formFields={formFields}
+              setFormFields={setFormFields}
+            />
+          </CollapsibleSection>
+        )}
       </div>
-      <CollapsibleSection title="Form Builder">
-        <FormEditor
-          onAddField={addFieldToForm}
-          formFields={formFields}
-          updateField={updateFieldInForm}
-        />
-      </CollapsibleSection>
-      <CollapsibleSection title="Form Preview">
-        <FormPreview formFields={formFields} setFormFields={setFormFields} />
-      </CollapsibleSection>
     </div>
   );
 };

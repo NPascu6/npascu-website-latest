@@ -68,11 +68,9 @@ const FormEditor: React.FC<FormEditorProps> = ({
 
   return (
     <div
-      className="p-1 shadow-md  border border-gray-300 mx-2"
       style={{
         maxHeight: "calc(100dvh - 22em)",
         overflow: "auto",
-        width: "24em",
       }}
     >
       <h2 className="text-lg font-semibold mb-2">

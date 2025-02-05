@@ -1,21 +1,21 @@
 import React from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import TicTacToeGame from "../../pages/game/TicTacToeGame";
-import SnakeGame from "../../pages/game/SnakeGame";
-import ClickTheTarget from "../../pages/game/ClickTheTarget";
-import TicTacToeIcon from "../../assets/icons/TicTacToe";
-import SnakeIcon from "../../assets/icons/Snake";
-import ClickTheTargetIcon from "../../assets/icons/ClickTheTargetIcon";
-import CloseIcon from "../../assets/icons/CloseIcon";
+import SnakeGame from "../pages/game/SnakeGame";
+import ClickTheTarget from "../pages/game/ClickTheTarget";
+import TicTacToeIcon from "../assets/icons/TicTacToe";
+import SnakeIcon from "../assets/icons/Snake";
+import ClickTheTargetIcon from "../assets/icons/ClickTheTargetIcon";
+import CloseIcon from "../assets/icons/CloseIcon";
+import TicTacToeGame from "../pages/game/TicTacToeGame";
 
 const GameCard: React.FC = () => {
-  // Game links array to avoid repetition
   const nav = useNavigate();
+
   const gameLinks = [
-    { to: "games/tic-tac-toe", label: "Tic Tac Toe", Icon: TicTacToeIcon },
-    { to: "games/snake", label: "Snake", Icon: SnakeIcon },
+    { to: "tic-tac-toe", label: "Tic Tac Toe", Icon: TicTacToeIcon },
+    { to: "snake", label: "Snake", Icon: SnakeIcon },
     {
-      to: "games/click-the-target",
+      to: "click-the-target",
       label: "Click The Target",
       Icon: ClickTheTargetIcon,
     },
@@ -23,13 +23,13 @@ const GameCard: React.FC = () => {
 
   return (
     <div
+      style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
       id="game-card"
-      className={`p-2 shadow-xl`}
-      style={{ height: "-webkit-fill-available" }}
+      className="p-2 shadow-xl"
     >
       <div className="flex justify-between items-center p-2 border-b">
         <div>Demo browser games</div>
-        <div onClick={() => nav("/")} className="cursor-pointer">
+        <div onClick={() => nav(-1)} className="cursor-pointer">
           <CloseIcon />
         </div>
       </div>
@@ -54,7 +54,7 @@ const GameCard: React.FC = () => {
 const GamesCardPage: React.FC = () => {
   return (
     <Routes>
-      <Route path="*" element={<GameCard />} />
+      <Route index element={<GameCard />} />
       <Route path="tic-tac-toe" element={<TicTacToeGame />} />
       <Route path="snake" element={<SnakeGame />} />
       <Route path="click-the-target" element={<ClickTheTarget />} />

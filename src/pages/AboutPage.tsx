@@ -11,6 +11,7 @@ const AboutPage = () => {
 
   return (
     <div
+      style={{ height: "calc(100vh - 4rem)", overflow: "auto" }}
       className={`flex items-center justify-center min-h-screen transition-colors ${
         isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}

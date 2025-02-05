@@ -1,10 +1,7 @@
 import { RootState } from "../../store/store";
 import { _githubAvatarUrl } from "../../_constant";
 import { useSelector } from "react-redux";
-import LinkedInIcon from "../../assets/icons/LinkedIn";
-import Facebook from "../../assets/icons/Facebook";
-import Instagram from "../../assets/icons/Instagram";
-import GitHub from "../../assets/icons/Github";
+
 import Email from "../../assets/icons/Email";
 import Phone from "../../assets/icons/Phone";
 
@@ -12,8 +9,11 @@ const GithubProfileCard = () => {
   const { githubProfile } = useSelector((state: RootState) => state.app);
 
   return (
-    <div id="github-profile-card" className={`p-2 shadow-xl`}>
-      <div className="text-start flex items-center justify-center">
+    <div
+      id="github-profile-card"
+      className={`shadow-xl text-start flex flex-col items-center justify-center`}
+    >
+      <div className="text-start flex items-center justify-evenly w-full">
         <div className="mt-2">
           <div className="pl-3">
             <p className={`text-md font-bold`}>{githubProfile?.name}</p>
@@ -51,66 +51,8 @@ const GithubProfileCard = () => {
             height: "10.2rem",
             objectFit: "cover",
           }}
-          className="mx-auto mt-4 mr-13"
+          className="mt-4"
         />
-      </div>
-      <div className="mb-4 mt-2">
-        <div className="flex justify-center items-center w-full mt-2">
-          <div className="text-center w-full">
-            <a
-              href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`cursor-pointer flex justify-center items-center w-full`}
-            >
-              <div>
-                <LinkedInIcon height={32} width={32} />
-              </div>
-              <div className="text-md text-center">Linkedin</div>
-            </a>
-          </div>
-          <div className="text-center w-full mr-4">
-            <a
-              href={githubProfile?.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`cursor-pointer flex justify-center items-center w-full`}
-            >
-              <div>
-                <GitHub height={32} width={32} />
-              </div>
-              <div className="text-md text-center">GitHub</div>
-            </a>
-          </div>
-        </div>
-        <div className="flex justify-center items-center w-full mt-2">
-          <div className="text-center w-full">
-            <a
-              href="https://www.facebook.com/norbi.pascu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`cursor-pointer flex justify-center items-center w-full`}
-            >
-              <div>
-                <Facebook height={32} width={32} />
-              </div>
-              <div className="text-md text-center">Facebook</div>
-            </a>
-          </div>
-          <div className="text-center w-full">
-            <a
-              href="https://www.instagram.com/norbipascu/?hl=en"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`cursor-pointer flex justify-center items-center w-full`}
-            >
-              <div>
-                <Instagram height={32} width={32} />
-              </div>
-              <div className="text-md text-center">Instagram</div>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   );
