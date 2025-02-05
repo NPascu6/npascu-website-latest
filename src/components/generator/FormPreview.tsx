@@ -14,7 +14,7 @@ const FormJSONEditor: React.FC<FormJSONEditorProps> = ({
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    fieldId: number
+    fieldId: number | null
   ): void => {
     const { name, value } = e.target;
     setFormFields((prevFields) =>
