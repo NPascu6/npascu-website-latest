@@ -6,6 +6,15 @@ import {workImages as images} from "../_constant";
 import {setWorkPhotos} from "../store/reducers/appReducer";
 import Loading from "./generic/Loading";
 import {Link} from "react-router-dom";
+import AmarisIcon from "../assets/icons/AmarisIcon";
+import BoschIcon from "../assets/icons/BoschIcon";
+import CognizantIcon from "../assets/icons/CognizantIcon";
+import CovarioIcon from "../assets/icons/CovarioIcon";
+import FintamaIcon from "../assets/icons/FintamaIcon";
+import GitHub from "../assets/icons/Github";
+import EducationIcon from "../assets/icons/EducationIcon";
+import TopmotiveIcon from "../assets/icons/TopmotiveIcon";
+import NewVTech from "../assets/icons/NewVTech";
 
 // --- Lazy Imports ---
 const EducationCard = lazy(
@@ -78,6 +87,7 @@ const MainPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [loadedImages, setLoadedImages] = useState<string[]>([]);
     const workImages = useSelector((state: RootState) => state.app.workPhotos);
+    const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
     // Load work images once
     useEffect(() => {
@@ -116,15 +126,21 @@ const MainPage = () => {
                 </Suspense>
             </div>
             {/* Interactive Sections */}
-            <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-center">
+            <div className="mt-3 mb-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-center">
                 {/* Dynamic Components */}
                 <Link
                     to="/dynamic-components"
-                    className="group block transform transition-all hover:scale-105"
+                    className="group block transform transition-all hover:scale-x-100 hover:scale-y-110"
                 >
-                    <div className="shadow-lg p-3 flex flex-col items-center justify-center space-y-2">
+                    <div style={{
+                        backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+                        color: isDarkTheme ? "#f3f4f6" : "#374151"
+                    }}
+                         className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2">
                         <div className="text-xl font-semibold">⚙️ Dynamic Components</div>
-                        <p className="text-sm text-gray-600 group-hover:underline">
+                        <p style={{
+                            color: isDarkTheme ? "#f3f4f6" : "#374151"
+                        }} className="text-sm  group-hover:underline">
                             Explore dynamically generated UI elements
                         </p>
                     </div>
@@ -133,11 +149,17 @@ const MainPage = () => {
                 {/* Browser Games */}
                 <Link
                     to="/games"
-                    className="group block transform transition-all hover:scale-105"
+                    className="group block transform transition-all hover:scale-x-100 hover:scale-y-110"
                 >
-                    <div className="shadow-lg p-3 flex flex-col items-center justify-center space-y-2">
+                    <div style={{
+                        backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+                        color: isDarkTheme ? "#f3f4f6" : "#374151"
+                    }}
+                         className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2">
                         <div className="text-xl font-semibold">🎮 Browser Games</div>
-                        <p className="text-sm text-gray-600 group-hover:underline">
+                        <p style={{
+                            color: isDarkTheme ? "#f3f4f6" : "#374151"
+                        }} className="text-sm  group-hover:underline">
                             Play simple browser-based games
                         </p>
                     </div>
@@ -147,6 +169,7 @@ const MainPage = () => {
                 {/* Example: Wrap CollapsibleSection in Suspense or only the card inside */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<EducationIcon/>}
                         isCollapsed={true}
                         title="Education"
                         subTitle="Diploma, courses and specialization"
@@ -159,6 +182,7 @@ const MainPage = () => {
 
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<GitHub width={32} height={32}/>}
                         isCollapsed={true}
                         title="Highlighted Github Repos"
                         subTitle="Github"
@@ -172,6 +196,7 @@ const MainPage = () => {
                 {/* Fintama */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<FintamaIcon/>}
                         isCollapsed={true}
                         title="Current employment (Fintama)"
                         subTitle="02/2023 - current"
@@ -185,6 +210,7 @@ const MainPage = () => {
                 {/* Covario */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<CovarioIcon/>}
                         isCollapsed={true}
                         title="TL / Senior Developer (Covario)"
                         subTitle="03/2021 - 01/2023"
@@ -198,6 +224,7 @@ const MainPage = () => {
                 {/* Amaris */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<AmarisIcon height={70} width={44}/>}
                         isCollapsed={true}
                         title="IT Consultant (Amaris)"
                         subTitle="04/2020 - 03/2021"
@@ -211,6 +238,7 @@ const MainPage = () => {
                 {/* Cognizant */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<CognizantIcon/>}
                         isCollapsed={true}
                         title="Mobile / BE Developer (Cognizant)"
                         subTitle="06/2019 - 04/2020"
@@ -224,6 +252,7 @@ const MainPage = () => {
                 {/* Bosch */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<BoschIcon/>}
                         isCollapsed={true}
                         title="Software Development Engineer (BOSCH)"
                         subTitle="07/2018 - 06/2019"
@@ -237,8 +266,9 @@ const MainPage = () => {
                 {/* DVSE */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<TopmotiveIcon/>}
                         isCollapsed={true}
-                        title="First Developer Job (DVSE.ro)"
+                        title="First Developer Job (TOPMOTIVE)"
                         subTitle="06/2016 - 07/2018"
                     >
                         <Suspense fallback={<Loading/>}>
@@ -250,6 +280,7 @@ const MainPage = () => {
                 {/* IT Support */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
+                        icon={<NewVTech/>}
                         isCollapsed={true}
                         title="Support Technician (NewV Technologies)"
                         subTitle="06/2015 - 06/2016"

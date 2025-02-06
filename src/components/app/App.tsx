@@ -1,15 +1,17 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setTheme} from "../../store/reducers/appReducer";
 import {RootState} from "../../store/store";
 import {useSwipeable} from "react-swipeable";
+import Loading from "../../pages/generic/Loading";
 
-import Toaster from "../common/Toaster";
-import TopBar from "./TopBar";
-import SideBar from "./SideBar";
-import InstallPWAButton from "./InstallPWAButton";
-import RoutesSwitch from "../../router/Router";
-import BottomBar from "./BottomBar";
+// Lazy load components
+const TopBar = lazy(() => import("./TopBar"));
+const SideBar = lazy(() => import("./SideBar"));
+const InstallPWAButton = lazy(() => import("./InstallPWAButton"));
+const RoutesSwitch = lazy(() => import("../../router/Router"));
+const BottomBar = lazy(() => import("./BottomBar"));
+const Toaster = lazy(() => import("../common/Toaster"));
 
 const App: React.FC = () => {
     const dispatch = useDispatch();
@@ -35,16 +37,15 @@ const App: React.FC = () => {
 
     // Prevent body scrolling when sidebar is open
     useEffect(() => {
-        if (isDrawerOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
+        document.body.style.overflow = isDrawerOpen ? "hidden" : "";
     }, [isDrawerOpen]);
 
-    // Load theme from localStorage once
+    // Load theme from localStorage, defaulting to dark mode if no value is saved
     useEffect(() => {
-        const savedTheme = localStorage.getItem("isDarkTheme") === "true";
+        // If nothing is stored in localStorage, default to dark mode (true)
+        const savedThemeStr = localStorage.getItem("isDarkTheme");
+        const savedTheme =
+            savedThemeStr === null ? true : savedThemeStr === "true";
         if (savedTheme !== darkTheme) {
             dispatch(setTheme(savedTheme));
         }
@@ -61,22 +62,37 @@ const App: React.FC = () => {
             className={`${darkTheme ? "dark" : "light"}-theme app select-none`}
             style={{touchAction: "none"}} // Prevent system gestures like back swipe
         >
-            <TopBar/>
+            {/* Top Bar */}
+            <Suspense fallback={<Loading/>}>
+                <TopBar/>
+            </Suspense>
 
             {/* Sidebar */}
-            <SideBar isDrawerOpen={isDrawerOpen} closeSidebar={closeSidebar}/>
+            <Suspense fallback={<Loading/>}>
+                <SideBar isDrawerOpen={isDrawerOpen} closeSidebar={closeSidebar}/>
+            </Suspense>
 
             {/* Main Content */}
             <main className="main-content">
-                <RoutesSwitch/>
+                <Suspense fallback={<Loading/>}>
+                    <RoutesSwitch/>
+                </Suspense>
             </main>
-            <BottomBar/>
+
+            {/* Bottom Bar */}
+            <Suspense fallback={<Loading/>}>
+                <BottomBar/>
+            </Suspense>
 
             {/* Toaster Notifications */}
-            <Toaster/>
+            <Suspense fallback={<Loading/>}>
+                <Toaster/>
+            </Suspense>
 
             {/* PWA Install Button */}
-            <InstallPWAButton/>
+            <Suspense fallback={<Loading/>}>
+                <InstallPWAButton/>
+            </Suspense>
         </div>
     );
 };

@@ -11,6 +11,7 @@ interface CollapsibleSectionProps {
     className?: string;
     isCollapsed?: boolean; // Optional external control
     setCollapsed?: (collapsed: boolean) => void; // Optional setter function
+    icon?: ReactNode; // Optional icon to display next to the title
 }
 
 function CollapsibleSection({
@@ -20,6 +21,7 @@ function CollapsibleSection({
                                 isCollapsed: externalCollapsed,
                                 setCollapsed: externalSetCollapsed,
                                 className = "",
+                                icon,
                             }: CollapsibleSectionProps) {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
@@ -55,25 +57,55 @@ function CollapsibleSection({
                 className="flex justify-between items-center p-3 cursor-pointer"
                 onClick={toggleCollapse}
             >
-                <div>
-                    <h3
-                        className="text-xl font-semibold"
-                        style={{
-                            backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
-                            color: isDarkTheme ? "#f3f4f6" : "#374151",
-                        }}
-                    >
-                        {title}
-                    </h3>
-                    {subTitle && (
-                        <p
-                            className="text-sm"
-                            style={{color: isDarkTheme ? "#f3f4f6" : "#344151"}}
+                {/* Left side: Optional icon and text */}
+                {icon ? (
+                    <div className="flex w-full items-center">
+                        <div style={{width: '5rem', marginLeft: '-1em'}} className="flex justify-center items-center">
+                            {icon}
+                        </div>
+                        <div className="w-full">
+                            <h3
+                                className="text-xl font-semibold"
+                                style={{
+                                    backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+                                    color: isDarkTheme ? "#f3f4f6" : "#374151",
+                                }}
+                            >
+                                {title}
+                            </h3>
+                            {subTitle && (
+                                <p
+                                    className="text-sm"
+                                    style={{color: isDarkTheme ? "#f3f4f6" : "#344151"}}
+                                >
+                                    {subTitle}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="w-full">
+                        <h3
+                            className="text-xl font-semibold"
+                            style={{
+                                backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+                                color: isDarkTheme ? "#f3f4f6" : "#374151",
+                            }}
                         >
-                            {subTitle}
-                        </p>
-                    )}
-                </div>
+                            {title}
+                        </h3>
+                        {subTitle && (
+                            <p
+                                className="text-sm"
+                                style={{color: isDarkTheme ? "#f3f4f6" : "#344151"}}
+                            >
+                                {subTitle}
+                            </p>
+                        )}
+                    </div>
+                )}
+
+                {/* Right side: Chevron for toggling */}
                 <div
                     className="flex-shrink-0"
                     style={{
@@ -82,15 +114,15 @@ function CollapsibleSection({
                     }}
                 >
                     {internalCollapsed ? (
-                        <ChevronDown className="w-5 h-5  transition-transform duration-300"/>
+                        <ChevronDown className="w-5 h-5 transition-transform duration-300"/>
                     ) : (
-                        <ChevronUp className="w-5 h-5  transition-transform duration-300"/>
+                        <ChevronUp className="w-5 h-5 transition-transform duration-300"/>
                     )}
                 </div>
             </div>
             <div
                 className={`transition-[max-height] duration-300 ease-in-out overflow-hidden ${
-                    internalCollapsed ? "max-h-0" : ""
+                    internalCollapsed ? "max-h-0" : "max-h-screen"
                 }`}
             >
                 <div className="p-2 border-t border-gray-200 dark:border-gray-700">
