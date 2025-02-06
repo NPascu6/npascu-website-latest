@@ -1,29 +1,43 @@
+import React, {lazy, Suspense} from "react";
 import {RouteDefinition} from "../models/common/common";
-import AboutPage from "../pages/AboutPage";
-import MainPage from "../pages/MainPage";
-import DynamicComponentsContainerPage from "../pages/DynamicComponentsContainerPage";
-import GamesCardPage from "../pages/GamesContainer";
+
+// Lazy load the page components
+const MainPage = lazy(() => import("../pages/MainPage"));
+const GamesCardPage = lazy(() => import("../pages/GamesContainer"));
+const DynamicComponentsContainerPage = lazy(() =>
+    import("../pages/DynamicComponentsContainerPage")
+);
+const AboutPage = lazy(() => import("../pages/AboutPage"));
+
+// A simple fallback component for loading states
+const LoadingFallback = () => <div>Loading...</div>;
+
+// Optionally, create a helper to wrap lazy components with Suspense
+const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
+    <Suspense fallback={<LoadingFallback/>}>
+        <Component/>
+    </Suspense>
+);
 
 export const routeDefinition: RouteDefinition[] = [
     {
         path: "*",
         exact: true,
-        element: <MainPage/>,
+        element: withSuspense(MainPage),
     },
     {
         path: "/games/*",
         exact: true,
-        element: <GamesCardPage/>,
+        element: withSuspense(GamesCardPage),
     },
     {
         path: "/dynamic-components",
         exact: true,
-        element: <DynamicComponentsContainerPage/>,
+        element: withSuspense(DynamicComponentsContainerPage),
     },
-
     {
         path: "/about",
         exact: true,
-        element: <AboutPage/>,
+        element: withSuspense(AboutPage),
     },
 ];
