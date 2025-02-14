@@ -32,10 +32,6 @@ const YoutubeVideoLink = () => {
             <p className="text-xl font-semibold m-2">
                 Explore a Crypto Trading Platform Created with Electron and React
             </p>
-            <hr className="border-t-2 border-solid p-1 mt-1"/>
-            <p className="text-md font-semibold m-1">
-                Click on the video to watch it on Youtube.
-            </p>
             <div className="flex flex-wrap justify-center items-center">
                 {videos.map((video, index) => (
                     <div
@@ -53,7 +49,6 @@ const YoutubeVideoLink = () => {
                             src={video.src}
                             allowFullScreen
                         />
-                        <hr className="border-t-2 border-solid p-1 mt-3"/>
                     </div>
                 ))}
             </div>

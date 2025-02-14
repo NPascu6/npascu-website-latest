@@ -22,8 +22,8 @@ const TopBar = () => {
 
     return (
         <div id="top-bar" data-testid="top-bar-test" className="top-bar">
-            <div className="w-full">
-                <div style={{width: "10em"}}>
+            <div className="w-full mt-1">
+                <div style={{width: "10em", marginLeft: "0.3em"}}>
                     <a
                         href="./PascuNorbertresumeEN.pdf"
                         download="PascuNorbertresumeEN.pdf"
@@ -38,7 +38,7 @@ const TopBar = () => {
                 </div>
             </div>
 
-            <div className="top-bar-section w-full">
+            <div className="top-bar-section w-full mr-3">
                 <button name="toggle-theme" onClick={changeTheme}>
                     {isDarkTheme ? <ToggleSvgLight/> : <ToggleSvgDark/>}
                 </button>
