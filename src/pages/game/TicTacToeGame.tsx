@@ -267,7 +267,7 @@ const TicTacToeContainer: React.FC = () => {
         if (startGame) {
             return windowSize.innerHeight - 190;
         }
-        return windowSize.innerHeight - 275;
+        return windowSize.innerHeight - 305;
     }, [windowSize, startGame]);
 
     return (

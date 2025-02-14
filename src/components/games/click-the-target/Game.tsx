@@ -185,7 +185,12 @@ const Game = ({setStarted}: GameProps) => {
     }, [targets]);
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div
+            className="grid items-center justify-center">
+            <div className="flex justify-evenly w-full p-4">
+                <Score score={score}/>
+                <Time time={time}/>
+            </div>
             {!start ? (
                 <button
                     onClick={() => {
@@ -197,11 +202,8 @@ const Game = ({setStarted}: GameProps) => {
                     Start Game
                 </button>
             ) : (
-                <>
-                    <div className="flex justify-evenly w-full p-4">
-                        <Score score={score}/>
-                        <Time time={time}/>
-                    </div>
+                <div>
+
                     {targets.map((target) => (
                         <div
                             key={target.id}
@@ -209,6 +211,7 @@ const Game = ({setStarted}: GameProps) => {
                                 left: `${target.position.x}px`,
                                 top: `${target.position.y}px`,
                                 position: "absolute",
+                                height: 'calc(100dvh - 7em', overflow: 'auto'
                             }}
                         >
                             <Target
@@ -220,7 +223,7 @@ const Game = ({setStarted}: GameProps) => {
                             />
                         </div>
                     ))}
-                </>
+                </div>
             )}
         </div>
     );
