@@ -4,6 +4,7 @@ import {RouteDefinition} from "../models/common/common";
 // Lazy load the page components
 const MainPage = lazy(() => import("../pages/MainPage"));
 const GamesCardPage = lazy(() => import("../pages/GamesContainer"));
+const QuotePage = lazy(() => import("../components/quote/QuoteComponent"));
 const DynamicComponentsContainerPage = lazy(() =>
     import("../pages/DynamicComponentsContainerPage")
 );
@@ -29,6 +30,11 @@ export const routeDefinition: RouteDefinition[] = [
         path: "/games/*",
         exact: true,
         element: withSuspense(GamesCardPage),
+    },
+    {
+        path: "/quotes",
+        exact: true,
+        element: withSuspense(QuotePage),
     },
     {
         path: "/dynamic-components",

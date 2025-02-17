@@ -70,6 +70,15 @@ const SideBar: React.FC<SideBarProps> = ({isDrawerOpen, closeSidebar}) => {
                                 </li>
                                 <li>
                                     <Link
+                                        to="/quotes"
+                                        className="flex items-center text-lg  transition"
+                                        onClick={closeSidebar}
+                                    >
+                                        🚀 Quotes
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
                                         to="/dynamic-components"
                                         className="flex items-center text-lg  transition"
                                         onClick={closeSidebar}
