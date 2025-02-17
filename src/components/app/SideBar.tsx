@@ -4,6 +4,7 @@ import {RootState} from "../../store/store";
 import {Link} from "react-router-dom";
 import {AnimatePresence, motion} from "framer-motion";
 import {X} from "lucide-react";
+import {FaRocket} from 'react-icons/fa';
 
 interface SideBarProps {
     isDrawerOpen: boolean;
@@ -71,10 +72,11 @@ const SideBar: React.FC<SideBarProps> = ({isDrawerOpen, closeSidebar}) => {
                                 <li>
                                     <Link
                                         to="/quotes"
-                                        className="flex items-center text-lg  transition"
+                                        className="flex items-center text-lg transition"
                                         onClick={closeSidebar}
                                     >
-                                        🚀 Quotes
+                                        <FaRocket className="mr-2 text-blue-500"/>
+                                        Quotes
                                     </Link>
                                 </li>
                                 <li>

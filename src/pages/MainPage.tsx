@@ -15,72 +15,55 @@ import GitHub from "../assets/icons/Github";
 import EducationIcon from "../assets/icons/EducationIcon";
 import TopmotiveIcon from "../assets/icons/TopmotiveIcon";
 import NewVTech from "../assets/icons/NewVTech";
+import {FaChartLine} from "react-icons/fa";
 
 // --- Lazy Imports ---
-const EducationCard = lazy(
-    () => import("../components/main-page/EducationAndTraining")
-);
-
-const GithubProfileCard = lazy(
-    () => import("../components/main-page/GithubProfileCard")
-);
-
-const YoutubeVideoLink = lazy(
-    () => import("../components/main-page/YoutubeVideoLink")
-);
-
-const CollapsibleSection = lazy(
-    () => import("../components/common/CollapsableSection")
-);
-
-const HighlightedRepos = lazy(
-    () => import("../components/main-page/HighlightedRepos")
-);
-
+const EducationCard = lazy(() => import("../components/main-page/EducationAndTraining"));
+const GithubProfileCard = lazy(() => import("../components/main-page/GithubProfileCard"));
+const YoutubeVideoLink = lazy(() => import("../components/main-page/YoutubeVideoLink"));
+const CollapsibleSection = lazy(() => import("../components/common/CollapsableSection"));
+const HighlightedRepos = lazy(() => import("../components/main-page/HighlightedRepos"));
 const ImageSlider = lazy(() => import("../components/common/ImageSlider"));
 
-// Each experience card is a named export from ExperienceCards, so we can import them individually
+// Each experience card is a named export from ExperienceCards.
 const AmarisCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.AmarisCard,
     }))
 );
-
 const BoschCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.BoschCard,
     }))
 );
-
 const CognizantCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.CognizantCard,
     }))
 );
-
 const CovarioCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.CovarioCard,
     }))
 );
-
 const DVSECard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.DVSECard,
     }))
 );
-
 const FintamaCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.FintamaCard,
     }))
 );
-
 const ItSupportTechnicianCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.ItSupportTechnicianCard,
     }))
 );
+
+// NEW: Lazy load the QuotesComponent.
+const QuotesComponent = lazy(() => import("../components/quote/QuoteComponent"));
 
 // --- MainPage Component ---
 const MainPage = () => {
@@ -89,7 +72,7 @@ const MainPage = () => {
     const workImages = useSelector((state: RootState) => state.app.workPhotos);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
-    // Load work images once
+    // Load work images once.
     useEffect(() => {
         if (loadedImages.length > 0) return;
         let cancelled = false;
@@ -108,7 +91,7 @@ const MainPage = () => {
         };
     }, [dispatch, loadedImages]);
 
-    // Fetch Github user profile on mount
+    // Fetch Github user profile on mount.
     useEffect(() => {
         dispatch(fetchGithubUserProfile());
     }, [dispatch]);
@@ -132,15 +115,20 @@ const MainPage = () => {
                     to="/dynamic-components"
                     className="group block transform transition-all hover:scale-x-100 hover:scale-y-110"
                 >
-                    <div style={{
-                        backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
-                        color: isDarkTheme ? "#f3f4f6" : "#374151"
-                    }}
-                         className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2">
+                    <div
+                        style={{
+                            backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+                            color: isDarkTheme ? "#f3f4f6" : "#374151",
+                        }}
+                        className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2"
+                    >
                         <div className="text-xl font-semibold">⚙️ Dynamic Components</div>
-                        <p style={{
-                            color: isDarkTheme ? "#f3f4f6" : "#374151"
-                        }} className="text-sm  group-hover:underline">
+                        <p
+                            style={{
+                                color: isDarkTheme ? "#f3f4f6" : "#374151",
+                            }}
+                            className="text-sm group-hover:underline"
+                        >
                             Explore dynamically generated UI elements
                         </p>
                     </div>
@@ -151,22 +139,27 @@ const MainPage = () => {
                     to="/games"
                     className="group block transform transition-all hover:scale-x-100 hover:scale-y-110"
                 >
-                    <div style={{
-                        backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
-                        color: isDarkTheme ? "#f3f4f6" : "#374151"
-                    }}
-                         className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2">
+                    <div
+                        style={{
+                            backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
+                            color: isDarkTheme ? "#f3f4f6" : "#374151",
+                        }}
+                        className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2"
+                    >
                         <div className="text-xl font-semibold">🎮 Browser Games</div>
-                        <p style={{
-                            color: isDarkTheme ? "#f3f4f6" : "#374151"
-                        }} className="text-sm  group-hover:underline">
+                        <p
+                            style={{
+                                color: isDarkTheme ? "#f3f4f6" : "#374151",
+                            }}
+                            className="text-sm group-hover:underline"
+                        >
                             Play simple browser-based games
                         </p>
                     </div>
                 </Link>
             </div>
             <div className="mt-1 space-y-1">
-                {/* Example: Wrap CollapsibleSection in Suspense or only the card inside */}
+                {/* Education Section */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<EducationIcon/>}
@@ -180,6 +173,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
+                {/* Github Repos Section */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<GitHub width={32} height={32}/>}
@@ -193,7 +187,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* Fintama */}
+                {/* Fintama Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<FintamaIcon/>}
@@ -207,7 +201,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* Covario */}
+                {/* Covario Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<CovarioIcon/>}
@@ -221,7 +215,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* Amaris */}
+                {/* Amaris Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<AmarisIcon height={70} width={44}/>}
@@ -235,7 +229,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* Cognizant */}
+                {/* Cognizant Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<CognizantIcon/>}
@@ -249,7 +243,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* Bosch */}
+                {/* Bosch Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<BoschIcon/>}
@@ -263,7 +257,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* DVSE */}
+                {/* DVSE / Topmotive Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<TopmotiveIcon/>}
@@ -277,7 +271,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* IT Support */}
+                {/* IT Support Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<NewVTech/>}
@@ -302,11 +296,25 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* Trading App */}
+                {/* Trading App Section */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection title="Trading App (Crypto trading platform)">
                         <Suspense fallback={<Loading/>}>
                             <YoutubeVideoLink/>
+                        </Suspense>
+                    </CollapsibleSection>
+                </Suspense>
+
+                {/* NEW: Live Quotes Section */}
+                <Suspense fallback={<Loading/>}>
+                    <CollapsibleSection
+                        icon={<FaChartLine className="text-2xl"/>}
+                        isCollapsed={false}
+                        title="Live Quotes"
+                        subTitle="Real-time market data"
+                    >
+                        <Suspense fallback={<Loading/>}>
+                            <QuotesComponent/>
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
