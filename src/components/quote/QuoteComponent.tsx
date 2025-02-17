@@ -52,11 +52,9 @@ export const availableSymbols = [
     "BINANCE:BNBUSDT",
     "BINANCE:ADAUSDT",
     "BINANCE:SOLUSDT",
-    "OANDA:EUR_USD",
-    "OANDA:GBP_USD",
-    "OANDA:USD_JPY",
-    "OANDA:USD_CHF",
-    "OANDA:EUR_CHF"
+    "BINANCE:DOGEUSDT",
+    "BINANCE:DOTUSDT",
+    "BINANCE:LINKUSDT"
 ];
 
 const QuotesComponent: React.FC = () => {
