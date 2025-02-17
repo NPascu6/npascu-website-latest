@@ -27,8 +27,8 @@ interface Quotes {
 // Duration for the blink effect (in milliseconds)
 const blinkDuration = 500;
 
-// Available symbols – 6 from Binance and 5 from Coinbase (or any other venue).
-const availableSymbols = [
+// Available symbols – 6 Binance pairs and 5 Coinbase pairs.
+export const availableSymbols = [
     "BINANCE:BTCUSDT",
     "BINANCE:ETHUSDT",
     "BINANCE:XRPUSDT",
@@ -47,7 +47,7 @@ const QuotesComponent: React.FC = () => {
     const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
-    // Initialize selected symbols to all available on mount.
+    // On mount, select all available symbols.
     useEffect(() => {
         setSelectedSymbols(availableSymbols);
     }, []);
@@ -110,10 +110,25 @@ const QuotesComponent: React.FC = () => {
         setSelectedSymbols(selected);
     };
 
-    // Inline style for blinking effect.
+    // Handler for "Select All" button.
+    const handleSelectAll = () => {
+        setSelectedSymbols(availableSymbols);
+    };
+
+    // Styling for the select dropdown to ensure good contrast.
+    const selectStyle: React.CSSProperties = {
+        width: '100%',
+        padding: '0.5rem',
+        borderRadius: '4px',
+        border: isDarkTheme ? '1px solid #888' : '1px solid #ccc',
+        backgroundColor: isDarkTheme ? '#333' : '#fff',
+        color: isDarkTheme ? '#fff' : '#222'
+    };
+
+    // Inline style for blinking effect on quote items.
     const quoteStyle = (updated: boolean): React.CSSProperties => ({
         transition: 'background-color 0.3s ease',
-        backgroundColor: updated ? (isDarkTheme ? '#444' : '#ff0') : 'transparent',
+        backgroundColor: updated ? (isDarkTheme ? '#555' : '#ff0') : 'transparent',
         padding: '0.5rem',
         borderRadius: '4px'
     });
@@ -129,19 +144,40 @@ const QuotesComponent: React.FC = () => {
             }}
         >
             <h1 className="m-4 border-b-2">Live Quotes</h1>
-            <div style={{marginBottom: '1rem'}}>
-                <label htmlFor="symbolSelect" style={{marginRight: '0.5rem'}}>Select symbols:</label>
+            <div style={{marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '100%'}}>
+                <label htmlFor="symbolSelect" style={{marginBottom: '0.25rem'}}>
+                    Select symbols:
+                </label>
                 <select
                     id="symbolSelect"
                     multiple
                     value={selectedSymbols}
                     onChange={handleSymbolSelectionChange}
-                    style={{minWidth: '300px', padding: '0.5rem'}}
+                    style={selectStyle}
                 >
                     {availableSymbols.map(symbol => (
-                        <option key={symbol} value={symbol}>{symbol}</option>
+                        <option key={symbol} value={symbol} style={{
+                            backgroundColor: isDarkTheme ? '#333' : '#fff',
+                            color: isDarkTheme ? '#fff' : '#222'
+                        }}>
+                            {symbol}
+                        </option>
                     ))}
                 </select>
+                <button
+                    onClick={handleSelectAll}
+                    style={{
+                        padding: '0.5rem',
+                        borderRadius: '4px',
+                        border: 'none',
+                        backgroundColor: isDarkTheme ? '#555' : '#007bff',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        width: '100%'
+                    }}
+                >
+                    Select All
+                </button>
             </div>
             <ul
                 style={{
