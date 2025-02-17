@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import * as signalR from '@microsoft/signalr';
-import {RootState} from '../../store/store';
 import {useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
 
 // Define a TypeScript interface for the quote data.
 export interface FinnhubQuote {
@@ -10,25 +10,47 @@ export interface FinnhubQuote {
     l: number;  // low price
     o: number;  // open price
     pc: number; // previous close
-    t: number;  // timestamp
+    t: number;  // timestamp (in seconds)
 }
 
-// We add an interface that wraps the quote with an "updated" flag.
+// Wrap the quote with an "updated" flag.
 interface QuoteData {
     quote: FinnhubQuote;
     updated: boolean;
 }
 
-// Type for dictionary mapping symbol to its QuoteData.
+// Dictionary type for quotes.
 interface Quotes {
     [symbol: string]: QuoteData;
 }
 
-const blinkDuration = 500; // milliseconds
+// Duration for the blink effect (in milliseconds)
+const blinkDuration = 500;
+
+// Available symbols – 6 from Binance and 5 from Coinbase (or any other venue).
+const availableSymbols = [
+    "BINANCE:BTCUSDT",
+    "BINANCE:ETHUSDT",
+    "BINANCE:XRPUSDT",
+    "BINANCE:BNBUSDT",
+    "BINANCE:ADAUSDT",
+    "BINANCE:SOLUSDT",
+    "COINBASE:BTCUSD",
+    "COINBASE:ETHUSD",
+    "COINBASE:XRPUSD",
+    "COINBASE:ADAUSD",
+    "COINBASE:SOLUSD"
+];
 
 const QuotesComponent: React.FC = () => {
     const [quotes, setQuotes] = useState<Quotes>({});
+    const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+
+    // Initialize selected symbols to all available on mount.
+    useEffect(() => {
+        setSelectedSymbols(availableSymbols);
+    }, []);
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
@@ -45,8 +67,6 @@ const QuotesComponent: React.FC = () => {
             setQuotes(prev => {
                 const prevData = prev[symbol];
                 let updated = false;
-
-                // Check if we have a previous quote and if any key has changed.
                 if (prevData) {
                     if (
                         prevData.quote.c !== newQuote.c ||
@@ -59,13 +79,9 @@ const QuotesComponent: React.FC = () => {
                         updated = true;
                     }
                 } else {
-                    // First time we get data for this symbol.
                     updated = true;
                 }
-
                 const newData: QuoteData = {quote: newQuote, updated};
-
-                // If updated, remove the flag after blinkDuration.
                 if (updated) {
                     setTimeout(() => {
                         setQuotes(current => {
@@ -77,7 +93,6 @@ const QuotesComponent: React.FC = () => {
                         });
                     }, blinkDuration);
                 }
-
                 return {...prev, [symbol]: newData};
             });
         });
@@ -89,33 +104,67 @@ const QuotesComponent: React.FC = () => {
         };
     }, []);
 
-    // Inline styles for blinking effect.
+    // Handler for dropdown selection change.
+    const handleSymbolSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = Array.from(e.target.selectedOptions, option => option.value);
+        setSelectedSymbols(selected);
+    };
+
+    // Inline style for blinking effect.
     const quoteStyle = (updated: boolean): React.CSSProperties => ({
         transition: 'background-color 0.3s ease',
-        backgroundColor: updated ? (isDarkTheme ? '#444' : '#ff0') : 'transparent'
+        backgroundColor: updated ? (isDarkTheme ? '#444' : '#ff0') : 'transparent',
+        padding: '0.5rem',
+        borderRadius: '4px'
     });
 
     return (
         <div
             style={{
-                height: 'calc(100vh - 6rem)',
-                overflow: 'auto',
-                backgroundColor: isDarkTheme ? '#1a1d24' : '#fff',
-                color: isDarkTheme ? '#fff' : '#222'
+                height: "calc(100vh - 6rem)",
+                overflowY: "auto",
+                backgroundColor: isDarkTheme ? "#1a1d24" : "#fff",
+                color: isDarkTheme ? "#fff" : "#222",
+                padding: "1rem"
             }}
         >
-            <h1 className="justify-self-center m-4 border-b-2">Live Quotes</h1>
-            <ul className="md:grid md:grid-cols-3 md:gap-4 sm:grid-cols-1">
-                {Object.entries(quotes).map(([symbol, data]) => (
-                    <li
-                        key={symbol}
-                        className="border-2 p-2"
-                        style={quoteStyle(data.updated)}
-                    >
-                        <strong>{symbol}</strong>: Price {data.quote.c}, High {data.quote.h}, Low {data.quote.l},
-                        Open {data.quote.o}, PrevClose {data.quote.pc}
-                    </li>
-                ))}
+            <h1 className="m-4 border-b-2">Live Quotes</h1>
+            <div style={{marginBottom: '1rem'}}>
+                <label htmlFor="symbolSelect" style={{marginRight: '0.5rem'}}>Select symbols:</label>
+                <select
+                    id="symbolSelect"
+                    multiple
+                    value={selectedSymbols}
+                    onChange={handleSymbolSelectionChange}
+                    style={{minWidth: '300px', padding: '0.5rem'}}
+                >
+                    {availableSymbols.map(symbol => (
+                        <option key={symbol} value={symbol}>{symbol}</option>
+                    ))}
+                </select>
+            </div>
+            <ul
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '1rem',
+                    listStyle: 'none',
+                    padding: 0
+                }}
+            >
+                {Object.entries(quotes)
+                    .filter(([symbol]) => selectedSymbols.includes(symbol))
+                    .map(([symbol, data]) => (
+                        <li key={symbol} style={{...quoteStyle(data.updated), border: '1px solid #ccc'}}>
+                            <strong>{symbol}</strong>: <br/>
+                            Price: {data.quote.c} <br/>
+                            High: {data.quote.h} <br/>
+                            Low: {data.quote.l} <br/>
+                            Open: {data.quote.o} <br/>
+                            PrevClose: {data.quote.pc} <br/>
+                            <small>{new Date(data.quote.t * 1000).toLocaleTimeString()}</small>
+                        </li>
+                    ))}
             </ul>
         </div>
     );
