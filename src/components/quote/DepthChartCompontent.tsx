@@ -1,4 +1,5 @@
-// DepthChart.tsx
+// DepthChartCompontent.tsx
+
 import React, { useMemo } from "react";
 import {
     Chart as ChartJS,
@@ -23,7 +24,6 @@ ChartJS.register(
     Legend
 );
 
-// Same trade interface you used in your code
 export interface FinnhubTrade {
     p: number; // price
     s: string; // symbol
@@ -41,11 +41,11 @@ interface DepthChartProps {
 }
 
 /**
- * Basic Depth Chart (approx) from trade data.
- * - We bin trades by price, separate them into buys (price < mid) & sells (price >= mid).
- * - Then we compute cumulative volume on each side to emulate "depth."
- * - Display two line areas (one for buys, one for sells).
- * - Shown in a popup overlay (similar to OrderBook).
+ * Basic Depth Chart (approx) from trade data:
+ *  - Bins trades by price (BIN_SIZE).
+ *  - Splits into buy side (price < mid) & sell side (price >= mid).
+ *  - Sort each side by ascending price, accumulate volumes, create a stair-step line.
+ *  - One line for bids, one line for asks, meeting around the midPrice.
  */
 const DepthChart: React.FC<DepthChartProps> = ({
     selectedSymbolForDepthChart,
@@ -57,92 +57,121 @@ const DepthChart: React.FC<DepthChartProps> = ({
     // If no symbol is selected, hide the popup entirely
     if (!selectedSymbolForDepthChart) return null;
 
-    // Adjust this bin size as desired
+    // If midPrice is zero or trades is empty, we can't draw anything meaningful
+    if (!midPrice || trades.length === 0) {
+        return (
+            <div
+                onClick={closeDepthChartPopup}
+                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            >
+                <div
+                    onClick={(e) => e.stopPropagation()}
+                    className={`relative p-2 w-11/12 max-w-3xl max-h-[90vh] overflow-y-auto ${isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                        } rounded shadow-lg`}
+                >
+                    <button
+                        onClick={closeDepthChartPopup}
+                        className={`absolute top-2 right-2 bg-transparent border-0 text-2xl cursor-pointer ${isDarkTheme ? "text-white" : "text-gray-900"
+                            }`}
+                    >
+                        ×
+                    </button>
+                    <h2 className="text-xl mb-4">
+                        Depth Chart - {selectedSymbolForDepthChart}
+                    </h2>
+                    <p>No data available to draw chart.</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Binning
     const BIN_SIZE = 0.5;
+    const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
 
-    // Binning function — round price to nearest BIN_SIZE
-    const binPrice = (price: number) =>
-        Math.round(price / BIN_SIZE) * BIN_SIZE;
-
-    // Separate trades into buy vs sell bins
-    const sellBins: Record<number, number> = {};
+    // Build bins for buys and sells
     const buyBins: Record<number, number> = {};
+    const sellBins: Record<number, number> = {};
 
     trades.forEach((trade) => {
-        const binned = binPrice(trade.p);
-        if (trade.p >= midPrice) {
-            sellBins[binned] = (sellBins[binned] || 0) + trade.v;
+        const binnedPrice = binPrice(trade.p);
+        if (trade.p < midPrice) {
+            // buy side
+            buyBins[binnedPrice] = (buyBins[binnedPrice] || 0) + trade.v;
         } else {
-            buyBins[binned] = (buyBins[binned] || 0) + trade.v;
+            // sell side
+            sellBins[binnedPrice] = (sellBins[binnedPrice] || 0) + trade.v;
         }
     });
 
-    // Convert bin objects into sorted arrays, then compute cumulative volumes
-    const sellData = useMemo(() => {
-        const entries = Object.entries(sellBins).map(([price, vol]) => [
-            parseFloat(price),
-            vol,
-        ]);
-        // Sort by ascending price
-        entries.sort((a, b) => a[0] - b[0]);
+    // Convert bins to arrays & sort ascending by price
+    const buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
+        price: parseFloat(price),
+        volume: vol as number,
+    }));
+    const sellPoints = Object.entries(sellBins).map(([price, vol]) => ({
+        price: parseFloat(price),
+        volume: vol as number,
+    }));
 
-        let cumulative = 0;
-        return entries.map(([price, volume]) => {
-            cumulative += volume;
-            return { x: price, y: cumulative };
+    buyPoints.sort((a, b) => a.price - b.price);
+    sellPoints.sort((a, b) => a.price - b.price);
+
+    // Compute cumulative volumes for each side
+    // For buys, the typical approach is to accumulate from low price to high
+    // so that at each point, we have total volume up to that price
+    const cumulativeBuys = useMemo(() => {
+        let sum = 0;
+        return buyPoints.map((pt) => {
+            sum += pt.volume;
+            return { x: pt.price, y: sum };
         });
-    }, [trades, midPrice]);
+    }, [buyPoints]);
 
-    const buyData = useMemo(() => {
-        const entries = Object.entries(buyBins).map(([price, vol]) => [
-            parseFloat(price),
-            vol,
-        ]);
-        // Sort by ascending price
-        entries.sort((a, b) => a[0] - b[0]);
-
-        let cumulative = 0;
-        return entries.map(([price, volume]) => {
-            cumulative += volume;
-            return { x: price, y: cumulative };
+    // For sells, same approach: from low ask to higher ask
+    const cumulativeSells = useMemo(() => {
+        let sum = 0;
+        return sellPoints.map((pt) => {
+            sum += pt.volume;
+            return { x: pt.price, y: sum };
         });
-    }, [trades, midPrice]);
+    }, [sellPoints]);
 
-    // Final chart data
+    // Chart.js data
     const chartData = {
         datasets: [
             {
-                label: "Buys",
-                data: buyData,
-                borderColor: "rgba(255, 0, 0, 1)",
-                backgroundColor: "rgba(255, 0, 0, 0.2)",
+                label: "Bids",
+                data: cumulativeBuys,
+                borderColor: "rgba(255,0,0,1)",     // red line
+                backgroundColor: "rgba(255,0,0,0.2)",
                 fill: true,
-                tension: 0.1,
+                stepped: true, // stair-step
             },
             {
-                label: "Sells",
-                data: sellData,
-                borderColor: "rgba(0, 255, 0, 1)",
-                backgroundColor: "rgba(0, 255, 0, 0.2)",
+                label: "Asks",
+                data: cumulativeSells,
+                borderColor: "rgba(0,255,0,1)",    // green line
+                backgroundColor: "rgba(0,255,0,0.2)",
                 fill: true,
-                tension: 0.1,
+                stepped: true, // stair-step
             },
         ],
     };
 
     const chartOptions = {
         responsive: true,
-        maintainAspectRatio: false, // Allows the chart to grow/shrink responsively
+        maintainAspectRatio: false,
         scales: {
             x: {
-                type: "linear" as const, // numeric axis
+                type: "linear" as const,
                 title: {
                     display: true,
                     text: "Price",
                     color: isDarkTheme ? "#fff" : "#000",
                 },
                 grid: {
-                    color: isDarkTheme ? "#444" : "#ccc",
+                    color: isDarkTheme ? "#555" : "#ccc",
                 },
                 ticks: {
                     color: isDarkTheme ? "#fff" : "#000",
@@ -155,7 +184,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                     color: isDarkTheme ? "#fff" : "#000",
                 },
                 grid: {
-                    color: isDarkTheme ? "#444" : "#ccc",
+                    color: isDarkTheme ? "#555" : "#ccc",
                 },
                 ticks: {
                     color: isDarkTheme ? "#fff" : "#000",
@@ -167,6 +196,11 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 labels: {
                     color: isDarkTheme ? "#fff" : "#000",
                 },
+            },
+            title: {
+                display: true,
+                text: `Depth Chart (Approx)`,
+                color: isDarkTheme ? "#fff" : "#000",
             },
         },
     };
@@ -188,10 +222,6 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 >
                     ×
                 </button>
-                <h2 className="text-xl mb-4">
-                    Depth Chart - {selectedSymbolForDepthChart} (Approx)
-                </h2>
-                {/* Chart container, ensures responsive resizing */}
                 <div className="h-96 w-full">
                     <Line data={chartData} options={chartOptions} />
                 </div>

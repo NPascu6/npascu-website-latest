@@ -2,7 +2,7 @@ import React, { MouseEvent, useCallback, useEffect, useRef, useState } from "rea
 import { FinnhubTrade } from "./QuoteComponent";
 
 const formatTime = (timestamp: number): string => {
-    // If timestamp > 1e10, assume it's in ms; otherwise, seconds.
+    // If timestamp > 1e10, assume it's ms; otherwise seconds
     return new Date(timestamp > 1e10 ? timestamp : timestamp * 1000).toLocaleTimeString();
 };
 
@@ -23,12 +23,10 @@ function throttle<T extends (...args: any[]) => void>(func: T, limit: number): T
 }
 
 /**
- * Computes a background color based on trade volume relative to the maximum volume.
- * We use a squared ratio for more granular shades.
- *
- * For dark theme, brightness ranges from 60% (low volume) down to 20% (high volume).
- * For light theme, brightness ranges from 80% (low volume) down to 30% (high volume).
- * Sells use a green hue (120) and buys use a red hue (0).
+ * Computes a background color based on trade volume relative to max volume.
+ * For dark theme, brightness goes from 60% (low) to 20% (high).
+ * For light theme, brightness goes from 80% (low) to 30% (high).
+ * Sells use hue=120 (green), buys use hue=0 (red).
  */
 const getRowColorByVolume = (
     tradeVolume: number,
@@ -36,13 +34,12 @@ const getRowColorByVolume = (
     darkTheme: boolean,
     isSell: boolean
 ): string => {
-    const ratio = tradeVolume / maxVolume; // value between 0 and 1
+    const ratio = tradeVolume / maxVolume; // 0..1
     const adjustedRatio = Math.pow(ratio, 2); // non-linear scaling
     const baseBrightness = darkTheme ? 60 : 80;
     const brightnessDelta = darkTheme ? 40 : 50;
     const brightness = baseBrightness - adjustedRatio * brightnessDelta;
-    const hue = isSell ? 120 : 0;
-    // HSL color:
+    const hue = isSell ? 120 : 0; // green or red
     return `hsl(${hue}, 100%, ${brightness}%)`;
 };
 
@@ -64,10 +61,10 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const orderBookContainerRef = useRef<HTMLDivElement>(null);
     const midPriceRef = useRef<HTMLDivElement>(null);
 
-    // Price-based vs volume-based sorting:
+    // Sort mode: "price" or "volume"
     const [sortCriteria, setSortCriteria] = useState<"price" | "volume">("price");
 
-    // Function to scroll the mid-price divider into view.
+    // Scroll the "MID" divider into view
     const scrollToMid = useCallback(() => {
         if (orderBookContainerRef.current && midPriceRef.current) {
             const container = orderBookContainerRef.current;
@@ -75,10 +72,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
             const containerRect = container.getBoundingClientRect();
             const midRect = midEl.getBoundingClientRect();
             const offset =
-                midRect.top -
-                containerRect.top -
-                containerRect.height / 2 +
-                midRect.height / 2;
+                midRect.top - containerRect.top - containerRect.height / 2 + midRect.height / 2;
             container.scrollBy({ top: offset, behavior: "smooth" });
         }
     }, []);
@@ -91,7 +85,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
         }
     }, [selectedSymbolForOrderBook, sortCriteria, throttledScrollToMid]);
 
-    // Periodically re-center every 5s if the popup is open
+    // Periodically recenter every 5s
     useEffect(() => {
         if (selectedSymbolForOrderBook) {
             const intervalId = setInterval(() => {
@@ -103,38 +97,33 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
     if (!selectedSymbolForOrderBook) return null;
 
+    // --- Build the Order Book data ---
     const midPrice = quotes[selectedSymbolForOrderBook]?.quote.c || 0;
     // All trades for this symbol
     const allTrades = orderBooks[selectedSymbolForOrderBook] || [];
 
-    // We want to keep the latest trades first by timestamp, so sort descending by 't'
-    const sortedByTimeDesc = [...allTrades].sort((a, b) => b.t - a.t);
+    // Partition by price relative to mid
+    let sells = allTrades.filter((t) => t.p >= midPrice);
+    let buys = allTrades.filter((t) => t.p < midPrice);
 
-    // Partition into sells and buys
-    const sellsAll = sortedByTimeDesc.filter((trade) => trade.p >= midPrice);
-    const buysAll = sortedByTimeDesc.filter((trade) => trade.p < midPrice);
-
-    // Keep only up to 50 of each (latest) to maintain half/half
-    const latestSells = sellsAll.slice(0, 50);
-    const latestBuys = buysAll.slice(0, 50);
-
-    // Now do the final sort based on price/volume
+    // Sort each side according to user selection:
+    // If "price": sells ascending, buys descending
+    // If "volume": both descending by volume
     if (sortCriteria === "price") {
-        // Sells in ascending order by price (closest to mid at the top)
-        latestSells.sort((a, b) => a.p - b.p);
-        // Buys in descending order by price (closest to mid at the top)
-        latestBuys.sort((a, b) => b.p - a.p);
+        sells.sort((a, b) => a.p - b.p); // low to high (best ask at top)
+        buys.sort((a, b) => b.p - a.p);  // high to low (best bid at top)
     } else {
-        // Volume-based descending
-        latestSells.sort((a, b) => b.v - a.v);
-        latestBuys.sort((a, b) => b.v - a.v);
+        // sort by volume descending
+        sells.sort((a, b) => b.v - a.v);
+        buys.sort((a, b) => b.v - a.v);
     }
 
-    // Determine max volume for color scaling
-    const maxVolume = Math.max(
-        ...[...latestSells, ...latestBuys].map((t) => t.v),
-        1
-    );
+    // Keep only 50 sells, 50 buys
+    sells = sells.slice(0, 50);
+    buys = buys.slice(0, 50);
+
+    // Find max volume for color shading
+    const maxVolume = Math.max(...[...sells, ...buys].map((t) => t.v), 1);
 
     return (
         <div
@@ -146,6 +135,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 className={`relative p-2 w-11/12 max-w-xl ${isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"
                     }`}
             >
+                {/* Close button */}
                 <button
                     onClick={closeOrderBookPopup}
                     className={`absolute top-2 right-2 bg-transparent border-0 text-2xl cursor-pointer ${isDarkTheme ? "text-white" : "text-gray-900"
@@ -154,9 +144,9 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     ×
                 </button>
 
+                {/* Header with sort dropdown */}
                 <div className="mb-4 flex justify-between items-center">
                     <h2>{selectedSymbolForOrderBook} Order Book</h2>
-                    {/* Optional: UI toggler to switch sort criteria */}
                     <div className="flex items-center space-x-2">
                         <span>Sort:</span>
                         <select
@@ -171,43 +161,49 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     </div>
                 </div>
 
-                {latestSells.length > 0 || latestBuys.length > 0 ? (
+                {sells.length > 0 || buys.length > 0 ? (
                     <div ref={orderBookContainerRef} className="grid gap-2 h-[35em] overflow-y-auto">
-                        {/* Sells */}
-                        {latestSells.map((trade, index) => {
+                        {/* SELL side */}
+                        {sells.map((trade, index) => {
                             const rowBg = getRowColorByVolume(trade.v, maxVolume, isDarkTheme, true);
                             return (
                                 <div
                                     key={`sell-${index}`}
                                     className="grid grid-cols-3 p-1 transition-all duration-300 ease-in-out"
-                                    // Force text to be dark for better contrast (especially in dark theme):
-                                    style={{ backgroundColor: rowBg, color: isDarkTheme ? "#000" : "inherit" }}
+                                    // Force black text in dark mode for contrast
+                                    style={{
+                                        backgroundColor: rowBg,
+                                        color: isDarkTheme ? "#000" : "inherit",
+                                    }}
                                 >
-                                    <div>{trade.p}</div>
+                                    <div>{trade.p.toFixed(4)}</div>
                                     <div>{trade.v}</div>
                                     <div>{formatTime(trade.t)}</div>
                                 </div>
                             );
                         })}
 
-                        {/* Mid Price Divider */}
+                        {/* MID divider */}
                         <div
                             ref={midPriceRef}
                             className="flex items-center justify-center border-t-2 border-b-2 border-black p-1 font-bold transition-all duration-300 ease-in-out"
                         >
-                            {midPrice ? `MID ${midPrice.toFixed(2)}` : "Mid Price Unavailable"}
+                            {midPrice ? `MID ${midPrice.toFixed(4)}` : "Mid Price Unavailable"}
                         </div>
 
-                        {/* Buys */}
-                        {latestBuys.map((trade, index) => {
+                        {/* BUY side */}
+                        {buys.map((trade, index) => {
                             const rowBg = getRowColorByVolume(trade.v, maxVolume, isDarkTheme, false);
                             return (
                                 <div
                                     key={`buy-${index}`}
                                     className="grid grid-cols-3 p-1 transition-all duration-300 ease-in-out"
-                                    style={{ backgroundColor: rowBg, color: isDarkTheme ? "#000" : "inherit" }}
+                                    style={{
+                                        backgroundColor: rowBg,
+                                        color: isDarkTheme ? "#000" : "inherit",
+                                    }}
                                 >
-                                    <div>{trade.p}</div>
+                                    <div>{trade.p.toFixed(4)}</div>
                                     <div>{trade.v}</div>
                                     <div>{formatTime(trade.t)}</div>
                                 </div>
