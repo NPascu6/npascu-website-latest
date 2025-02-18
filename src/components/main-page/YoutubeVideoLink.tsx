@@ -6,10 +6,10 @@ const videos = [
         title: "Youtube1",
         src: "https://www.youtube-nocookie.com/embed/isTUIKnZl_0",
     },
-    {
-        title: "Youtube2",
-        src: "https://www.youtube-nocookie.com/embed/jGah_U_GBuI",
-    },
+    // {
+    //     title: "Youtube2",
+    //     src: "https://www.youtube-nocookie.com/embed/jGah_U_GBuI",
+    // },
     {
         title: "Youtube3",
         src: "https://www.youtube-nocookie.com/embed/edBKGax80RE",
