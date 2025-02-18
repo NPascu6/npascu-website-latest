@@ -47,8 +47,6 @@ function getRowColorByVolume(
     const hue = isSell ? 120 : 0; // green or red
 
     // If it's a top-10 row, make it stand out more
-    // One approach: reduce brightness further (darker color) or tweak saturation.
-    // Let's just reduce brightness by 15% more for top 10 to be extra saturated/darker.
     if (isTop10) {
         brightness -= 15;
         if (brightness < 0) brightness = 0; // clamp
@@ -146,14 +144,12 @@ const OrderBook: React.FC<OrderBookProps> = ({
         >
             <div
                 onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-                className={`relative p-2 w-11/12 max-w-xl ${isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-                    }`}
+                className={`relative p-2 w-11/12 max-w-xl ${isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}
             >
                 {/* Close button */}
                 <button
                     onClick={closeOrderBookPopup}
-                    className={`absolute top-2 right-2 bg-transparent border-0 text-2xl cursor-pointer ${isDarkTheme ? "text-white" : "text-gray-900"
-                        }`}
+                    className={`absolute top-2 right-2 mr-4 bg-transparent border-0 text-2xl cursor-pointer ${isDarkTheme ? "text-white" : "text-gray-900"}`}
                 >
                     ×
                 </button>
@@ -166,8 +162,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                         <select
                             value={sortCriteria}
                             onChange={(e) => setSortCriteria(e.target.value as "price" | "volume")}
-                            className={`p-1 rounded ${isDarkTheme ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-                                }`}
+                            className={`p-1 rounded ${isDarkTheme ? "bg-gray-700 text-white" : "bg-gray-200 text-black"}`}
                         >
                             <option value="price">Price</option>
                             <option value="volume">Volume</option>
@@ -194,7 +189,8 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                     className="grid grid-cols-3 p-1 transition-all duration-300 ease-in-out"
                                     style={{
                                         backgroundColor: rowBg,
-                                        color: isDarkTheme ? "#000" : "inherit",
+                                        // Use white text for dark mode for better contrast
+                                        color: isDarkTheme ? "#fff" : "inherit",
                                         fontWeight: index < 10 ? "bold" : "normal",
                                     }}
                                 >
@@ -228,7 +224,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                     className="grid grid-cols-3 p-1 transition-all duration-300 ease-in-out"
                                     style={{
                                         backgroundColor: rowBg,
-                                        color: isDarkTheme ? "#000" : "inherit",
+                                        color: isDarkTheme ? "#fff" : "inherit",
                                         fontWeight: index < 10 ? "bold" : "normal",
                                     }}
                                 >

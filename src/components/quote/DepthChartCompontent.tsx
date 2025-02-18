@@ -40,12 +40,12 @@ interface DepthChartProps {
 }
 
 /**
- * Basic Depth Chart (approx) from trade data:
- *  - Bins trades by price (using a very fine BIN_SIZE).
- *  - Splits into buy side (price < mid) & sell side (price >= mid).
- *  - Sorts BUY side in ascending order and SELL side in descending order (for a pyramid look).
- *  - Accumulates volumes to create a stair-step line for each side.
- *  - Adds a dashed vertical line at the midPrice.
+ * Depth Chart (approx) from trade data:
+ * - Uses a very fine BIN_SIZE to bin trades.
+ * - Splits into buy side (price < mid) and sell side (price >= mid).
+ * - Ensures both sides always have at least one data point (fallback) so no side is missing.
+ * - Accumulates volumes to create a stair-step line for each side.
+ * - Adds a dashed vertical mid–price line.
  */
 const DepthChart: React.FC<DepthChartProps> = ({
     selectedSymbolForDepthChart,
@@ -57,7 +57,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     // 1) Return null if no symbol is selected
     if (!selectedSymbolForDepthChart) return null;
 
-    // 2) If no midPrice or no trades, show fallback
+    // 2) If no midPrice or no trades at all, show fallback message
     if (!midPrice || trades.length === 0) {
         return (
             <div
@@ -85,11 +85,11 @@ const DepthChart: React.FC<DepthChartProps> = ({
         );
     }
 
-    // 3) Bin trades by price with a very small bin for finer resolution
-    const BIN_SIZE = 0.001; // Even more granular bin size
+    // 3) Bin trades by price with a very fine bin for increased granularity
+    const BIN_SIZE = 0.001; // Very fine granularity
     const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
 
-    // Separate trades into buy vs. sell bins
+    // Separate into buy vs. sell bins
     const buyBins: Record<number, number> = {};
     const sellBins: Record<number, number> = {};
 
@@ -103,20 +103,30 @@ const DepthChart: React.FC<DepthChartProps> = ({
     });
 
     // Convert bins to arrays of { price, volume }
-    const buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
+    let buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
         price: parseFloat(price),
         volume: vol as number,
     }));
-    const sellPoints = Object.entries(sellBins).map(([price, vol]) => ({
+    let sellPoints = Object.entries(sellBins).map(([price, vol]) => ({
         price: parseFloat(price),
         volume: vol as number,
     }));
 
-    // 4) Sort: buys ascending (low→high) and sells descending (high→low)
+    // 4) Ensure both sides have at least one data point.
+    if (buyPoints.length === 0) {
+        // If no buys, add a fallback point just below midPrice.
+        buyPoints.push({ price: midPrice - BIN_SIZE, volume: 0 });
+    }
+    if (sellPoints.length === 0) {
+        // If no sells, add a fallback point just above midPrice.
+        sellPoints.push({ price: midPrice + BIN_SIZE, volume: 0 });
+    }
+
+    // 5) Sort: buys in ascending order (low→high), sells in descending order (high→low)
     buyPoints.sort((a, b) => a.price - b.price);
     sellPoints.sort((a, b) => b.price - a.price);
 
-    // 5) Compute cumulative volumes for each side
+    // 6) Compute cumulative volumes for each side
     const cumulativeBuys = useMemo(() => {
         let sum = 0;
         return buyPoints.map((pt) => {
@@ -133,13 +143,13 @@ const DepthChart: React.FC<DepthChartProps> = ({
         });
     }, [sellPoints]);
 
-    // Determine maximum cumulative volume for y-range reference
+    // Determine maximum cumulative volume for y-axis range
     const yMax = Math.max(
         ...cumulativeBuys.map((pt) => pt.y),
         ...cumulativeSells.map((pt) => pt.y)
     );
 
-    // 6) Build Chart.js data, including a mid-price line dataset
+    // 7) Build Chart.js data, including a dashed mid–price line
     const chartData = {
         datasets: [
             {
@@ -176,7 +186,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
         ],
     };
 
-    // 7) Chart.js options with animations disabled for stability
+    // 8) Chart.js options with animations disabled for stability
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -195,7 +205,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 },
                 ticks: {
                     color: isDarkTheme ? "#fff" : "#000",
-                    // Optional: adjust stepSize if needed:
+                    // Uncomment and adjust if needed:
                     // stepSize: BIN_SIZE * 10,
                 },
             },
@@ -227,7 +237,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
         },
     };
 
-    // 8) Render the popup & chart
+    // 9) Render the popup & chart
     return (
         <div
             onClick={closeDepthChartPopup}
