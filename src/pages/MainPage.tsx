@@ -4,7 +4,7 @@ import {AppDispatch, RootState} from "../store/store";
 import {workImages as images} from "../_constant";
 import {setWorkPhotos} from "../store/reducers/appReducer";
 import Loading from "./generic/Loading";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import AmarisIcon from "../assets/icons/AmarisIcon";
 import BoschIcon from "../assets/icons/BoschIcon";
 import CognizantIcon from "../assets/icons/CognizantIcon";
@@ -70,6 +70,7 @@ const MainPage = () => {
     const [loadedImages, setLoadedImages] = useState<string[]>([]);
     const workImages = useSelector((state: RootState) => state.app.workPhotos);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+    const location = useLocation();
 
     // Load work images once.
     useEffect(() => {
@@ -94,7 +95,7 @@ const MainPage = () => {
         <div
             className="p-2"
             id="main-page"
-            style={{height: "calc(100vh - 6rem)", overflow: "auto"}}
+            style={{height: location.pathname !== '/' ? "calc(100vh - 6rem)" : "auto", overflow: "auto"}}
         >
             <div className="flex items-center justify-center">
                 {/* Wrap each lazy component in Suspense */}
@@ -157,9 +158,9 @@ const MainPage = () => {
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<FaChartLine className="text-2xl"/>}
-                        isCollapsed={false}
-                        title="Live Quotes"
-                        subTitle="Real-time market data"
+                        isCollapsed={true}
+                        title="Demo Real-time market data"
+                        subTitle="Using my personal .net api hosted on render to get data from finnhub"
                     >
                         <Suspense fallback={<Loading/>}>
                             <QuotesComponent/>
