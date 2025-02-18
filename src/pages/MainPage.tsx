@@ -95,7 +95,7 @@ const MainPage = () => {
         <div
             className="p-2"
             id="main-page"
-            style={{height: location.pathname !== '/' ? "calc(100vh - 6rem)" : "auto", overflow: "auto"}}
+            style={{height: "calc(100vh - 6rem)", overflow: "auto"}}
         >
             <div className="flex items-center justify-center">
                 {/* Wrap each lazy component in Suspense */}
@@ -103,6 +103,19 @@ const MainPage = () => {
                     <GithubProfileCard/>
                 </Suspense>
             </div>
+            {/* NEW: Live Quotes Section */}
+            <Suspense fallback={<Loading/>}>
+                <CollapsibleSection
+                    icon={<FaChartLine className="text-2xl"/>}
+                    isCollapsed={true}
+                    title="Demo Real-time market data"
+                    subTitle="Using my personal .net api hosted on render to get data from finnhub"
+                >
+                    <Suspense fallback={<Loading/>}>
+                        <QuotesComponent/>
+                    </Suspense>
+                </CollapsibleSection>
+            </Suspense>
             {/* Interactive Sections */}
             <div className="mt-3 mb-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-center">
                 {/* Dynamic Components */}
@@ -154,19 +167,6 @@ const MainPage = () => {
                 </Link>
             </div>
             <div className="mt-1 space-y-1">
-                {/* NEW: Live Quotes Section */}
-                <Suspense fallback={<Loading/>}>
-                    <CollapsibleSection
-                        icon={<FaChartLine className="text-2xl"/>}
-                        isCollapsed={true}
-                        title="Demo Real-time market data"
-                        subTitle="Using my personal .net api hosted on render to get data from finnhub"
-                    >
-                        <Suspense fallback={<Loading/>}>
-                            <QuotesComponent/>
-                        </Suspense>
-                    </CollapsibleSection>
-                </Suspense>
 
                 {/* Education Section */}
                 <Suspense fallback={<Loading/>}>
