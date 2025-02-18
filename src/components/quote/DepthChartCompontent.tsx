@@ -41,11 +41,11 @@ interface DepthChartProps {
 
 /**
  * Basic Depth Chart (approx) from trade data:
- *  - Bins trades by price (BIN_SIZE).
+ *  - Bins trades by price (using BIN_SIZE).
  *  - Splits into buy side (price < mid) & sell side (price >= mid).
- *  - Sort BUY side ascending (lowest→highest price),
- *    but SELL side descending (highest→lowest price) for a "pyramid" look.
- *  - Accumulate volumes to create a stair-step line for each side.
+ *  - Sorts BUY side in ascending order and SELL side in descending order (for a pyramid look).
+ *  - Accumulates volumes to create a stair-step line for each side.
+ *  - Adds a dashed vertical line at the midPrice.
  */
 const DepthChart: React.FC<DepthChartProps> = ({
     selectedSymbolForDepthChart,
@@ -76,15 +76,17 @@ const DepthChart: React.FC<DepthChartProps> = ({
                     >
                         ×
                     </button>
-                    <h2 className="text-xl mb-4">Depth Chart - {selectedSymbolForDepthChart}</h2>
+                    <h2 className="text-xl mb-4">
+                        Depth Chart - {selectedSymbolForDepthChart}
+                    </h2>
                     <p>No data available to draw chart.</p>
                 </div>
             </div>
         );
     }
 
-    // 3) Bin trades by price
-    const BIN_SIZE = 0.5;
+    // 3) Bin trades by price with a smaller bin for more granularity
+    const BIN_SIZE = 0.1; // smaller bin for finer resolution
     const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
 
     // Separate into buy vs sell bins
@@ -110,12 +112,11 @@ const DepthChart: React.FC<DepthChartProps> = ({
         volume: vol as number,
     }));
 
-    // 4) Sort: buys ascending, sells descending (for "reverse" effect)
-    buyPoints.sort((a, b) => a.price - b.price);   // low→high
-    sellPoints.sort((a, b) => b.price - a.price);  // high→low
+    // 4) Sort: buys ascending (low→high) and sells descending (high→low)
+    buyPoints.sort((a, b) => a.price - b.price);
+    sellPoints.sort((a, b) => b.price - a.price);
 
     // 5) Compute cumulative volumes
-    // Buys: ascending price => accumulate from bottom up
     const cumulativeBuys = useMemo(() => {
         let sum = 0;
         return buyPoints.map((pt) => {
@@ -124,9 +125,6 @@ const DepthChart: React.FC<DepthChartProps> = ({
         });
     }, [buyPoints]);
 
-    // Sells: descending price => accumulate from top down
-    // This will yield a reversed array in terms of price,
-    // so the line is drawn from right (high price) to left (mid).
     const cumulativeSells = useMemo(() => {
         let sum = 0;
         return sellPoints.map((pt) => {
@@ -135,7 +133,13 @@ const DepthChart: React.FC<DepthChartProps> = ({
         });
     }, [sellPoints]);
 
-    // 6) Chart.js data
+    // Determine maximum cumulative volume to set the y-range for mid line
+    const yMax = Math.max(
+        ...cumulativeBuys.map((pt) => pt.y),
+        ...cumulativeSells.map((pt) => pt.y)
+    );
+
+    // 6) Build Chart.js data, including an extra dataset for the mid-price line
     const chartData = {
         datasets: [
             {
@@ -144,7 +148,8 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 borderColor: "rgba(255,0,0,1)", // red
                 backgroundColor: "rgba(255,0,0,0.2)",
                 fill: true,
-                stepped: true, // stair-step
+                stepped: true,
+                order: 1,
             },
             {
                 label: "Asks",
@@ -153,14 +158,30 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 backgroundColor: "rgba(0,255,0,0.2)",
                 fill: true,
                 stepped: true,
+                order: 1,
+            },
+            {
+                label: "Mid Price",
+                data: [
+                    { x: midPrice, y: 0 },
+                    { x: midPrice, y: yMax },
+                ],
+                borderColor: "rgba(255,255,0,1)", // yellow
+                borderWidth: 2,
+                borderDash: [6, 6],
+                fill: false,
+                pointRadius: 0,
+                order: 2,
             },
         ],
     };
 
-    // 7) Chart.js options
+    // 7) Chart.js options, with animation disabled for stability
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        animation: { duration: 0 },
+        responsiveAnimationDuration: 0,
         scales: {
             x: {
                 type: "linear" as const,
@@ -175,8 +196,6 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 ticks: {
                     color: isDarkTheme ? "#fff" : "#000",
                 },
-                // If you REALLY want the highest price on the left, uncomment this:
-                // reverse: true
             },
             y: {
                 title: {
