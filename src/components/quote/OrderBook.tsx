@@ -149,7 +149,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 {/* Close button */}
                 <button
                     onClick={closeOrderBookPopup}
-                    className={`absolute top-2 right-2 mr-4 bg-transparent border-0 text-2xl cursor-pointer ${isDarkTheme ? "text-white" : "text-gray-900"}`}
+                    className={`absolute top-2 right-2 bg-transparent border-0 text-2xl cursor-pointer ${isDarkTheme ? "text-white" : "text-gray-900"}`}
                 >
                     ×
                 </button>
@@ -162,7 +162,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                         <select
                             value={sortCriteria}
                             onChange={(e) => setSortCriteria(e.target.value as "price" | "volume")}
-                            className={`p-1 rounded ${isDarkTheme ? "bg-gray-700 text-white" : "bg-gray-200 text-black"}`}
+                            className={`p-1 mr-4 rounded ${isDarkTheme ? "bg-gray-700 text-white" : "bg-gray-200 text-black"}`}
                         >
                             <option value="price">Price</option>
                             <option value="volume">Volume</option>
