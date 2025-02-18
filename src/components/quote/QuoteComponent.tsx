@@ -93,7 +93,7 @@ const QuotesComponent: React.FC = () => {
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5252/quotesHub')
+            .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
             .withAutomaticReconnect()
             .build();
 
