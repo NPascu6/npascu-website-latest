@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
-import {Link, useLocation} from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { Link, useLocation } from 'react-router-dom';
 import CollapsableSection from "../common/CollapsableSection";
-import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import Loading from "../../pages/generic/Loading";
 import OrderBook from "./OrderBook";
+import DepthChart from "./DepthChartCompontent";
 
 // --- Interfaces ---
-// Quote events (from ReceiveQuote)
-// Quotes include property "c" for current price and timestamp in seconds.
 export interface FinnhubQuote {
     c: number;  // current price
     h: number;
@@ -20,8 +19,6 @@ export interface FinnhubQuote {
     t: number;  // timestamp in seconds
 }
 
-// Trade events (from ReceiveTrade)
-// Trades include property "p" for price, and timestamp in milliseconds.
 export interface FinnhubTrade {
     p: number;  // trade price
     s: string;  // symbol
@@ -30,19 +27,16 @@ export interface FinnhubTrade {
     c?: number | null;
 }
 
-// For instrument cards we store quote data plus an "updated" flag and direction.
 interface QuoteData {
     quote: FinnhubQuote;
     updated: boolean;
     direction?: 'up' | 'down' | 'neutral';
 }
 
-// Dictionary of quotes keyed by symbol.
 interface Quotes {
     [symbol: string]: QuoteData;
 }
 
-// OrderBooks stores an array of trades per symbol.
 interface OrderBooks {
     [symbol: string]: FinnhubTrade[];
 }
@@ -72,21 +66,22 @@ export const availableSymbols = [
 ];
 
 const formatTime = (timestamp: number): string => {
-    // If timestamp > 1e10, assume it's in ms; otherwise, seconds.
+    // If timestamp > 1e10, assume it's in ms; otherwise, it's seconds
     return new Date(timestamp > 1e10 ? timestamp : timestamp * 1000).toLocaleTimeString();
 };
 
-// --- Component ---
 const QuotesComponent: React.FC = () => {
     const [quotes, setQuotes] = useState<Quotes>({});
     const [orderBooks, setOrderBooks] = useState<OrderBooks>({});
     const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const [selectedSymbolForOrderBook, setSelectedSymbolForOrderBook] = useState<string | null>(null);
+    // NEW: For Depth Chart
+    const [selectedSymbolForDepthChart, setSelectedSymbolForDepthChart] = useState<string | null>(null);
 
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const location = useLocation();
 
-    // Set initial symbols.
+    // Initialize selected symbols
     useEffect(() => {
         setSelectedSymbols(availableSymbols);
     }, []);
@@ -101,7 +96,7 @@ const QuotesComponent: React.FC = () => {
             .then(() => console.log('Connected to quotes hub.'))
             .catch(err => console.error('Error connecting to quotes hub:', err));
 
-        // Handle ReceiveQuote events.
+        // Handle ReceiveQuote events
         connection.on('ReceiveQuote', (symbol: string, newQuote: FinnhubQuote) => {
             setQuotes(prev => {
                 const prevData = prev[symbol];
@@ -114,31 +109,31 @@ const QuotesComponent: React.FC = () => {
                     updated = true;
                 }
                 const direction = prevData?.direction || 'neutral';
-                const newData: QuoteData = {quote: newQuote, updated, direction};
+                const newData: QuoteData = { quote: newQuote, updated, direction };
                 if (updated) {
                     setTimeout(() => {
                         setQuotes(current => {
                             const data = current[symbol];
                             if (data && data.updated) {
-                                return {...current, [symbol]: {...data, updated: false}};
+                                return { ...current, [symbol]: { ...data, updated: false } };
                             }
                             return current;
                         });
                     }, blinkDuration);
                 }
-                return {...prev, [symbol]: newData};
+                return { ...prev, [symbol]: newData };
             });
         });
 
-        // Handle ReceiveTrade events.
+        // Handle ReceiveTrade events
         connection.on('ReceiveTrade', (symbol: string, newTrade: FinnhubTrade) => {
-            // Update order book: store up to 1000 trades.
+            // Update order book: store up to 1000 trades
             setOrderBooks(prev => {
                 const currentTrades = prev[symbol] || [];
                 const updatedTrades = [newTrade, ...currentTrades];
-                return {...prev, [symbol]: updatedTrades.slice(0, 1000)};
+                return { ...prev, [symbol]: updatedTrades.slice(0, 1000) };
             });
-            // Update instrument card arrow direction.
+            // Update instrument card arrow direction
             setQuotes(prev => {
                 const prevData = prev[symbol];
                 if (prevData) {
@@ -173,7 +168,11 @@ const QuotesComponent: React.FC = () => {
     };
 
     const handleSelectAll = () => {
-        setSelectedSymbols(availableSymbols.length === selectedSymbols.length ? [] : [...availableSymbols]);
+        if (selectedSymbols.length === availableSymbols.length) {
+            setSelectedSymbols([]);
+        } else {
+            setSelectedSymbols([...availableSymbols]);
+        }
     };
 
     const handleOpenOrderBook = (symbol: string) => {
@@ -184,11 +183,20 @@ const QuotesComponent: React.FC = () => {
         setSelectedSymbolForOrderBook(null);
     };
 
+    // NEW: Depth chart open/close
+    const handleOpenDepthChart = (symbol: string) => {
+        setSelectedSymbolForDepthChart(symbol);
+    };
+
+    const closeDepthChartPopup = () => {
+        setSelectedSymbolForDepthChart(null);
+    };
+
     const isLoading = Object.keys(quotes).length === 0;
 
     return (
         <div
-            className={` overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}
+            className={`overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}
         >
             {location.pathname !== "/" && (
                 <div className="flex justify-end">
@@ -204,8 +212,10 @@ const QuotesComponent: React.FC = () => {
                 <CollapsableSection title="Symbols" isCollapsed={true}>
                     <div className="grid gap-3 h-56 overflow-y-auto flex-wrap">
                         {availableSymbols.map(symbol => (
-                            <label key={symbol}
-                                   className={`flex items-center gap-2 mb-2 ${isDarkTheme ? "text-white" : "text-gray-900"}`}>
+                            <label
+                                key={symbol}
+                                className={`flex items-center gap-2 mb-2 ${isDarkTheme ? "text-white" : "text-gray-900"}`}
+                            >
                                 <input
                                     type="checkbox"
                                     checked={selectedSymbols.includes(symbol)}
@@ -218,7 +228,8 @@ const QuotesComponent: React.FC = () => {
                     </div>
                     <button
                         onClick={handleSelectAll}
-                        className={`mt-1 w-full rounded bg-${isDarkTheme ? "[#555]" : "blue-600"} py-2 text-white`}
+                        className={`mt-1 w-full rounded bg-${isDarkTheme ? "[#555]" : "blue-600"
+                            } py-2 text-white`}
                     >
                         {selectedSymbols.length === availableSymbols.length ? 'Deselect All' : 'Select All'}
                     </button>
@@ -226,70 +237,110 @@ const QuotesComponent: React.FC = () => {
             </div>
             {isLoading ? (
                 <div className="text-center py-8">
-                    <Loading/>
+                    <Loading />
                 </div>
             ) : (
                 <ul className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0">
                     {Object.entries(quotes)
                         .filter(([symbol]) => selectedSymbols.includes(symbol))
-                        .map(([symbol, data]) => (
-                            <li
-                                key={symbol}
-                                className={`relative border border-green-900 rounded p-3 transition-colors duration-300`}
-                                onClick={() => handleOpenOrderBook(symbol)}
-                            >
-                                <div
-                                    className="absolute top-1 right-1 cursor-pointer font-bold"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleCheckboxChange(symbol);
-                                    }}
+                        .map(([symbol, data]) => {
+                            const midPrice = data.quote.c;
+
+                            return (
+                                <li
+                                    key={symbol}
+                                    className={`relative border border-green-900 rounded p-3 transition-colors duration-300`}
+                                    onClick={() => handleOpenOrderBook(symbol)}
                                 >
-                                    ×
-                                </div>
-                                <strong className="text-xl">
-                                    {symbolEmojis[symbol] ? `${symbolEmojis[symbol]} ${symbol}` : symbol}
-                                </strong>
-                                <div className="mt-2 flex items-center justify-between">
-                                    <div className="flex items-center">
-                                        <span
-                                            className={`text-base font-bold ${
-                                                data.direction === 'up'
+                                    <div
+                                        className="absolute top-1 right-1 cursor-pointer font-bold"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCheckboxChange(symbol);
+                                        }}
+                                    >
+                                        ×
+                                    </div>
+                                    <strong className="text-xl">
+                                        {symbolEmojis[symbol] ? `${symbolEmojis[symbol]} ${symbol}` : symbol}
+                                    </strong>
+                                    <div className="mt-2 flex items-center justify-between">
+                                        <div className="flex items-center">
+                                            <span
+                                                className={`text-base font-bold ${data.direction === 'up'
                                                     ? "text-green-500"
                                                     : data.direction === 'down'
                                                         ? "text-red-500"
                                                         : isDarkTheme
                                                             ? "text-white"
                                                             : "text-gray-900"
-                                            }`}
-                                        >
-                                          {data.quote.c}
-                                        </span>
-                                        {data.direction === 'up' && <FaArrowUp className="ml-2" color="#00cc00"/>}
-                                        {data.direction === 'down' && <FaArrowDown className="ml-2" color="#ff3333"/>}
+                                                    }`}
+                                            >
+                                                {data.quote.c}
+                                            </span>
+                                            {data.direction === 'up' && (
+                                                <FaArrowUp className="ml-2" color="#00cc00" />
+                                            )}
+                                            {data.direction === 'down' && (
+                                                <FaArrowDown className="ml-2" color="#ff3333" />
+                                            )}
+                                        </div>
+                                        <div className="space-x-2">
+                                            <button
+                                                className="rounded bg-green-700 py-1 px-2 text-sm text-white"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleOpenOrderBook(symbol);
+                                                }}
+                                            >
+                                                Order Book
+                                            </button>
+                                            {/* NEW: Depth Chart button */}
+                                            <button
+                                                className="rounded bg-blue-700 py-1 px-2 text-sm text-white"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleOpenDepthChart(symbol);
+                                                }}
+                                            >
+                                                Depth Chart
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button
-                                        className="rounded bg-green-700 py-1 px-2 text-sm text-white"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleOpenOrderBook(symbol);
-                                        }}
-                                    >
-                                        Order Book
-                                    </button>
-                                </div>
-                                <small className="block mt-1">{formatTime(data.quote.t)}</small>
-                            </li>
-                        ))}
-                    <OrderBook
-                        selectedSymbolForOrderBook={selectedSymbolForOrderBook}
-                        isDarkTheme={isDarkTheme}
-                        closeOrderBookPopup={closeOrderBookPopup}
-                        orderBooks={orderBooks}
-                        quotes={quotes}
-                    />
+                                    <small className="block mt-1">{formatTime(data.quote.t)}</small>
+                                </li>
+                            );
+                        })}
                 </ul>
             )}
+
+            {/* Order Book Popup */}
+            <OrderBook
+                selectedSymbolForOrderBook={selectedSymbolForOrderBook}
+                isDarkTheme={isDarkTheme}
+                closeOrderBookPopup={closeOrderBookPopup}
+                orderBooks={orderBooks}
+                quotes={quotes}
+            />
+
+            {/* Depth Chart Popup */}
+            <DepthChart
+                selectedSymbolForDepthChart={selectedSymbolForDepthChart}
+                isDarkTheme={isDarkTheme}
+                closeDepthChartPopup={closeDepthChartPopup}
+                // Pass the trades for the selected symbol
+                trades={
+                    selectedSymbolForDepthChart
+                        ? orderBooks[selectedSymbolForDepthChart] || []
+                        : []
+                }
+                // Pass the midPrice from quotes
+                midPrice={
+                    selectedSymbolForDepthChart
+                        ? quotes[selectedSymbolForDepthChart]?.quote.c || 0
+                        : 0
+                }
+            />
         </div>
     );
 };
