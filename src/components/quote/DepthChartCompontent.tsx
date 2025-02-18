@@ -41,7 +41,7 @@ interface DepthChartProps {
 
 /**
  * Basic Depth Chart (approx) from trade data:
- *  - Bins trades by price (using BIN_SIZE).
+ *  - Bins trades by price (using a very fine BIN_SIZE).
  *  - Splits into buy side (price < mid) & sell side (price >= mid).
  *  - Sorts BUY side in ascending order and SELL side in descending order (for a pyramid look).
  *  - Accumulates volumes to create a stair-step line for each side.
@@ -85,11 +85,11 @@ const DepthChart: React.FC<DepthChartProps> = ({
         );
     }
 
-    // 3) Bin trades by price with a smaller bin for more granularity
-    const BIN_SIZE = 0.1; // smaller bin for finer resolution
+    // 3) Bin trades by price with a very small bin for finer resolution
+    const BIN_SIZE = 0.001; // Even more granular bin size
     const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
 
-    // Separate into buy vs sell bins
+    // Separate trades into buy vs. sell bins
     const buyBins: Record<number, number> = {};
     const sellBins: Record<number, number> = {};
 
@@ -102,7 +102,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
         }
     });
 
-    // Convert bins to arrays
+    // Convert bins to arrays of { price, volume }
     const buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
         price: parseFloat(price),
         volume: vol as number,
@@ -116,7 +116,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     buyPoints.sort((a, b) => a.price - b.price);
     sellPoints.sort((a, b) => b.price - a.price);
 
-    // 5) Compute cumulative volumes
+    // 5) Compute cumulative volumes for each side
     const cumulativeBuys = useMemo(() => {
         let sum = 0;
         return buyPoints.map((pt) => {
@@ -133,13 +133,13 @@ const DepthChart: React.FC<DepthChartProps> = ({
         });
     }, [sellPoints]);
 
-    // Determine maximum cumulative volume to set the y-range for mid line
+    // Determine maximum cumulative volume for y-range reference
     const yMax = Math.max(
         ...cumulativeBuys.map((pt) => pt.y),
         ...cumulativeSells.map((pt) => pt.y)
     );
 
-    // 6) Build Chart.js data, including an extra dataset for the mid-price line
+    // 6) Build Chart.js data, including a mid-price line dataset
     const chartData = {
         datasets: [
             {
@@ -176,7 +176,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
         ],
     };
 
-    // 7) Chart.js options, with animation disabled for stability
+    // 7) Chart.js options with animations disabled for stability
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -195,6 +195,8 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 },
                 ticks: {
                     color: isDarkTheme ? "#fff" : "#000",
+                    // Optional: adjust stepSize if needed:
+                    // stepSize: BIN_SIZE * 10,
                 },
             },
             y: {
