@@ -24,24 +24,38 @@ function throttle<T extends (...args: any[]) => void>(func: T, limit: number): T
 
 /**
  * Computes a background color based on trade volume relative to max volume.
- * For dark theme, brightness goes from 60% (low) to 20% (high).
- * For light theme, brightness goes from 80% (low) to 30% (high).
- * Sells use hue=120 (green), buys use hue=0 (red).
+ * We use a squared ratio for non-linear scaling.
+ * For dark theme: brightness from 60% (low volume) down to 20% (high).
+ * For light theme: brightness from 80% down to 30%.
+ * Sells: hue=120 (green), Buys: hue=0 (red).
+ *
+ * If `isTop10` is true, we boost the saturation or shift brightness to make it more prominent.
  */
-const getRowColorByVolume = (
+function getRowColorByVolume(
     tradeVolume: number,
     maxVolume: number,
     darkTheme: boolean,
-    isSell: boolean
-): string => {
+    isSell: boolean,
+    isTop10: boolean
+): string {
+    // Normal ratio-based brightness
     const ratio = tradeVolume / maxVolume; // 0..1
-    const adjustedRatio = Math.pow(ratio, 2); // non-linear scaling
+    const adjustedRatio = ratio * ratio; // squared
     const baseBrightness = darkTheme ? 60 : 80;
     const brightnessDelta = darkTheme ? 40 : 50;
-    const brightness = baseBrightness - adjustedRatio * brightnessDelta;
+    let brightness = baseBrightness - adjustedRatio * brightnessDelta;
     const hue = isSell ? 120 : 0; // green or red
+
+    // If it's a top-10 row, make it stand out more
+    // One approach: reduce brightness further (darker color) or tweak saturation.
+    // Let's just reduce brightness by 15% more for top 10 to be extra saturated/darker.
+    if (isTop10) {
+        brightness -= 15;
+        if (brightness < 0) brightness = 0; // clamp
+    }
+
     return `hsl(${hue}, 100%, ${brightness}%)`;
-};
+}
 
 interface OrderBookProps {
     selectedSymbolForOrderBook: string | null;
@@ -110,8 +124,8 @@ const OrderBook: React.FC<OrderBookProps> = ({
     // If "price": sells ascending, buys descending
     // If "volume": both descending by volume
     if (sortCriteria === "price") {
-        sells.sort((a, b) => a.p - b.p); // low to high (best ask at top)
-        buys.sort((a, b) => b.p - a.p);  // high to low (best bid at top)
+        sells.sort((a, b) => a.p - b.p); // best/lowest ask at top
+        buys.sort((a, b) => b.p - a.p);  // best/highest bid at top
     } else {
         // sort by volume descending
         sells.sort((a, b) => b.v - a.v);
@@ -161,19 +175,27 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     </div>
                 </div>
 
+                {/* Main content */}
                 {sells.length > 0 || buys.length > 0 ? (
                     <div ref={orderBookContainerRef} className="grid gap-2 h-[35em] overflow-y-auto">
                         {/* SELL side */}
                         {sells.map((trade, index) => {
-                            const rowBg = getRowColorByVolume(trade.v, maxVolume, isDarkTheme, true);
+                            // isTop10 if index < 10
+                            const rowBg = getRowColorByVolume(
+                                trade.v,
+                                maxVolume,
+                                isDarkTheme,
+                                true, // isSell
+                                index < 10 // top 10 highlight?
+                            );
                             return (
                                 <div
                                     key={`sell-${index}`}
                                     className="grid grid-cols-3 p-1 transition-all duration-300 ease-in-out"
-                                    // Force black text in dark mode for contrast
                                     style={{
                                         backgroundColor: rowBg,
                                         color: isDarkTheme ? "#000" : "inherit",
+                                        fontWeight: index < 10 ? "bold" : "normal",
                                     }}
                                 >
                                     <div>{trade.p.toFixed(4)}</div>
@@ -193,7 +215,13 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
                         {/* BUY side */}
                         {buys.map((trade, index) => {
-                            const rowBg = getRowColorByVolume(trade.v, maxVolume, isDarkTheme, false);
+                            const rowBg = getRowColorByVolume(
+                                trade.v,
+                                maxVolume,
+                                isDarkTheme,
+                                false, // isSell = false
+                                index < 10
+                            );
                             return (
                                 <div
                                     key={`buy-${index}`}
@@ -201,6 +229,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                     style={{
                                         backgroundColor: rowBg,
                                         color: isDarkTheme ? "#000" : "inherit",
+                                        fontWeight: index < 10 ? "bold" : "normal",
                                     }}
                                 >
                                     <div>{trade.p.toFixed(4)}</div>
