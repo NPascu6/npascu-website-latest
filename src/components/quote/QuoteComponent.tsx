@@ -49,12 +49,14 @@ interface OrderBooks {
 const blinkDuration = 500;
 
 const symbolEmojis: { [symbol: string]: string } = {
-    "BINANCE:BTCUSDT": "₿",
-    "BINANCE:ETHUSDT": "⚡",
+    "BINANCE:BTCUSDT": "🪙",
+    "BINANCE:ETHUSDT": "💎",
     "BINANCE:XRPUSDT": "🚀",
     "BINANCE:BNBUSDT": "🔵",
     "BINANCE:ADAUSDT": "🧡",
     "BINANCE:SOLUSDT": "🌞",
+    "BINANCE:DOGEUSDT": "🐕",
+    "BINANCE:DOTUSDT": "💠"
 };
 
 export const availableSymbols = [
@@ -63,7 +65,7 @@ export const availableSymbols = [
     "BINANCE:XRPUSDT",
     "BINANCE:BNBUSDT",
     "BINANCE:ADAUSDT",
-    "BINANCE:SOLUSUT", // check spelling!
+    "BINANCE:SOLUSDT",
     "BINANCE:DOGEUSDT",
     "BINANCE:DOTUSDT",
 ];
