@@ -117,7 +117,7 @@ const MainPage = () => {
                 </CollapsibleSection>
             </Suspense>
             {/* Interactive Sections */}
-            <div className="mt-3 mb-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-center">
+            <div className="mb-1 mt-1 grid grid-cols-1 md:grid-cols-2 gap-2 text-center">
                 {/* Dynamic Components */}
                 <Link
                     to="/dynamic-components"
