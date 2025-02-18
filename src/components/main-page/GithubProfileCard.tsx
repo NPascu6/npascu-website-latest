@@ -6,7 +6,6 @@ import Email from "../../assets/icons/Email";
 import Phone from "../../assets/icons/Phone";
 
 const GithubProfileCard = () => {
-    const {githubProfile} = useSelector((state: RootState) => state.app);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
     // Define dynamic colors based on the theme
@@ -36,7 +35,7 @@ const GithubProfileCard = () => {
 
                 {/* Profile Details */}
                 <h2 className={`mt-2 text-2xl font-bold ${textColor}`}>
-                    {githubProfile?.name || "Your Name"}
+                    {"Norbert Pascu"}
                 </h2>
                 <p className={`mt-1 text-sm ${secondaryTextColor}`}>
                     Zurich, Switzerland

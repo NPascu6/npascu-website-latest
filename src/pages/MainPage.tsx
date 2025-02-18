@@ -1,7 +1,6 @@
 import React, {lazy, Suspense, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../store/store";
-import {fetchGithubUserProfile} from "../store/thunks/appThunk";
 import {workImages as images} from "../_constant";
 import {setWorkPhotos} from "../store/reducers/appReducer";
 import Loading from "./generic/Loading";
@@ -91,11 +90,6 @@ const MainPage = () => {
         };
     }, [dispatch, loadedImages]);
 
-    // Fetch Github user profile on mount.
-    useEffect(() => {
-        dispatch(fetchGithubUserProfile());
-    }, [dispatch]);
-
     return (
         <div
             className="p-2"
@@ -159,6 +153,20 @@ const MainPage = () => {
                 </Link>
             </div>
             <div className="mt-1 space-y-1">
+                {/* NEW: Live Quotes Section */}
+                <Suspense fallback={<Loading/>}>
+                    <CollapsibleSection
+                        icon={<FaChartLine className="text-2xl"/>}
+                        isCollapsed={false}
+                        title="Live Quotes"
+                        subTitle="Real-time market data"
+                    >
+                        <Suspense fallback={<Loading/>}>
+                            <QuotesComponent/>
+                        </Suspense>
+                    </CollapsibleSection>
+                </Suspense>
+
                 {/* Education Section */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
@@ -305,19 +313,7 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
-                {/* NEW: Live Quotes Section */}
-                <Suspense fallback={<Loading/>}>
-                    <CollapsibleSection
-                        icon={<FaChartLine className="text-2xl"/>}
-                        isCollapsed={false}
-                        title="Live Quotes"
-                        subTitle="Real-time market data"
-                    >
-                        <Suspense fallback={<Loading/>}>
-                            <QuotesComponent/>
-                        </Suspense>
-                    </CollapsibleSection>
-                </Suspense>
+
             </div>
         </div>
     );
