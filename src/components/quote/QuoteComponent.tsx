@@ -89,6 +89,15 @@ const QuotesComponent: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        // Helper function: Applies a random percentage change
+        function applyRandomPercentage(value: number): number {
+            // Random percentage between -1% and +1%
+            const randomFactor = (Math.random() - 0.5) * 0.02; // -0.01 to 0.01
+            const newValue = value * (1 + randomFactor);
+            // Ensure there's always a change (if randomFactor is extremely close to 0, force a minimal difference)
+            return newValue === value ? value * 1.0001 : newValue;
+        }
+
         const connection = new signalR.HubConnectionBuilder()
             .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
             .withAutomaticReconnect()
@@ -100,18 +109,26 @@ const QuotesComponent: React.FC = () => {
 
         // Handle ReceiveQuote events
         connection.on('ReceiveQuote', (symbol: string, newQuote: FinnhubQuote) => {
+            // Randomize the current and timestamp values if desired
+            // For example, if newQuote.c is a price, you can randomize it:
+            const randomizedQuote = {
+                ...newQuote,
+                c: applyRandomPercentage(newQuote.c),
+                t: applyRandomPercentage(newQuote.t) // If t is a numeric field that can be randomized
+            };
+
             setQuotes(prev => {
                 const prevData = prev[symbol];
                 let updated = false;
                 if (prevData) {
-                    if (prevData.quote.c !== newQuote.c || prevData.quote.t !== newQuote.t) {
+                    if (prevData.quote.c !== randomizedQuote.c || prevData.quote.t !== randomizedQuote.t) {
                         updated = true;
                     }
                 } else {
                     updated = true;
                 }
                 const direction = prevData?.direction || 'neutral';
-                const newData: QuoteData = { quote: newQuote, updated, direction };
+                const newData: QuoteData = { quote: randomizedQuote, updated, direction };
                 if (updated) {
                     setTimeout(() => {
                         setQuotes(current => {
@@ -129,20 +146,26 @@ const QuotesComponent: React.FC = () => {
 
         // Handle ReceiveTrade events
         connection.on('ReceiveTrade', (symbol: string, newTrade: FinnhubTrade) => {
+            // Apply a random percentage change to the trade price before updating the order book
+            const randomizedTrade = {
+                ...newTrade,
+                p: applyRandomPercentage(newTrade.p)
+            };
+
             // Update order book: store up to 1000 trades
             setOrderBooks(prev => {
                 const currentTrades = prev[symbol] || [];
-                const updatedTrades = [newTrade, ...currentTrades];
+                const updatedTrades = [randomizedTrade, ...currentTrades];
                 return { ...prev, [symbol]: updatedTrades.slice(0, 1000) };
             });
-            // Update instrument card arrow direction
+            // Update instrument card arrow direction based on the randomized price
             setQuotes(prev => {
                 const prevData = prev[symbol];
                 if (prevData) {
                     let direction: 'up' | 'down' | 'neutral' = 'neutral';
-                    if (newTrade.p > prevData.quote.c) {
+                    if (randomizedTrade.p > prevData.quote.c) {
                         direction = 'up';
-                    } else if (newTrade.p < prevData.quote.c) {
+                    } else if (randomizedTrade.p < prevData.quote.c) {
                         direction = 'down';
                     }
                     return {
@@ -162,6 +185,7 @@ const QuotesComponent: React.FC = () => {
             connection.stop().catch(err => console.error('Error stopping connection:', err));
         };
     }, []);
+
 
     const handleCheckboxChange = (symbol: string) => {
         setSelectedSymbols(prev =>
