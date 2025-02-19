@@ -1,10 +1,10 @@
-import React, {lazy, Suspense, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../store/store";
-import {workImages as images} from "../_constant";
-import {setWorkPhotos} from "../store/reducers/appReducer";
+import React, { lazy, Suspense, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { workImages as images } from "../_constant";
+import { setWorkPhotos } from "../store/reducers/appReducer";
 import Loading from "./generic/Loading";
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AmarisIcon from "../assets/icons/AmarisIcon";
 import BoschIcon from "../assets/icons/BoschIcon";
 import CognizantIcon from "../assets/icons/CognizantIcon";
@@ -14,7 +14,7 @@ import GitHub from "../assets/icons/Github";
 import EducationIcon from "../assets/icons/EducationIcon";
 import TopmotiveIcon from "../assets/icons/TopmotiveIcon";
 import NewVTech from "../assets/icons/NewVTech";
-import {FaChartLine} from "react-icons/fa";
+import { FaChartLine } from "react-icons/fa";
 
 // --- Lazy Imports ---
 const EducationCard = lazy(() => import("../components/main-page/EducationAndTraining"));
@@ -71,7 +71,7 @@ const MainPage = () => {
     const workImages = useSelector((state: RootState) => state.app.workPhotos);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const location = useLocation();
-
+    const FaChartLineIcon: any = FaChartLine
     // Load work images once.
     useEffect(() => {
         if (loadedImages.length > 0) return;
@@ -95,24 +95,24 @@ const MainPage = () => {
         <div
             className="p-2"
             id="main-page"
-            style={{height: "calc(100vh - 6rem)", overflow: "auto"}}
+            style={{ height: "calc(100vh - 6rem)", overflow: "auto" }}
         >
             <div className="flex items-center justify-center">
                 {/* Wrap each lazy component in Suspense */}
-                <Suspense fallback={<Loading/>}>
-                    <GithubProfileCard/>
+                <Suspense fallback={<Loading />}>
+                    <GithubProfileCard />
                 </Suspense>
             </div>
             {/* NEW: Live Quotes Section */}
-            <Suspense fallback={<Loading/>}>
+            <Suspense fallback={<Loading />}>
                 <CollapsibleSection
-                    icon={<FaChartLine className="text-2xl"/>}
+                    icon={<FaChartLineIcon className="text-2xl" />}
                     isCollapsed={true}
                     title="Demo Real-time market data"
                     subTitle="Using my personal .net api hosted on render to get data from finnhub"
                 >
-                    <Suspense fallback={<Loading/>}>
-                        <QuotesComponent/>
+                    <Suspense fallback={<Loading />}>
+                        <QuotesComponent />
                     </Suspense>
                 </CollapsibleSection>
             </Suspense>
@@ -169,147 +169,147 @@ const MainPage = () => {
             <div className="mt-1 space-y-1">
 
                 {/* Education Section */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<EducationIcon/>}
+                        icon={<EducationIcon />}
                         isCollapsed={true}
                         title="Education"
                         subTitle="Diploma, courses and specialization"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <EducationCard/>
+                        <Suspense fallback={<Loading />}>
+                            <EducationCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Github Repos Section */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<GitHub width={32} height={32}/>}
+                        icon={<GitHub width={32} height={32} />}
                         isCollapsed={true}
                         title="Highlighted Github Repos"
                         subTitle="Github"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <HighlightedRepos/>
+                        <Suspense fallback={<Loading />}>
+                            <HighlightedRepos />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Fintama Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<FintamaIcon/>}
+                        icon={<FintamaIcon />}
                         isCollapsed={true}
                         title="Current employment (Fintama)"
                         subTitle="02/2023 - current"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <FintamaCard/>
+                        <Suspense fallback={<Loading />}>
+                            <FintamaCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Covario Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<CovarioIcon/>}
+                        icon={<CovarioIcon />}
                         isCollapsed={true}
                         title="TL / Senior Developer (Covario)"
                         subTitle="03/2021 - 01/2023"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <CovarioCard/>
+                        <Suspense fallback={<Loading />}>
+                            <CovarioCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Amaris Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<AmarisIcon height={70} width={44}/>}
+                        icon={<AmarisIcon height={70} width={44} />}
                         isCollapsed={true}
                         title="IT Consultant (Amaris)"
                         subTitle="04/2020 - 03/2021"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <AmarisCard/>
+                        <Suspense fallback={<Loading />}>
+                            <AmarisCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Cognizant Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<CognizantIcon/>}
+                        icon={<CognizantIcon />}
                         isCollapsed={true}
                         title="Mobile / BE Developer (Cognizant)"
                         subTitle="06/2019 - 04/2020"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <CognizantCard/>
+                        <Suspense fallback={<Loading />}>
+                            <CognizantCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Bosch Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<BoschIcon/>}
+                        icon={<BoschIcon />}
                         isCollapsed={true}
                         title="Software Development Engineer (BOSCH)"
                         subTitle="07/2018 - 06/2019"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <BoschCard/>
+                        <Suspense fallback={<Loading />}>
+                            <BoschCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* DVSE / Topmotive Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<TopmotiveIcon/>}
+                        icon={<TopmotiveIcon />}
                         isCollapsed={true}
                         title="First Developer Job (TOPMOTIVE)"
                         subTitle="06/2016 - 07/2018"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <DVSECard/>
+                        <Suspense fallback={<Loading />}>
+                            <DVSECard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* IT Support Employment */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection
-                        icon={<NewVTech/>}
+                        icon={<NewVTech />}
                         isCollapsed={true}
                         title="Support Technician (NewV Technologies)"
                         subTitle="06/2015 - 06/2016"
                     >
-                        <Suspense fallback={<Loading/>}>
-                            <ItSupportTechnicianCard/>
+                        <Suspense fallback={<Loading />}>
+                            <ItSupportTechnicianCard />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Sample Screens */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection title="Sample screens from previous work.">
                         {!!workImages?.length && (
-                            <Suspense fallback={<Loading/>}>
-                                <ImageSlider images={workImages}/>
+                            <Suspense fallback={<Loading />}>
+                                <ImageSlider images={workImages} />
                             </Suspense>
                         )}
                     </CollapsibleSection>
                 </Suspense>
 
                 {/* Trading App Section */}
-                <Suspense fallback={<Loading/>}>
+                <Suspense fallback={<Loading />}>
                     <CollapsibleSection title="Trading App (Crypto trading platform)">
-                        <Suspense fallback={<Loading/>}>
-                            <YoutubeVideoLink/>
+                        <Suspense fallback={<Loading />}>
+                            <YoutubeVideoLink />
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>

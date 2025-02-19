@@ -80,6 +80,8 @@ const QuotesComponent: React.FC = () => {
 
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const location = useLocation();
+    const FaArrowDownIcon: any = FaArrowDown
+    const FaArrowUpIcon: any = FaArrowUp
 
     // Initialize selected symbols
     useEffect(() => {
@@ -279,10 +281,10 @@ const QuotesComponent: React.FC = () => {
                                                 {data.quote.c}
                                             </span>
                                             {data.direction === 'up' && (
-                                                <FaArrowUp className="ml-2" color="#00cc00" />
+                                                <FaArrowUpIcon className="ml-2" color="#00cc00" />
                                             )}
                                             {data.direction === 'down' && (
-                                                <FaArrowDown className="ml-2" color="#ff3333" />
+                                                <FaArrowDownIcon className="ml-2" color="#ff3333" />
                                             )}
                                         </div>
                                         <div className="space-x-2">
