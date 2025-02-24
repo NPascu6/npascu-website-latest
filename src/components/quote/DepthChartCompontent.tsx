@@ -47,7 +47,7 @@ interface DepthChartProps {
  * - Computes cumulative volumes in a directional order:
  *     - Bids: sorted descending (from best bid downwards)
  *     - Asks: sorted ascending (from best ask upwards)
- * - Uses a tension value for a smooth curve representation.
+ * - Uses gradient fills with a tension value for a smooth curve representation.
  * - Adds a dashed vertical mid–price line.
  */
 const DepthChart: React.FC<DepthChartProps> = ({
@@ -160,14 +160,27 @@ const DepthChart: React.FC<DepthChartProps> = ({
     );
 
     // 7) Build Chart.js data, including a dashed mid–price line.
-    // Note: Using tension for a smooth curve representation.
+    // Gradient fill functions adjust the background so that the bottom part is a bit darker.
     const chartData = {
         datasets: [
             {
                 label: "Bids",
                 data: cumulativeBuys,
                 borderColor: "rgba(255,0,0,1)", // red
-                backgroundColor: "rgba(255,0,0,0.2)",
+                backgroundColor: (context: any) => {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+                    if (!chartArea) return "rgba(255,0,0,0.2)";
+                    const gradient = ctx.createLinearGradient(
+                        0,
+                        chartArea.top,
+                        0,
+                        chartArea.bottom
+                    );
+                    gradient.addColorStop(0, "rgba(255,0,0,0.2)");
+                    gradient.addColorStop(1, "rgba(255,0,0,0.4)"); // darker at the bottom
+                    return gradient;
+                },
                 fill: true,
                 tension: 0.4, // smooth curve
                 order: 1,
@@ -176,7 +189,20 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 label: "Asks",
                 data: cumulativeSells,
                 borderColor: "rgba(0,255,0,1)", // green
-                backgroundColor: "rgba(0,255,0,0.2)",
+                backgroundColor: (context: any) => {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+                    if (!chartArea) return "rgba(0,255,0,0.2)";
+                    const gradient = ctx.createLinearGradient(
+                        0,
+                        chartArea.top,
+                        0,
+                        chartArea.bottom
+                    );
+                    gradient.addColorStop(0, "rgba(0,255,0,0.2)");
+                    gradient.addColorStop(1, "rgba(0,255,0,0.4)"); // darker at the bottom
+                    return gradient;
+                },
                 fill: true,
                 tension: 0.4, // smooth curve
                 order: 1,
