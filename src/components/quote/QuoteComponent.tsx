@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import * as signalR from '@microsoft/signalr';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { Link, useLocation } from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
+import {Link, useLocation} from 'react-router-dom';
 import CollapsableSection from "../common/CollapsableSection";
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 import Loading from "../../pages/generic/Loading";
 import OrderBook from "./OrderBook";
 import DepthChart from "./DepthChartCompontent";
@@ -96,6 +96,7 @@ const QuotesComponent: React.FC = () => {
             const newValue = value * (1 + randomFactor);
             // Ensure there's always a change (if randomFactor is extremely close to 0, force a minimal difference)
             return newValue === value ? value * 1.0001 : newValue;
+
         }
 
         const connection = new signalR.HubConnectionBuilder()
@@ -128,19 +129,19 @@ const QuotesComponent: React.FC = () => {
                     updated = true;
                 }
                 const direction = prevData?.direction || 'neutral';
-                const newData: QuoteData = { quote: randomizedQuote, updated, direction };
+                const newData: QuoteData = {quote: randomizedQuote, updated, direction};
                 if (updated) {
                     setTimeout(() => {
                         setQuotes(current => {
                             const data = current[symbol];
                             if (data && data.updated) {
-                                return { ...current, [symbol]: { ...data, updated: false } };
+                                return {...current, [symbol]: {...data, updated: false}};
                             }
                             return current;
                         });
                     }, blinkDuration);
                 }
-                return { ...prev, [symbol]: newData };
+                return {...prev, [symbol]: newData};
             });
         });
 
@@ -156,7 +157,7 @@ const QuotesComponent: React.FC = () => {
             setOrderBooks(prev => {
                 const currentTrades = prev[symbol] || [];
                 const updatedTrades = [randomizedTrade, ...currentTrades];
-                return { ...prev, [symbol]: updatedTrades.slice(0, 1000) };
+                return {...prev, [symbol]: updatedTrades.slice(0, 1000)};
             });
             // Update instrument card arrow direction based on the randomized price
             setQuotes(prev => {
@@ -255,7 +256,7 @@ const QuotesComponent: React.FC = () => {
                     <button
                         onClick={handleSelectAll}
                         className={`mt-1 w-full rounded bg-${isDarkTheme ? "[#555]" : "blue-600"
-                            } py-2 text-white`}
+                        } py-2 text-white`}
                     >
                         {selectedSymbols.length === availableSymbols.length ? 'Deselect All' : 'Select All'}
                     </button>
@@ -263,7 +264,7 @@ const QuotesComponent: React.FC = () => {
             </div>
             {isLoading ? (
                 <div className="text-center py-8">
-                    <Loading />
+                    <Loading/>
                 </div>
             ) : (
                 <ul className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0">
@@ -300,18 +301,18 @@ const QuotesComponent: React.FC = () => {
                                                         : isDarkTheme
                                                             ? "text-white"
                                                             : "text-gray-900"
-                                                    }`}
+                                                }`}
                                             >
-                                                {data.quote.c}
+                                                {data.quote.c.toFixed(2)}
                                             </span>
                                             {data.direction === 'up' && (
-                                                <FaArrowUpIcon className="ml-2" color="#00cc00" />
+                                                <FaArrowUpIcon className="ml-2" color="#00cc00"/>
                                             )}
                                             {data.direction === 'down' && (
-                                                <FaArrowDownIcon className="ml-2" color="#ff3333" />
+                                                <FaArrowDownIcon className="ml-2" color="#ff3333"/>
                                             )}
                                         </div>
-                                        <div className="space-x-2">
+                                        <div className="space-x-2 space-y-2">
                                             <button
                                                 className="rounded bg-green-700 py-1 px-2 text-sm text-white"
                                                 onClick={(e) => {
