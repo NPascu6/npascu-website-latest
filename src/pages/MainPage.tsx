@@ -219,7 +219,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<FintamaIcon/>}
                         isCollapsed={true}
-                        title="Current employment (Fintama)"
+                        title="Senior Software Engineer (Fintama)"
                         subTitle="02/2023 - 10/2024"
                     >
                         <Suspense fallback={<Loading/>}>
