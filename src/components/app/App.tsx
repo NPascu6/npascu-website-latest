@@ -4,6 +4,7 @@ import {setTheme} from "../../store/reducers/appReducer";
 import {RootState} from "../../store/store";
 import {useSwipeable} from "react-swipeable";
 import Loading from "../../pages/generic/Loading";
+import {useLocation} from "react-router-dom";
 
 // Lazy load components
 const TopBar = lazy(() => import("./TopBar"));
@@ -17,12 +18,14 @@ const App: React.FC = () => {
     const dispatch = useDispatch();
     const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+    const location = useLocation();
     const closeSidebar = useCallback(() => {
         setIsDrawerOpen(false);
     }, []);
 
     const openSidebar = useCallback(() => {
+
+        if (location.pathname.includes('snake')) return
         setIsDrawerOpen(true);
     }, []);
 

@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import * as signalR from '@microsoft/signalr';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
-import {Link, useLocation} from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { Link, useLocation } from 'react-router-dom';
 import CollapsableSection from "../common/CollapsableSection";
-import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import Loading from "../../pages/generic/Loading";
 import OrderBook from "./OrderBook";
 import DepthChart from "./DepthChartCompontent";
@@ -25,6 +25,7 @@ export interface FinnhubTrade {
     t: number;  // timestamp in milliseconds
     v: number;  // volume
     c?: number | null;
+    side?: 'buy' | 'sell';  // added side
 }
 
 interface QuoteData {
@@ -65,38 +66,31 @@ export const availableSymbols = [
     "BINANCE:AVAXUSDT"
 ];
 
-const formatTime = (timestamp: number): string => {
-    // If timestamp > 1e10, assume it's in ms; otherwise, it's seconds
-    return new Date(timestamp > 1e10 ? timestamp : timestamp * 1000).toLocaleTimeString();
-};
+const formatTime = (timestamp: number): string =>
+    new Date(timestamp > 1e10 ? timestamp : timestamp * 1000).toLocaleTimeString();
 
 const QuotesComponent: React.FC = () => {
     const [quotes, setQuotes] = useState<Quotes>({});
     const [orderBooks, setOrderBooks] = useState<OrderBooks>({});
     const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const [selectedSymbolForOrderBook, setSelectedSymbolForOrderBook] = useState<string | null>(null);
-    // NEW: For Depth Chart
     const [selectedSymbolForDepthChart, setSelectedSymbolForDepthChart] = useState<string | null>(null);
+    const [lastTradeSide, setLastTradeSide] = useState<{ [symbol: string]: 'buy' | 'sell' }>({});
 
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const location = useLocation();
-    const FaArrowDownIcon: any = FaArrowDown
-    const FaArrowUpIcon: any = FaArrowUp
+    const FaArrowDownIcon: any = FaArrowDown;
+    const FaArrowUpIcon: any = FaArrowUp;
 
-    // Initialize selected symbols
     useEffect(() => {
         setSelectedSymbols(availableSymbols);
     }, []);
 
     useEffect(() => {
-        // Helper function: Applies a random percentage change
         function applyRandomPercentage(value: number): number {
-            // Random percentage between -1% and +1%
-            const randomFactor = (Math.random() - 0.5) * 0.02; // -0.01 to 0.01
+            const randomFactor = (Math.random() - 0.5) * 0.02;
             const newValue = value * (1 + randomFactor);
-            // Ensure there's always a change (if randomFactor is extremely close to 0, force a minimal difference)
             return newValue === value ? value * 1.0001 : newValue;
-
         }
 
         const connection = new signalR.HubConnectionBuilder()
@@ -108,14 +102,12 @@ const QuotesComponent: React.FC = () => {
             .then(() => console.log('Connected to quotes hub.'))
             .catch(err => console.error('Error connecting to quotes hub:', err));
 
-        // Handle ReceiveQuote events
+        // Handle ReceiveQuote
         connection.on('ReceiveQuote', (symbol: string, newQuote: FinnhubQuote) => {
-            // Randomize the current and timestamp values if desired
-            // For example, if newQuote.c is a price, you can randomize it:
             const randomizedQuote = {
                 ...newQuote,
                 c: applyRandomPercentage(newQuote.c),
-                t: applyRandomPercentage(newQuote.t) // If t is a numeric field that can be randomized
+                t: applyRandomPercentage(newQuote.t)
             };
 
             setQuotes(prev => {
@@ -129,37 +121,41 @@ const QuotesComponent: React.FC = () => {
                     updated = true;
                 }
                 const direction = prevData?.direction || 'neutral';
-                const newData: QuoteData = {quote: randomizedQuote, updated, direction};
+                const newData: QuoteData = { quote: randomizedQuote, updated, direction };
                 if (updated) {
                     setTimeout(() => {
                         setQuotes(current => {
                             const data = current[symbol];
                             if (data && data.updated) {
-                                return {...current, [symbol]: {...data, updated: false}};
+                                return { ...current, [symbol]: { ...data, updated: false } };
                             }
                             return current;
                         });
                     }, blinkDuration);
                 }
-                return {...prev, [symbol]: newData};
+                return { ...prev, [symbol]: newData };
             });
         });
 
-        // Handle ReceiveTrade events
+        // Handle ReceiveTrade (Balanced Buys/Sells)
         connection.on('ReceiveTrade', (symbol: string, newTrade: FinnhubTrade) => {
-            // Apply a random percentage change to the trade price before updating the order book
-            const randomizedTrade = {
+            const randomizedTrade: FinnhubTrade = {
                 ...newTrade,
                 p: applyRandomPercentage(newTrade.p)
             };
 
-            // Update order book: store up to 1000 trades
+            const previousSide = lastTradeSide[symbol] || 'sell';
+            const nextSide = previousSide === 'buy' ? 'sell' : 'buy';
+            randomizedTrade.side = nextSide;
+
+            setLastTradeSide(prev => ({ ...prev, [symbol]: nextSide }));
+
             setOrderBooks(prev => {
                 const currentTrades = prev[symbol] || [];
                 const updatedTrades = [randomizedTrade, ...currentTrades];
-                return {...prev, [symbol]: updatedTrades.slice(0, 1000)};
+                return { ...prev, [symbol]: updatedTrades.slice(0, 1000) };
             });
-            // Update instrument card arrow direction based on the randomized price
+
             setQuotes(prev => {
                 const prevData = prev[symbol];
                 if (prevData) {
@@ -185,8 +181,7 @@ const QuotesComponent: React.FC = () => {
         return () => {
             connection.stop().catch(err => console.error('Error stopping connection:', err));
         };
-    }, []);
-
+    }, [lastTradeSide]);
 
     const handleCheckboxChange = (symbol: string) => {
         setSelectedSymbols(prev =>
@@ -210,7 +205,6 @@ const QuotesComponent: React.FC = () => {
         setSelectedSymbolForOrderBook(null);
     };
 
-    // NEW: Depth chart open/close
     const handleOpenDepthChart = (symbol: string) => {
         setSelectedSymbolForDepthChart(symbol);
     };
@@ -255,8 +249,7 @@ const QuotesComponent: React.FC = () => {
                     </div>
                     <button
                         onClick={handleSelectAll}
-                        className={`mt-1 w-full rounded bg-${isDarkTheme ? "[#555]" : "blue-600"
-                        } py-2 text-white`}
+                        className={`mt-1 w-full rounded bg-${isDarkTheme ? "[#555]" : "blue-600"} py-2 text-white`}
                     >
                         {selectedSymbols.length === availableSymbols.length ? 'Deselect All' : 'Select All'}
                     </button>
@@ -264,84 +257,78 @@ const QuotesComponent: React.FC = () => {
             </div>
             {isLoading ? (
                 <div className="text-center py-8">
-                    <Loading/>
+                    <Loading />
                 </div>
             ) : (
                 <ul className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0">
                     {Object.entries(quotes)
                         .filter(([symbol]) => selectedSymbols.includes(symbol))
-                        .map(([symbol, data]) => {
-                            const midPrice = data.quote.c;
-
-                            return (
-                                <li
-                                    key={symbol}
-                                    className={`relative border border-green-900 rounded p-3 transition-colors duration-300`}
-                                    onClick={() => handleOpenOrderBook(symbol)}
+                        .map(([symbol, data]) => (
+                            <li
+                                key={symbol}
+                                className={`relative border border-green-900 rounded p-3 transition-colors duration-300`}
+                                onClick={() => handleOpenOrderBook(symbol)}
+                            >
+                                <div
+                                    className="absolute top-1 right-1 cursor-pointer font-bold"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleCheckboxChange(symbol);
+                                    }}
                                 >
-                                    <div
-                                        className="absolute top-1 right-1 cursor-pointer font-bold"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleCheckboxChange(symbol);
-                                        }}
-                                    >
-                                        ×
+                                    ×
+                                </div>
+                                <strong className="text-xl">
+                                    {symbolEmojis[symbol] ? `${symbolEmojis[symbol]} ${symbol}` : symbol}
+                                </strong>
+                                <div className="mt-2 flex items-center justify-between">
+                                    <div className="flex items-center">
+                                        <span
+                                            className={`text-base font-bold ${data.direction === 'up'
+                                                ? "text-green-500"
+                                                : data.direction === 'down'
+                                                    ? "text-red-500"
+                                                    : isDarkTheme
+                                                        ? "text-white"
+                                                        : "text-gray-900"
+                                            }`}
+                                        >
+                                            {data.quote.c.toFixed(2)}
+                                        </span>
+                                        {data.direction === 'up' && (
+                                            <FaArrowUpIcon className="ml-2" color="#00cc00" />
+                                        )}
+                                        {data.direction === 'down' && (
+                                            <FaArrowDownIcon className="ml-2" color="#ff3333" />
+                                        )}
                                     </div>
-                                    <strong className="text-xl">
-                                        {symbolEmojis[symbol] ? `${symbolEmojis[symbol]} ${symbol}` : symbol}
-                                    </strong>
-                                    <div className="mt-2 flex items-center justify-between">
-                                        <div className="flex items-center">
-                                            <span
-                                                className={`text-base font-bold ${data.direction === 'up'
-                                                    ? "text-green-500"
-                                                    : data.direction === 'down'
-                                                        ? "text-red-500"
-                                                        : isDarkTheme
-                                                            ? "text-white"
-                                                            : "text-gray-900"
-                                                }`}
-                                            >
-                                                {data.quote.c.toFixed(2)}
-                                            </span>
-                                            {data.direction === 'up' && (
-                                                <FaArrowUpIcon className="ml-2" color="#00cc00"/>
-                                            )}
-                                            {data.direction === 'down' && (
-                                                <FaArrowDownIcon className="ml-2" color="#ff3333"/>
-                                            )}
-                                        </div>
-                                        <div className="space-x-2 space-y-2">
-                                            <button
-                                                className="rounded bg-green-700 py-1 px-2 text-sm text-white"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleOpenOrderBook(symbol);
-                                                }}
-                                            >
-                                                Order Book
-                                            </button>
-                                            {/* NEW: Depth Chart button */}
-                                            <button
-                                                className="rounded bg-blue-700 py-1 px-2 text-sm text-white"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleOpenDepthChart(symbol);
-                                                }}
-                                            >
-                                                Depth Chart
-                                            </button>
-                                        </div>
+                                    <div className="space-x-2 space-y-2">
+                                        <button
+                                            className="rounded bg-green-700 py-1 px-2 text-sm text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleOpenOrderBook(symbol);
+                                            }}
+                                        >
+                                            Order Book
+                                        </button>
+                                        <button
+                                            className="rounded bg-blue-700 py-1 px-2 text-sm text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleOpenDepthChart(symbol);
+                                            }}
+                                        >
+                                            Depth Chart
+                                        </button>
                                     </div>
-                                    <small className="block mt-1">{formatTime(data.quote.t)}</small>
-                                </li>
-                            );
-                        })}
+                                </div>
+                                <small className="block mt-1">{formatTime(data.quote.t)}</small>
+                            </li>
+                        ))}
                 </ul>
             )}
 
-            {/* Order Book Popup */}
             <OrderBook
                 selectedSymbolForOrderBook={selectedSymbolForOrderBook}
                 isDarkTheme={isDarkTheme}
@@ -350,18 +337,15 @@ const QuotesComponent: React.FC = () => {
                 quotes={quotes}
             />
 
-            {/* Depth Chart Popup */}
             <DepthChart
                 selectedSymbolForDepthChart={selectedSymbolForDepthChart}
                 isDarkTheme={isDarkTheme}
                 closeDepthChartPopup={closeDepthChartPopup}
-                // Pass the trades for the selected symbol
                 trades={
                     selectedSymbolForDepthChart
                         ? orderBooks[selectedSymbolForDepthChart] || []
                         : []
                 }
-                // Pass the midPrice from quotes
                 midPrice={
                     selectedSymbolForDepthChart
                         ? quotes[selectedSymbolForDepthChart]?.quote.c || 0
