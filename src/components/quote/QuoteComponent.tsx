@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import * as signalR from '@microsoft/signalr';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { Link, useLocation } from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
+import {Link, useLocation} from 'react-router-dom';
 import CollapsableSection from "../common/CollapsableSection";
-import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
 import Loading from "../../pages/generic/Loading";
 import OrderBook from "./OrderBook";
 import DepthChart from "./DepthChartCompontent";
@@ -121,19 +121,19 @@ const QuotesComponent: React.FC = () => {
                     updated = true;
                 }
                 const direction = prevData?.direction || 'neutral';
-                const newData: QuoteData = { quote: randomizedQuote, updated, direction };
+                const newData: QuoteData = {quote: randomizedQuote, updated, direction};
                 if (updated) {
                     setTimeout(() => {
                         setQuotes(current => {
                             const data = current[symbol];
                             if (data && data.updated) {
-                                return { ...current, [symbol]: { ...data, updated: false } };
+                                return {...current, [symbol]: {...data, updated: false}};
                             }
                             return current;
                         });
                     }, blinkDuration);
                 }
-                return { ...prev, [symbol]: newData };
+                return {...prev, [symbol]: newData};
             });
         });
 
@@ -148,12 +148,12 @@ const QuotesComponent: React.FC = () => {
             const nextSide = previousSide === 'buy' ? 'sell' : 'buy';
             randomizedTrade.side = nextSide;
 
-            setLastTradeSide(prev => ({ ...prev, [symbol]: nextSide }));
+            setLastTradeSide(prev => ({...prev, [symbol]: nextSide}));
 
             setOrderBooks(prev => {
                 const currentTrades = prev[symbol] || [];
                 const updatedTrades = [randomizedTrade, ...currentTrades];
-                return { ...prev, [symbol]: updatedTrades.slice(0, 1000) };
+                return {...prev, [symbol]: updatedTrades.slice(0, 1000)};
             });
 
             setQuotes(prev => {
@@ -181,7 +181,7 @@ const QuotesComponent: React.FC = () => {
         return () => {
             connection.stop().catch(err => console.error('Error stopping connection:', err));
         };
-    }, [lastTradeSide]);
+    }, []); // Dependency array updated to avoid repeated reconnections
 
     const handleCheckboxChange = (symbol: string) => {
         setSelectedSymbols(prev =>
@@ -257,7 +257,7 @@ const QuotesComponent: React.FC = () => {
             </div>
             {isLoading ? (
                 <div className="text-center py-8">
-                    <Loading />
+                    <Loading/>
                 </div>
             ) : (
                 <ul className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0">
@@ -296,10 +296,10 @@ const QuotesComponent: React.FC = () => {
                                             {data.quote.c.toFixed(2)}
                                         </span>
                                         {data.direction === 'up' && (
-                                            <FaArrowUpIcon className="ml-2" color="#00cc00" />
+                                            <FaArrowUpIcon className="ml-2" color="#00cc00"/>
                                         )}
                                         {data.direction === 'down' && (
-                                            <FaArrowDownIcon className="ml-2" color="#ff3333" />
+                                            <FaArrowDownIcon className="ml-2" color="#ff3333"/>
                                         )}
                                     </div>
                                     <div className="space-x-2 space-y-2">
