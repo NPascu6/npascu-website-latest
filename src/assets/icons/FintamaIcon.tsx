@@ -9,3 +9,7 @@ const FintamaIcon = () => {
 }
 
 export default FintamaIcon;
+
+
+
+

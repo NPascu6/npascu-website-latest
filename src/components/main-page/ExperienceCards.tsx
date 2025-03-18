@@ -1,3 +1,32 @@
+export const MavXCard = () => {
+    return <div className="shadow-xl p-3 m-2 card">
+        <h2 className="text-xl font-semibold">Senior Software Engineer (Full Stack)</h2>
+        <p className="">MAVERIX Securities AG - Zurich, Switzerland</p>
+        <p className="">On site</p>
+        <ul className="list-disc ml-6 mt-4">
+            <li>Building and maintaining micros-services for internal data management.</li>
+            <li>
+                Building and maintaining .Net: C# and F# components.
+            </li>
+            <li>Maintaining internal grpc communication.</li>
+            <li>Building and maintaining UI components created for dedicated Vue front end application.</li>
+            <li>Building and maintaining inter-service communication using Fake poling, Marten and Kafka.</li>
+            <li>Created tools for importing and exporting data from csv.</li>
+            <li>Building and maintaining data migration, alteration and enhancements using sql scripts.</li>
+            <li>Managing release process and deployment process.</li>
+        </ul>
+        <p className="mt-4">
+            <strong>Technology Stack:</strong> .NET 9, C#, F#, SQL, Postgres, Marten, GRPC, Nuxt and Vue.js.
+        </p>
+        <p>
+            <strong>Workflow:</strong> Clickup for Task tracking, working in a kanban / priority approach with dedicated engineers per department.
+        </p>
+        <p>
+            <strong>CI/CD:</strong> Gitlab, Nomad, Neko, Keysore Vault for secret and env manangement.
+        </p>
+    </div>
+}
+
 export const FintamaCard = () => {
     return (
         <div className="shadow-xl p-3 m-2 card">
@@ -5,6 +34,7 @@ export const FintamaCard = () => {
             <p className="">Fintama AG - Zurich, Switzerland</p>
             <p className="">External to Bank Julius Bar</p>
             <ul className="list-disc ml-6 mt-4">
+                <li>Building and maintaining minimal api's in JAVA.</li>
                 <li>Building and maintaining UI features in React 17.</li>
                 <li>
                     Building and maintaining UI npm internal component library for JB

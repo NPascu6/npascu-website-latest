@@ -15,6 +15,7 @@ import EducationIcon from "../assets/icons/EducationIcon";
 import TopmotiveIcon from "../assets/icons/TopmotiveIcon";
 import NewVTech from "../assets/icons/NewVTech";
 import {FaChartLine} from "react-icons/fa";
+import MavxIcon from "../assets/icons/MavXIcon";
 
 // --- Lazy Imports ---
 const EducationCard = lazy(() => import("../components/main-page/EducationAndTraining"));
@@ -58,6 +59,10 @@ const FintamaCard = lazy(() =>
 const ItSupportTechnicianCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
         default: mod.ItSupportTechnicianCard,
+    }))
+);
+const MavXCard = lazy(() => import("../components/main-page/ExperienceCards").then((mod) => ({
+        default: mod.MavXCard
     }))
 );
 
@@ -196,13 +201,26 @@ const MainPage = () => {
                     </CollapsibleSection>
                 </Suspense>
 
+                <Suspense fallback={<Loading/>}>
+                    <CollapsibleSection
+                        icon={<MavxIcon/>}
+                        isCollapsed={true}
+                        title="Current employment (Maverix Securities AG)"
+                        subTitle="10/2024 - current"
+                    >
+                        <Suspense fallback={<Loading/>}>
+                            <MavXCard/>
+                        </Suspense>
+                    </CollapsibleSection>
+                </Suspense>
+
                 {/* Fintama Employment */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<FintamaIcon/>}
                         isCollapsed={true}
                         title="Current employment (Fintama)"
-                        subTitle="02/2023 - current"
+                        subTitle="02/2023 - 10/2024"
                     >
                         <Suspense fallback={<Loading/>}>
                             <FintamaCard/>
