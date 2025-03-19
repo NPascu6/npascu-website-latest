@@ -47,7 +47,7 @@ function CollapsibleSection({
         <div
             className={`${className} border ${
                 isDarkTheme ? "border-gray-700" : "border-gray-300"
-            } shadow-xl overflow-hidden transition-all`}
+            } shadow-xl overflow-hidden transition-all hover:scale-x-100 hover:scale-y-110`}
         >
             <div
                 style={{

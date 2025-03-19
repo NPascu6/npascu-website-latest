@@ -37,7 +37,7 @@ const FormList: React.FC = () => {
 
             {/* Show FormDetail only if a form is selected */}
             {activeForm !== null && (
-                <FormDetail id={activeForm} setActiveForm={setActiveForm}/>
+                <FormDetail id={activeForm}/>
             )}
         </div>
     );

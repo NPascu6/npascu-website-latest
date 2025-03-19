@@ -3,7 +3,7 @@ import React from "react";
 interface RadioInputProps {
     id: string;
     placeholder?: string;
-    options: string[] | undefined;
+    options: string[] | null;
     value: string;
     required?: boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

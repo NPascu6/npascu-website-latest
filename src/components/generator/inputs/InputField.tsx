@@ -54,7 +54,7 @@ const InputField: React.FC<InputFieldProps> = ({
                     <label
                         htmlFor={id}
                         className={`absolute left-1 transition-all duration-200 ${
-                            value || isFocused ? "-top-3 text-xs p-1" : "top-1/2 text-sm"
+                            value || isFocused ? "-top-3 text-xs p-1" : "top-1/3 text-sm"
                         }`}
                         style={{
                             pointerEvents: "none",

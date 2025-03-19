@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {JSX, useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import CheckboxInput from "./inputs/CheckboxInput";
@@ -23,11 +23,9 @@ export interface FormField {
 
 interface FormDetailProps {
     id: number | null;
-    setActiveForm: (id: number | null) => void;
 }
 
-const FormDetail: React.FC<FormDetailProps> = ({id, setActiveForm}) => {
-    const navigate = useNavigate();
+const FormDetail: React.FC<FormDetailProps> = ({id}) => {
     const [formFields, setFormFields] = useState<FormField[]>([]);
     const [formData, setFormData] = useState<{ [key: string]: any }>({});
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -108,16 +106,16 @@ const FormDetail: React.FC<FormDetailProps> = ({id, setActiveForm}) => {
     };
 
     const renderInput = (field: FormField): JSX.Element | null => {
-        const value = formData[field.name] || "";
+        const value = formData[field?.name] || "";
         const commonProps = {
-            id: field.name,
-            field,
-            type: field.type,
-            placeholder: field.placeholder,
-            options: field.options,
-            value,
-            required: field.required,
-            onChange: handleChange,
+            id: field?.name,
+            field: field ?? null,
+            type: field?.type,
+            placeholder: field?.placeholder ?? "",
+            options: field?.options ?? null,
+            value: value ?? "",
+            required: field?.required ?? false,
+            onChange: handleChange ?? null,
         };
 
         switch (field.type) {

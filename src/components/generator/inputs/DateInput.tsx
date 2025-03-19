@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Datepicker, {DateValueType} from "react-tailwindcss-datepicker";
 
 interface DateInputProps {
@@ -16,31 +16,20 @@ const DateInput: React.FC<DateInputProps> = ({
                                                  value,
                                                  onChange,
                                              }) => {
-    const [isFocused, setIsFocused] = useState<boolean>(false);
 
-    const handleFocus = (): void => setIsFocused(true);
-    const handleBlur = (): void => setIsFocused(false);
 
-    useEffect(() => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener("focus", handleFocus);
-            input.addEventListener("blur", handleBlur);
-        }
-        return () => {
-            if (input) {
-                input.removeEventListener("focus", handleFocus);
-                input.removeEventListener("blur", handleBlur);
-            }
-        };
-    }, [id]);
+    const handleChange = (value: any, date: any) => {
+        if (date.startDate === null) return;
+        onChange(date.startDate.toString(), id, "date");
+    }
+
 
     return (
         <div className="flex flex-col w-full relative text-black">
             <label
                 htmlFor={id}
                 className={`absolute left-1 transition-all duration-200 ${
-                    value || isFocused ? "-top-3 text-xs" : "top-1 text-md"
+                    value ? "-top-3 text-xs" : "top-1 text-md"
                 }`}
                 style={{zIndex: 1, pointerEvents: "none", backgroundColor: "white"}}
             >
@@ -56,10 +45,7 @@ const DateInput: React.FC<DateInputProps> = ({
                         endDate: value ? new Date(value) : null,
                     } as DateValueType
                 }
-                onChange={(date: any) => {
-                    if (date.startDate === null) return;
-                    onChange(date.startDate.toString(), id, "date");
-                }}
+                onChange={(date: any) => handleChange(value, date)}
             />
         </div>
     );

@@ -4,7 +4,7 @@ import CloseIcon from "../../../assets/icons/CloseIcon";
 interface SelectInputProps {
     id: string;
     placeholder?: string;
-    options: string[] | undefined;
+    options: string[] | null;
     value: string;
     required?: boolean;
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;

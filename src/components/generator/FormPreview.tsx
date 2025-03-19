@@ -33,13 +33,13 @@ const FormJSONEditor: React.FC<FormJSONEditorProps> = ({
     };
 
     return (
-        <div className="p-1 shadow-md  border border-gray-300 h-[calc(100dvh-8em)] overflow-auto w-full">
+        <div className="shadow-md  border border-gray-300 h-[calc(100dvh-8em)] overflow-auto w-full">
             <h2 className="text-md font-semibold mb-2">Form JSON Editor</h2>
             <pre className="p-2  overflow-x-auto">
         {JSON.stringify({fields: formFields}, null, 2)}
       </pre>
             {formFields.map((field) => (
-                <div key={field.id} className="mt-4">
+                <div key={field.id} className="mt-2">
                     {editingField?.id === field.id ? (
                         <div>
                             <label className="block text-sm font-medium">

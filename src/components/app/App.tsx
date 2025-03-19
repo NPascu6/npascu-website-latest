@@ -24,9 +24,9 @@ const App: React.FC = () => {
     }, []);
 
     const openSidebar = useCallback(() => {
-
-        if (location.pathname.includes('snake')) return
-        setIsDrawerOpen(true);
+        if (location.pathname.includes('/snake')) return
+        else
+            setIsDrawerOpen(true);
     }, []);
 
     // Global swipe handler for the entire app with default behavior prevention
