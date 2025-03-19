@@ -104,7 +104,7 @@ const FormList: React.FC = () => {
             <div className="w-full mt-1 md:mt-0">
                 {activeForm !== null ? (
                     <div style={{height: "calc(100dvh - 32.7em)", overflow: "auto"}}>
-                        <FormDetail id={activeForm} setActiveForm={setActiveForm}/>
+                        <FormDetail id={activeForm}/>
                     </div>
                 ) : (
                     <CollapsibleSection title="Dynamic Table Data">
