@@ -6,6 +6,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
+    "build-production": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest watch",
