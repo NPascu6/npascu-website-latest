@@ -79,10 +79,11 @@ div.ag-root-wrapper {
 
 .ag-row:hover {
     background-color: #efeee9;
+    cursor: pointer;
+    color:rgba(0, 0, 0, 0.4);
 }
 
 .ag-header-active {
-    color: #001489;
     margin-top: "1em";
 }
 
@@ -102,10 +103,6 @@ div.ag-root-wrapper {
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
     -webkit-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
     -moz-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
-}
-
-.active {
-    color: #001489;
 }
 
 .ag-paging-panel {
