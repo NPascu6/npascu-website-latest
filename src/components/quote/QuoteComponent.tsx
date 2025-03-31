@@ -93,8 +93,13 @@ const QuotesComponent: React.FC = () => {
             return newValue === value ? value * 1.0001 : newValue;
         }
 
+        // const connection = new signalR.HubConnectionBuilder()
+        //     .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
+        //     .withAutomaticReconnect()
+        //     .build();
+
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
+            .withUrl('http://localhost:5252/quotesHub')
             .withAutomaticReconnect()
             .build();
 
@@ -217,6 +222,9 @@ const QuotesComponent: React.FC = () => {
 
     return (
         <div
+            style={{
+                height: 'calc(100dvh - 6em)',
+            }}
             className={`overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}
         >
             {location.pathname !== "/" && (

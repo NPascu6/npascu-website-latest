@@ -271,7 +271,9 @@ const TicTacToeContainer: React.FC = () => {
     }, [windowSize, startGame]);
 
     return (
-        <div className="p-1">
+        <div className="p-1" style={{
+            height: 'calc(100dvh - 6em)',
+        }}>
             <div className="shadow-xl flex flex-col">
                 {!startGame && <div className="text-center flex w-full">
                     <div className="m-2 w-full">
@@ -293,7 +295,7 @@ const TicTacToeContainer: React.FC = () => {
                             <option value="8">8x8</option>
                         </select>
                     </div>
-                    <div onClick={() => navigate('/')}>
+                    <div onClick={() => navigate('/games')}>
                         <CloseIcon/>
                     </div>
                 </div>}

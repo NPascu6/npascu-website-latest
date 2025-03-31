@@ -19,7 +19,8 @@ export const MavXCard = () => {
             <strong>Technology Stack:</strong> .NET 9, C#, F#, SQL, Postgres, Marten, GRPC, Nuxt and Vue.js.
         </p>
         <p>
-            <strong>Workflow:</strong> Clickup for Task tracking, working in a kanban / priority approach with dedicated engineers per department.
+            <strong>Workflow:</strong> Clickup for Task tracking, working in a kanban / priority approach with dedicated
+            engineers per department.
         </p>
         <p>
             <strong>CI/CD:</strong> Gitlab, Nomad, Neko, Keysore Vault for secret and env manangement.

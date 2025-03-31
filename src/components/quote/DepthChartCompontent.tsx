@@ -36,7 +36,7 @@ interface DepthChartProps {
     isDarkTheme: boolean;
     closeDepthChartPopup: () => void;
     trades: FinnhubTrade[]; // trades for the selected symbol
-    midPrice: number;       // midPrice (e.g. current price from quotes)
+    midPrice: number; // midPrice (e.g. current price from quotes)
 }
 
 /**
@@ -92,8 +92,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
 
     // 3) Bin trades by price with a very fine bin for increased granularity
     const BIN_SIZE = 0.001; // Very fine granularity
-    const binPrice = (price: number) =>
-        Math.round(price / BIN_SIZE) * BIN_SIZE;
+    const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
 
     // Separate into buy vs. sell bins
     const buyBins: Record<number, number> = {};
@@ -275,6 +274,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     // 9) Render the popup & chart.
     return (
         <div
+            style={{zIndex: 1000}}
             onClick={closeDepthChartPopup}
             className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >

@@ -12,6 +12,7 @@ interface CollapsibleSectionProps {
     isCollapsed?: boolean; // Optional external control
     setCollapsed?: (collapsed: boolean) => void; // Optional setter function
     icon?: ReactNode; // Optional icon to display next to the title
+    grow?: boolean; // Optional prop to control growth behavior
 }
 
 function CollapsibleSection({
@@ -22,11 +23,17 @@ function CollapsibleSection({
                                 setCollapsed: externalSetCollapsed,
                                 className = "",
                                 icon,
+                                grow = true,
                             }: CollapsibleSectionProps) {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+    const [internalGrow, setInternalGrow] = useState<boolean>(grow);
 
     // Internal state if not controlled externally
     const [internalCollapsed, setInternalCollapsed] = useState<boolean>(false);
+
+    useEffect(() => {
+        setInternalGrow(grow);
+    }, [grow]);
 
     // Sync external state if provided
     useEffect(() => {
@@ -34,6 +41,14 @@ function CollapsibleSection({
             setInternalCollapsed(externalCollapsed);
         }
     }, [externalCollapsed]);
+
+    useEffect(() => {
+        if (!internalCollapsed) {
+            setInternalGrow(false);
+        } else {
+            setInternalGrow(grow);
+        }
+    }, [internalCollapsed, grow]);
 
     // Ensure setCollapsed is always available
     const setCollapsed = externalSetCollapsed ?? setInternalCollapsed;
@@ -47,7 +62,9 @@ function CollapsibleSection({
         <div
             className={`${className} border ${
                 isDarkTheme ? "border-gray-700" : "border-gray-300"
-            } shadow-xl overflow-hidden transition-all hover:scale-x-100 hover:scale-y-110`}
+            } shadow-xl overflow-hidden transition-all ${
+                internalGrow && "hover:scale-x-100 hover:scale-y-110"
+            }`}
         >
             <div
                 style={{
@@ -60,7 +77,10 @@ function CollapsibleSection({
                 {/* Left side: Optional icon and text */}
                 {icon ? (
                     <div className="flex w-full items-center">
-                        <div style={{width: '5rem', marginLeft: '-1em'}} className="flex justify-center items-center">
+                        <div
+                            style={{width: "5rem", marginLeft: "-1em"}}
+                            className="flex justify-center items-center"
+                        >
                             {icon}
                         </div>
                         <div className="w-full">

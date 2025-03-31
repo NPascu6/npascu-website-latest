@@ -11,8 +11,8 @@ const BottomBar = () => {
     const {githubProfile} = useSelector((state: RootState) => state.app);
 
     return (
-        <div className="text-start flex items-center justify-evenly w-full">
-            <div className="flex justify-evenly w-full mt-4">
+        <div className="text-start flex items-center justify-evenly w-full pt-3">
+            <div className="flex justify-evenly w-full">
                 <div className="text-center w-full">
                     <a
                         href="mailto:norbipascu92@gmail.com"
@@ -34,7 +34,7 @@ const BottomBar = () => {
                     </a>
                 </div>
             </div>
-            <div className="flex justify-evenly w-full mt-4">
+            <div className="flex justify-evenly w-full">
                 <div className="text-center w-full">
                     <a
                         href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
@@ -60,7 +60,7 @@ const BottomBar = () => {
                     </a>
                 </div>
             </div>
-            <div className="flex justify-evenly w-full mt-4">
+            <div className="flex justify-evenly w-full">
                 <div className="text-center w-full">
                     <a
                         href="https://www.facebook.com/norbi.pascu"

@@ -150,7 +150,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     <h2 className="text-lg font-semibold">
                         {selectedSymbolForOrderBook} Order Book
                     </h2>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 mt-6">
                         <span>Sort:</span>
                         <select
                             value={sortCriteria}

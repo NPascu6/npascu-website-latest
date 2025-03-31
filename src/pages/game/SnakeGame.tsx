@@ -479,7 +479,7 @@ const SnakeGame: React.FC = () => {
     const renderControls = useCallback(() => {
         if (state.running) {
             return (
-                <div className="flex">
+                <div className="flex ml-3 mt-1">
                     <button
                         style={{color: "red"}}
                         className="bg-black border border-gray-500 p-0.5"
@@ -498,7 +498,7 @@ const SnakeGame: React.FC = () => {
             );
         } else {
             return (
-                <div className="flex">
+                <div className="flex ml-3 mt-1">
                     {
                         <button
                             style={{color: "green"}}
@@ -611,7 +611,10 @@ const SnakeGame: React.FC = () => {
 
     return (
         <div
-            className="justify-center items-center align-center flex flex-col"
+            style={{
+                height: 'calc(100dvh - 6em)',
+            }}
+            className="justify-center items-center align-center flex flex-col border-gray-500"
             ref={boardRef}
         >
             <div className="flex flex-col justify-center items-center">
@@ -623,8 +626,8 @@ const SnakeGame: React.FC = () => {
                         Score: {state.score}
                     </div>
                     <div
-                        onClick={() => navigate("/")}
-                        className="flex cursor-pointer justify-end"
+                        onClick={() => navigate("/games/")}
+                        className="flex cursor-pointer justify-end mt-2"
                     >
                         <CloseIcon/>
                     </div>
@@ -637,11 +640,11 @@ const SnakeGame: React.FC = () => {
                     renderObstacle={renderObstacle}
                 />
             </div>
-            <div className="flex items-center border border-gray-500 justify-between w-full">
-                {renderControls()}
+            <div className="flex items-center border-gray-500 justify-between w-full">
+                <span className="">{renderControls()}</span>
                 <input
-                    style={{color: "green"}}
-                    className="bg-gray-500"
+                    style={{color: "green", backgroundColor: "black"}}
+                    className="bg-gray-800 mr-2 border border-gray-500 w-1/3"
                     type="range"
                     min="1"
                     max="40"

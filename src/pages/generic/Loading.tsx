@@ -1,7 +1,9 @@
 const Loading = () => {
+    debugger
     return (
         <div
-            className="flex justify-center items-center min-h-[10em]"
+            style={{height: "calc(100vh - 6em)"}}
+            className="flex justify-center items-center"
             role="status"
             aria-label="Loading..."
         >

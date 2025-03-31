@@ -34,7 +34,7 @@ const GameCard: React.FC = () => {
         >
             <div className="flex justify-between w-full items-center p-2 border-b">
                 <div>Demo browser games</div>
-                <div onClick={() => nav(-1)} className="cursor-pointer">
+                <div onClick={() => nav('/')} className="cursor-pointer mt-1">
                     <CloseIcon/>
                 </div>
             </div>

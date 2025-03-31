@@ -1,6 +1,5 @@
 import React, {JSX, useEffect, useState} from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
 import CheckboxInput from "./inputs/CheckboxInput";
 import RadioInput from "./inputs/RadioInput";
 import SelectInput from "./inputs/SelectInput";

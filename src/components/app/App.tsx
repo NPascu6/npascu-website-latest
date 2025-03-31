@@ -24,10 +24,9 @@ const App: React.FC = () => {
     }, []);
 
     const openSidebar = useCallback(() => {
-        if (location.pathname.includes('/snake')) return
-        else
-            setIsDrawerOpen(true);
-    }, []);
+        if (location.pathname.includes("/snake")) return;
+        else setIsDrawerOpen(true);
+    }, [location.pathname]);
 
     // Global swipe handler for the entire app with default behavior prevention
     const swipeHandlers = useSwipeable({
@@ -47,8 +46,7 @@ const App: React.FC = () => {
     useEffect(() => {
         // If nothing is stored in localStorage, default to dark mode (true)
         const savedThemeStr = localStorage.getItem("isDarkTheme");
-        const savedTheme =
-            savedThemeStr === null ? true : savedThemeStr === "true";
+        const savedTheme = savedThemeStr === null ? true : savedThemeStr === "true";
         if (savedTheme !== darkTheme) {
             dispatch(setTheme(savedTheme));
         }

@@ -18,11 +18,21 @@ import {FaChartLine} from "react-icons/fa";
 import MavxIcon from "../assets/icons/MavXIcon";
 
 // --- Lazy Imports ---
-const EducationCard = lazy(() => import("../components/main-page/EducationAndTraining"));
-const GithubProfileCard = lazy(() => import("../components/main-page/GithubProfileCard"));
-const YoutubeVideoLink = lazy(() => import("../components/main-page/YoutubeVideoLink"));
-const CollapsibleSection = lazy(() => import("../components/common/CollapsableSection"));
-const HighlightedRepos = lazy(() => import("../components/main-page/HighlightedRepos"));
+const EducationCard = lazy(
+    () => import("../components/main-page/EducationAndTraining")
+);
+const GithubProfileCard = lazy(
+    () => import("../components/main-page/GithubProfileCard")
+);
+const YoutubeVideoLink = lazy(
+    () => import("../components/main-page/YoutubeVideoLink")
+);
+const CollapsibleSection = lazy(
+    () => import("../components/common/CollapsableSection")
+);
+const HighlightedRepos = lazy(
+    () => import("../components/main-page/HighlightedRepos")
+);
 const ImageSlider = lazy(() => import("../components/common/ImageSlider"));
 
 // Each experience card is a named export from ExperienceCards.
@@ -61,13 +71,16 @@ const ItSupportTechnicianCard = lazy(() =>
         default: mod.ItSupportTechnicianCard,
     }))
 );
-const MavXCard = lazy(() => import("../components/main-page/ExperienceCards").then((mod) => ({
-        default: mod.MavXCard
+const MavXCard = lazy(() =>
+    import("../components/main-page/ExperienceCards").then((mod) => ({
+        default: mod.MavXCard,
     }))
 );
 
 // NEW: Lazy load the QuotesComponent.
-const QuotesComponent = lazy(() => import("../components/quote/QuoteComponent"));
+const QuotesComponent = lazy(
+    () => import("../components/quote/QuoteComponent")
+);
 
 // --- MainPage Component ---
 const MainPage = () => {
@@ -76,7 +89,7 @@ const MainPage = () => {
     const workImages = useSelector((state: RootState) => state.app.workPhotos);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const location = useLocation();
-    const FaChartLineIcon: any = FaChartLine
+    const FaChartLineIcon: any = FaChartLine;
     // Load work images once.
     useEffect(() => {
         if (loadedImages.length > 0) return;
@@ -126,53 +139,68 @@ const MainPage = () => {
                 {/* Dynamic Components */}
                 <Link
                     to="/dynamic-components"
-                    className="group block transform transition-all hover:scale-x-100 hover:scale-y-110"
+                    className="flex w-full transform transition-all hover:scale-x-100 hover:scale-y-110"
                 >
                     <div
                         style={{
                             backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
                             color: isDarkTheme ? "#f3f4f6" : "#374151",
                         }}
-                        className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2"
+                        className="shadow-lg p-2 flex items-center justify-start w-full"
                     >
-                        <div className="text-xl font-semibold">⚙️ Dynamic Components</div>
-                        <p
+                        <div
+                            style={{
+                                width: "3rem",
+                            }}
+                            className="mr-2 flex items-center  justify-center"
+                        >
+                            ⚙️
+                        </div>
+                        <div
                             style={{
                                 color: isDarkTheme ? "#f3f4f6" : "#374151",
                             }}
-                            className="text-sm group-hover:underline"
+                            className="text-sm text-start group-hover:underline"
                         >
+                            <div className="text-xl font-semibold"> Dynamic Components</div>
                             Explore dynamically generated UI elements
-                        </p>
+                        </div>
                     </div>
                 </Link>
 
                 {/* Browser Games */}
                 <Link
                     to="/games"
-                    className="group block transform transition-all hover:scale-x-100 hover:scale-y-110"
+                    className="flex full-width transform transition-all hover:scale-x-100 hover:scale-y-110"
                 >
                     <div
                         style={{
                             backgroundColor: isDarkTheme ? "#374151" : "#f3f4f6",
                             color: isDarkTheme ? "#f3f4f6" : "#374151",
                         }}
-                        className="shadow-lg p-2 flex flex-col items-center justify-center space-y-2"
+                        className="shadow-lg p-2 flex items-center justify-start w-full"
                     >
-                        <div className="text-xl font-semibold">🎮 Browser Games</div>
-                        <p
+                        <div
+                            style={{
+                                width: "3rem",
+                            }}
+                            className="mr-2 items-center justify-center"
+                        >
+                            🎮
+                        </div>
+                        <div
                             style={{
                                 color: isDarkTheme ? "#f3f4f6" : "#374151",
                             }}
-                            className="text-sm group-hover:underline"
+                            className="text-sm text-start group-hover:underline"
                         >
+                            <div className="text-xl font-semibold"> Browser Games</div>
                             Play simple browser-based games
-                        </p>
+                        </div>
                     </div>
                 </Link>
             </div>
             <div className="mt-1 space-y-1">
-
                 {/* Education Section */}
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
@@ -331,8 +359,6 @@ const MainPage = () => {
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
-
-
             </div>
         </div>
     );
