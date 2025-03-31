@@ -93,15 +93,15 @@ const QuotesComponent: React.FC = () => {
             return newValue === value ? value * 1.0001 : newValue;
         }
 
-        // const connection = new signalR.HubConnectionBuilder()
-        //     .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
-        //     .withAutomaticReconnect()
-        //     .build();
-
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5252/quotesHub')
+            .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
             .withAutomaticReconnect()
             .build();
+
+        // const connection = new signalR.HubConnectionBuilder()
+        //     .withUrl('http://localhost:5252/quotesHub')
+        //     .withAutomaticReconnect()
+        //     .build();
 
         connection.start()
             .then(() => console.log('Connected to quotes hub.'))
