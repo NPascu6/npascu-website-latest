@@ -233,7 +233,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<CovarioIcon/>}
                         isCollapsed={true}
-                        title="TL / Senior Developer (Covario)"
+                        title="Team-Lead/Senior Software Engineer(Covario)"
                         subTitle="03/2021 - 01/2023"
                     >
                         <Suspense fallback={<Loading/>}>
@@ -247,7 +247,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<AmarisIcon height={70} width={44}/>}
                         isCollapsed={true}
-                        title="IT Consultant (Amaris)"
+                        title="IT Consultant(Amaris)"
                         subTitle="04/2020 - 03/2021"
                     >
                         <Suspense fallback={<Loading/>}>
@@ -261,7 +261,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<CognizantIcon/>}
                         isCollapsed={true}
-                        title="Mobile / BE Developer (Cognizant)"
+                        title="Mobile/BE Developer(Cognizant)"
                         subTitle="06/2019 - 04/2020"
                     >
                         <Suspense fallback={<Loading/>}>
@@ -275,7 +275,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<BoschIcon/>}
                         isCollapsed={true}
-                        title="Software Development Engineer (BOSCH)"
+                        title="Software Engineer(BOSCH)"
                         subTitle="07/2018 - 06/2019"
                     >
                         <Suspense fallback={<Loading/>}>
@@ -289,7 +289,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<TopmotiveIcon/>}
                         isCollapsed={true}
-                        title="First Developer Job (TOPMOTIVE)"
+                        title="Web Developer(TOPMOTIVE)"
                         subTitle="06/2016 - 07/2018"
                     >
                         <Suspense fallback={<Loading/>}>
@@ -303,7 +303,7 @@ const MainPage = () => {
                     <CollapsibleSection
                         icon={<NewVTech/>}
                         isCollapsed={true}
-                        title="Support Technician (NewV Technologies)"
+                        title="Support Technician(NewV Technologies)"
                         subTitle="06/2015 - 06/2016"
                     >
                         <Suspense fallback={<Loading/>}>

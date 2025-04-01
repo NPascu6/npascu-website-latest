@@ -1,4 +1,4 @@
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useEffect, useRef, useState} from "react";
 import ChevronUp from "../../assets/icons/ChevronUp";
 import ChevronDown from "../../assets/icons/ChevronDown";
 import {useSelector} from "react-redux";
@@ -27,7 +27,7 @@ function CollapsibleSection({
                             }: CollapsibleSectionProps) {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const [internalGrow, setInternalGrow] = useState<boolean>(grow);
-
+    const localRef = useRef<HTMLDivElement>(null);
     // Internal state if not controlled externally
     const [internalCollapsed, setInternalCollapsed] = useState<boolean>(false);
 
@@ -50,6 +50,24 @@ function CollapsibleSection({
         }
     }, [internalCollapsed, grow]);
 
+    useEffect(() => {
+        const element = localRef.current;
+        if (element) {
+            const resetTransform = () => {
+                element.style.transform = "scale(1)";
+            };
+
+            element.addEventListener("focusout", resetTransform);
+            // Optionally, also listen to touchend if needed on mobile
+            element.addEventListener("touchend", resetTransform);
+
+            return () => {
+                element.removeEventListener("focusout", resetTransform);
+                element.removeEventListener("touchend", resetTransform);
+            };
+        }
+    }, []);
+
     // Ensure setCollapsed is always available
     const setCollapsed = externalSetCollapsed ?? setInternalCollapsed;
 
@@ -60,6 +78,7 @@ function CollapsibleSection({
 
     return (
         <div
+            ref={localRef}
             className={`${className} border ${
                 isDarkTheme ? "border-gray-700" : "border-gray-300"
             } shadow-xl overflow-hidden transition-all ${
