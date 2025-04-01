@@ -201,34 +201,6 @@ const MainPage = () => {
                 </Link>
             </div>
             <div className="mt-1 space-y-1">
-                {/* Education Section */}
-                <Suspense fallback={<Loading/>}>
-                    <CollapsibleSection
-                        icon={<EducationIcon/>}
-                        isCollapsed={true}
-                        title="Education"
-                        subTitle="Diploma, courses and specialization"
-                    >
-                        <Suspense fallback={<Loading/>}>
-                            <EducationCard/>
-                        </Suspense>
-                    </CollapsibleSection>
-                </Suspense>
-
-                {/* Github Repos Section */}
-                <Suspense fallback={<Loading/>}>
-                    <CollapsibleSection
-                        icon={<GitHub width={32} height={32}/>}
-                        isCollapsed={true}
-                        title="Highlighted Github Repos"
-                        subTitle="Github"
-                    >
-                        <Suspense fallback={<Loading/>}>
-                            <HighlightedRepos/>
-                        </Suspense>
-                    </CollapsibleSection>
-                </Suspense>
-
                 <Suspense fallback={<Loading/>}>
                     <CollapsibleSection
                         icon={<MavxIcon/>}
@@ -336,6 +308,33 @@ const MainPage = () => {
                     >
                         <Suspense fallback={<Loading/>}>
                             <ItSupportTechnicianCard/>
+                        </Suspense>
+                    </CollapsibleSection>
+                </Suspense>
+                {/* Education Section */}
+                <Suspense fallback={<Loading/>}>
+                    <CollapsibleSection
+                        icon={<EducationIcon/>}
+                        isCollapsed={true}
+                        title="Education"
+                        subTitle="Diploma, courses and specialization"
+                    >
+                        <Suspense fallback={<Loading/>}>
+                            <EducationCard/>
+                        </Suspense>
+                    </CollapsibleSection>
+                </Suspense>
+
+                {/* Gitub Repos Section */}
+                <Suspense fallback={<Loading/>}>
+                    <CollapsibleSection
+                        icon={<GitHub width={32} height={32}/>}
+                        isCollapsed={true}
+                        title="Highlighted Github Repos"
+                        subTitle="Github"
+                    >
+                        <Suspense fallback={<Loading/>}>
+                            <HighlightedRepos/>
                         </Suspense>
                     </CollapsibleSection>
                 </Suspense>
