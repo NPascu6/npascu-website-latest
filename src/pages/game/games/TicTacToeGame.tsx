@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import useWindowSize from '../../hooks/useWindowSize';
+import useWindowSize from '../../../hooks/useWindowSize';
 import {useNavigate} from 'react-router-dom';
-import CloseIcon from '../../assets/icons/CloseIcon';
+import CloseIcon from '../../../assets/icons/CloseIcon';
 
 type SquareValue = 'X' | 'O' | null;
 

@@ -1,5 +1,5 @@
 import {RootState} from "../../store/store";
-import {_githubAvatarUrl} from "../../_constant";
+import {_githubAvatarUrl} from "../_constant";
 import {useSelector} from "react-redux";
 
 import Email from "../../assets/icons/Email";

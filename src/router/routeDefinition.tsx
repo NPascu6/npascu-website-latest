@@ -4,10 +4,10 @@ import Loading from "../pages/generic/Loading";
 
 // Lazy load the page components
 const MainPage = lazy(() => import("../pages/MainPage"));
-const GamesCardPage = lazy(() => import("../pages/GamesContainer"));
+const GamesCardPage = lazy(() => import("../pages/game/GamesContainer"));
 const QuotePage = lazy(() => import("../components/quote/QuoteComponent"));
 const DynamicComponentsContainerPage = lazy(() =>
-    import("../pages/dynamic-components/DynamicComponentsContainerPage")
+    import("../pages/dynamic/DynamicComponentsContainerPage")
 );
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 
@@ -35,7 +35,7 @@ export const routeDefinition: RouteDefinition[] = [
         element: withSuspense(QuotePage),
     },
     {
-        path: "/dynamic-components",
+        path: "/dynamic",
         exact: true,
         element: withSuspense(DynamicComponentsContainerPage),
     },

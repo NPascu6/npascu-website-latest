@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {ReusableColumn} from "./models/table";
+import {ReusableColumn} from "../models/table";
 
 export const dateFormater = (date: string) => {
     return date ? dayjs(date).format("YYYY-MM-DD HH:mm") : "N/A";

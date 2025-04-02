@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
-import Game from "../../components/games/click-the-target/Game";
+import Game from "../../../components/games/click-the-target/Game";
 import React from "react";
-import CloseIcon from "../../assets/icons/CloseIcon";
+import CloseIcon from "../../../assets/icons/CloseIcon";
 
 const ClickTheTarget = () => {
     const navigation = useNavigate();

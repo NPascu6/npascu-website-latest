@@ -45,25 +45,39 @@ interface OrderBooks {
 const blinkDuration = 500;
 
 const symbolEmojis: { [symbol: string]: string } = {
-    "BINANCE:BTCUSDT": "🪙",
-    "BINANCE:ETHUSDT": "💎",
-    "BINANCE:XRPUSDT": "🚀",
-    "BINANCE:ADAUSDT": "🧡",
-    "BINANCE:SOLUSDT": "🌞",
-    "BINANCE:LTCUSDT": "💰",
-    "BINANCE:LINKUSDT": "🔗",
-    "BINANCE:AVAXUSDT": "❄️"
+    "BINANCE:BTCUSDT": "🪙",  // Bitcoin
+    "BINANCE:ETHUSDT": "💎",  // Ethereum
+    "BINANCE:XRPUSDT": "🚀",  // Ripple
+    "BINANCE:BNBUSDT": "💛",  // Binance Coin (using a yellow heart)
+    "BINANCE:ADAUSDT": "🧡",  // Cardano
+    "BINANCE:SOLUSDT": "🌞",  // Solana
+    "BINANCE:DOGEUSDT": "🐶", // Dogecoin
+    "BINANCE:DOTUSDT": "📌",  // Polkadot
+    "BINANCE:LTCUSDT": "💰",  // Litecoin
+    "BINANCE:LINKUSDT": "🔗", // Chainlink
+    "BINANCE:UNIUSDT": "🦄",  // Uniswap
+    "BINANCE:MATICUSDT": "🔷",// MATIC (using a blue diamond)
+    "BINANCE:AVAXUSDT": "❄️",  // Avalanche
+    "BINANCE:ALGOUSDT": "🥇",  // Algorand (gold medal)
+    "BINANCE:ATOMUSDT": "🌌"   // Cosmos
 };
 
 export const availableSymbols = [
     "BINANCE:BTCUSDT",
     "BINANCE:ETHUSDT",
     "BINANCE:XRPUSDT",
+    "BINANCE:BNBUSDT",
     "BINANCE:ADAUSDT",
     "BINANCE:SOLUSDT",
+    "BINANCE:DOGEUSDT",
+    "BINANCE:DOTUSDT",
     "BINANCE:LTCUSDT",
     "BINANCE:LINKUSDT",
-    "BINANCE:AVAXUSDT"
+    "BINANCE:UNIUSDT",
+    "BINANCE:MATICUSDT",
+    "BINANCE:AVAXUSDT",
+    "BINANCE:ALGOUSDT",
+    "BINANCE:ATOMUSDT"
 ];
 
 const formatTime = (timestamp: number): string =>
@@ -94,14 +108,9 @@ const QuotesComponent: React.FC = () => {
         }
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl('https://npascu-api-v1.onrender.com/quotesHub')
+            .withUrl(import.meta.env.VITE_API_KEY)
             .withAutomaticReconnect()
             .build();
-
-        // const connection = new signalR.HubConnectionBuilder()
-        //     .withUrl('http://localhost:5252/quotesHub')
-        //     .withAutomaticReconnect()
-        //     .build();
 
         connection.start()
             .then(() => console.log('Connected to quotes hub.'))
@@ -222,9 +231,7 @@ const QuotesComponent: React.FC = () => {
 
     return (
         <div
-            style={{
-                height: 'calc(100dvh - 6em)',
-            }}
+
             className={`overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}
         >
             {location.pathname !== "/" && (
@@ -268,13 +275,13 @@ const QuotesComponent: React.FC = () => {
                     <Loading/>
                 </div>
             ) : (
-                <ul className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0">
+                <ul className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0 overflow-y-auto h-[400px] sm:h-auto">
                     {Object.entries(quotes)
                         .filter(([symbol]) => selectedSymbols.includes(symbol))
                         .map(([symbol, data]) => (
                             <li
                                 key={symbol}
-                                className={`relative border border-green-900 rounded p-3 transition-colors duration-300`}
+                                className="relative border border-green-900 rounded p-3 transition-colors duration-300"
                                 onClick={() => handleOpenOrderBook(symbol)}
                             >
                                 <div
@@ -287,26 +294,29 @@ const QuotesComponent: React.FC = () => {
                                     ×
                                 </div>
                                 <strong className="text-xl">
-                                    {symbolEmojis[symbol] ? `${symbolEmojis[symbol]} ${symbol}` : symbol}
+                                    {symbolEmojis[symbol]
+                                        ? `${symbolEmojis[symbol]} ${symbol}`
+                                        : symbol}
                                 </strong>
                                 <div className="mt-2 flex items-center justify-between">
                                     <div className="flex items-center">
-                                        <span
-                                            className={`text-base font-bold ${data.direction === 'up'
-                                                ? "text-green-500"
-                                                : data.direction === 'down'
-                                                    ? "text-red-500"
-                                                    : isDarkTheme
-                                                        ? "text-white"
-                                                        : "text-gray-900"
-                                            }`}
-                                        >
-                                            {data.quote.c.toFixed(2)}
-                                        </span>
-                                        {data.direction === 'up' && (
+            <span
+                className={`text-base font-bold ${
+                    data.direction === "up"
+                        ? "text-green-500"
+                        : data.direction === "down"
+                            ? "text-red-500"
+                            : isDarkTheme
+                                ? "text-white"
+                                : "text-gray-900"
+                }`}
+            >
+              {data.quote.c.toFixed(2)}
+            </span>
+                                        {data.direction === "up" && (
                                             <FaArrowUpIcon className="ml-2" color="#00cc00"/>
                                         )}
-                                        {data.direction === 'down' && (
+                                        {data.direction === "down" && (
                                             <FaArrowDownIcon className="ml-2" color="#ff3333"/>
                                         )}
                                     </div>
@@ -335,6 +345,7 @@ const QuotesComponent: React.FC = () => {
                             </li>
                         ))}
                 </ul>
+
             )}
 
             <OrderBook

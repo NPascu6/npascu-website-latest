@@ -1,7 +1,7 @@
 import React, {lazy, Suspense, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../store/store";
-import {workImages as images} from "../_constant";
+import {workImages as images} from "../components/_constant";
 import {setWorkPhotos} from "../store/reducers/appReducer";
 import Loading from "./generic/Loading";
 import {Link, useLocation} from "react-router-dom";

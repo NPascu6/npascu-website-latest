@@ -1,14 +1,14 @@
 import React from "react";
 import {Link, Route, Routes, useNavigate} from "react-router-dom";
-import SnakeGame from "../pages/game/SnakeGame";
-import ClickTheTarget from "../pages/game/ClickTheTarget";
-import TicTacToeIcon from "../assets/icons/TicTacToe";
-import SnakeIcon from "../assets/icons/Snake";
-import ClickTheTargetIcon from "../assets/icons/ClickTheTargetIcon";
-import CloseIcon from "../assets/icons/CloseIcon";
-import TicTacToeGame from "../pages/game/TicTacToeGame";
+import SnakeGame from "./games/SnakeGame";
+import ClickTheTarget from "./games/ClickTheTarget";
+import TicTacToeIcon from "../../assets/icons/TicTacToe";
+import SnakeIcon from "../../assets/icons/Snake";
+import ClickTheTargetIcon from "../../assets/icons/ClickTheTargetIcon";
+import CloseIcon from "../../assets/icons/CloseIcon";
+import TicTacToeGame from "./games/TicTacToeGame";
 import {useSelector} from "react-redux";
-import {RootState} from "../store/store";
+import {RootState} from "../../store/store";
 
 const GameCard: React.FC = () => {
     const nav = useNavigate();

@@ -1,18 +1,18 @@
 import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setTheme} from "../../store/reducers/appReducer";
-import {RootState} from "../../store/store";
+import {setTheme} from "./store/reducers/appReducer";
+import {RootState} from "./store/store";
 import {useSwipeable} from "react-swipeable";
-import Loading from "../../pages/generic/Loading";
+import Loading from "./pages/generic/Loading";
 import {useLocation} from "react-router-dom";
 
 // Lazy load components
-const TopBar = lazy(() => import("./TopBar"));
-const SideBar = lazy(() => import("./SideBar"));
-const InstallPWAButton = lazy(() => import("./InstallPWAButton"));
-const RoutesSwitch = lazy(() => import("../../router/Router"));
-const BottomBar = lazy(() => import("./BottomBar"));
-const Toaster = lazy(() => import("../common/Toaster"));
+const TopBar = lazy(() => import("./components/app/TopBar"));
+const SideBar = lazy(() => import("./components/app/SideBar"));
+const InstallPWAButton = lazy(() => import("./components/app/InstallPWAButton"));
+const RoutesSwitch = lazy(() => import("./router/Router"));
+const BottomBar = lazy(() => import("./components/app/BottomBar"));
+const Toaster = lazy(() => import("./components/common/Toaster"));
 
 const App: React.FC = () => {
     const dispatch = useDispatch();

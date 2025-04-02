@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import DynamicTableContainer from "../dynamic-components/DynamicTableContainer";
-import FormList from "../dynamic-components/FormListContainer";
+import DynamicTableContainer from "./dynamic-components/DynamicTableContainer";
+import FormList from "./dynamic-components/FormListContainer";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import CloseIcon from "../../assets/icons/CloseIcon";

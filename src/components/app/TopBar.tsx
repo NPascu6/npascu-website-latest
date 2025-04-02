@@ -1,17 +1,14 @@
-import React, {useState} from "react";
+import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setTheme} from "../../store/reducers/appReducer";
 import {RootState} from "../../store/store";
 import ToggleSvgDark from "../../assets/icons/ToggleSvgDark";
 import ToggleSvgLight from "../../assets/icons/ToggleSvgLight";
-import CommonDialog from "../common/CommonDialog";
-import LoginForm from "../auth/LoginForm";
 import DownloadCVButton from "../common/DownloadCVButton";
 
 const TopBar = () => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const dispatch = useDispatch();
-    const [showLogin, setShowLogin] = useState(false);
 
     const changeTheme = () => {
         const newTheme = !isDarkTheme ? "true" : "false";
@@ -30,12 +27,6 @@ const TopBar = () => {
                     </button>
                 </div>
             </div>
-
-            {showLogin && (
-                <CommonDialog title="Login" onClose={() => setShowLogin(false)}>
-                    <LoginForm/>
-                </CommonDialog>
-            )}
         </div>
     );
 };

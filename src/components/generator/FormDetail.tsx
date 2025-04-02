@@ -6,7 +6,7 @@ import SelectInput from "./inputs/SelectInput";
 import DateInput from "./inputs/DateInput";
 import FormEditor from "./FormEditor";
 import FormPreview from "./FormPreview";
-import {formatFieldToUpperCaseAndBreakCammelCase} from "../../util";
+import {formatFieldToUpperCaseAndBreakCammelCase} from "../util";
 import InputField from "./inputs/InputField";
 import {formDb} from "../../assets/formDb";
 import CollapsibleSection from "../common/CollapsableSection";

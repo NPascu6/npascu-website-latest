@@ -1,6 +1,6 @@
 import {useState} from "react";
-import {tables} from "../../assets/tableDb";
-import DynamicTable from "../../components/generator/DynamicTable";
+import {tables} from "../../../assets/tableDb";
+import DynamicTable from "../../../components/generator/DynamicTable";
 
 const DynamicTableContainer = () => {
     const [useTabs, setUseTabs] = useState<boolean>(false);

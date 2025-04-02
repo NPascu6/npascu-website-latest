@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { formDb } from "../../assets/formDb";
-import CollapsibleSection from "../../components/common/CollapsableSection";
-import FormDetail from "../../components/generator/FormDetail";
+import { formDb } from "../../../assets/formDb";
+import CollapsibleSection from "../../../components/common/CollapsableSection";
+import FormDetail from "../../../components/generator/FormDetail";
 
 const FormList: React.FC = () => {
   const [activeForm, setActiveForm] = useState<number | null>(null);

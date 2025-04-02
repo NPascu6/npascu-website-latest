@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import useWindowSize from "../../hooks/useWindowSize";
+import useWindowSize from "../../../hooks/useWindowSize";
 import {useNavigate} from "react-router-dom";
-import CloseIcon from "../../assets/icons/CloseIcon";
+import CloseIcon from "../../../assets/icons/CloseIcon";
 
 const CELL_SIZE = 16;
 const BOARD_PADDING = 2 * CELL_SIZE;
