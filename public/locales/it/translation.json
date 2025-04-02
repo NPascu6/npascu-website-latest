@@ -102,7 +102,7 @@
     "cicd": "Gitlab, Nomad, Neko, Keysore Vault per la gestione dei secret e degli ambienti."
   },
   "fintamaCard": {
-    "title": "Senior Software Developer",
+    "title": "Senior Software Engineer",
     "institution": "Fintama AG - Zurigo, Svizzera",
     "employmentType": "Esterno per Bank Julius Bar",
     "responsibilities": [
@@ -125,7 +125,7 @@
     "backend": "Java; applicazioni React compilate all'interno di una java.jar per la comunicazione tra IFrame."
   },
   "covarioCard": {
-    "title": "Team Lead / Senior Software Developer",
+    "title": "Team Lead / Senior Software Engineer",
     "institution": "Covario AG - Zug, Svizzera",
     "responsibilities": [
       "Sviluppo e manutenzione di funzionalità UI con React.js.",

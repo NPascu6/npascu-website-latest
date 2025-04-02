@@ -30,7 +30,7 @@
       "subtitle": "04/2020 - 03/2021"
     },
     "cognizant": {
-      "title": "Mobile/BE Developer (Cognizant)",
+      "title": "Mobile/BackEnd Developer (Cognizant)",
       "subtitle": "06/2019 - 04/2020"
     },
     "bosch": {
@@ -102,7 +102,7 @@
     "cicd": "Gitlab, Nomad, Neko, Keystore Vault for secret and env management."
   },
   "fintamaCard": {
-    "title": "Senior Software Developer",
+    "title": "Senior Software Engineer",
     "institution": "Fintama AG - Zurich, Switzerland",
     "employmentType": "External to Bank Julius Bar",
     "responsibilities": [
@@ -125,7 +125,7 @@
     "backend": "Java; React apps compiled within java.jar for inter-IFrame communication."
   },
   "covarioCard": {
-    "title": "Team Lead / Senior Software Developer",
+    "title": "Team Lead / Senior Software Engineer",
     "institution": "Covario AG - Zug, Switzerland",
     "responsibilities": [
       "Building and maintaining UI features using React.js.",
@@ -163,7 +163,7 @@
     "techStack": ".Net 5, Vue 2, Vuetify, Vuex."
   },
   "cognizantCard": {
-    "title": "Software Developer",
+    "title": "Mobile/BackEnd Software Developer",
     "institution": "Cognizant Softvision - Cluj Napoca, Romania",
     "responsibilities": [
       "TDD with a focus on business layer unit tests.",

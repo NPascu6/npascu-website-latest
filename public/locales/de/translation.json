@@ -26,15 +26,15 @@
       "subtitle": "03/2021 - 01/2023"
     },
     "amaris": {
-      "title": "IT-Berater (Amaris)",
+      "title": "IT-Berater / Full Stack Softwareentwickler (Amaris)",
       "subtitle": "04/2020 - 03/2021"
     },
     "cognizant": {
-      "title": "Mobile/Backend-Entwickler (Cognizant)",
+      "title": "Mobile/Backend Softwareentwickler (Cognizant)",
       "subtitle": "06/2019 - 04/2020"
     },
     "bosch": {
-      "title": "Software Engineer (BOSCH)",
+      "title": "Softwareentwickler (BOSCH)",
       "subtitle": "07/2018 - 06/2019"
     },
     "topmotive": {
@@ -102,7 +102,7 @@
     "cicd": "Gitlab, Nomad, Neko, Keysore Vault für die Verwaltung von Secrets und Umgebungen."
   },
   "fintamaCard": {
-    "title": "Senior Software Developer",
+    "title": "Senior Software Engineer",
     "institution": "Fintama AG - Zürich, Schweiz",
     "employmentType": "Extern bei der Bank Julius Bar",
     "responsibilities": [
@@ -125,7 +125,7 @@
     "backend": "Java; React-Apps, die innerhalb einer java.jar für die Kommunikation zwischen IFrames kompiliert werden."
   },
   "covarioCard": {
-    "title": "Teamleiter / Senior Software Developer",
+    "title": "Teamleiter / Senior Software Engineer",
     "institution": "Covario AG - Zug, Schweiz",
     "responsibilities": [
       "Entwicklung und Wartung von UI-Funktionen mit React.js.",
@@ -146,7 +146,7 @@
     "cicd": "Gitlab für Ticketing und SCRUM-Board-Verwaltung."
   },
   "amarisCard": {
-    "title": "IT-Berater / Full Stack Developer",
+    "title": "IT-Berater / Full Stack Softwareentwickler",
     "institution": "Amaris Consulting - Zürich, Schweiz",
     "responsibilities": [
       "Entwicklung einer .NET Core API mit CRUD-Funktionalitäten unter Verwendung von Entity Framework Code First und Repository-Pattern.",
@@ -181,7 +181,7 @@
     "techStack": "React 16, .Net 5, Vue 1 & 2, Redux, React-Native mit Redux-Saga, Node.js (Server-seitig)."
   },
   "boschCard": {
-    "title": "Software Development Engineer",
+    "title": "Softwareentwickler",
     "institution": "Bosch Automotive Service Solutions, LLC - Cluj Napoca, Rumänien",
     "responsibilitiesLabel": "Verantwortlichkeiten:",
     "responsibilities": [

@@ -125,7 +125,7 @@
     "backend": "Java; aplicaciones React compiladas dentro de una java.jar para la comunicación entre IFrame."
   },
   "covarioCard": {
-    "title": "Líder de Equipo / Desarrollador de Software Senior",
+    "title": "Líder de Equipo / Senior Software Engineer",
     "institution": "Covario AG - Zug, Suiza",
     "responsibilities": [
       "Construcción y mantenimiento de funcionalidades UI con React.js.",
@@ -163,7 +163,7 @@
     "techStack": ".Net 5, Vue 2, Vuetify, Vuex."
   },
   "cognizantCard": {
-    "title": "Desarrollador de Software",
+    "title": "Desarrollador de Software BackEnd/Mobile",
     "institution": "Cognizant Softvision - Cluj Napoca, Rumanía",
     "responsibilities": [
       "TDD con énfasis en pruebas unitarias de la capa de negocio.",
