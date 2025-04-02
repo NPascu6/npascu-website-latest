@@ -1,0 +1,232 @@
+{
+  "language": "IT",
+  "marketData": {
+    "title": "Dati di mercato in tempo reale - Demo",
+    "subtitle": "Utilizzo della mia API .NET personale ospitata su Render per ottenere dati da Finnhub"
+  },
+  "dynamicComponents": {
+    "title": "Componenti dinamiche",
+    "subtitle": "Esplora elementi UI generati dinamicamente"
+  },
+  "browserGames": {
+    "title": "Giochi da browser",
+    "subtitle": "Gioca a giochi semplici basati sul browser"
+  },
+  "employment": {
+    "maverix": {
+      "title": "Impiegato attuale (Maverix Securities AG)",
+      "subtitle": "10/2024 - attuale"
+    },
+    "fintama": {
+      "title": "Senior Software Engineer (Fintama)",
+      "subtitle": "02/2023 - 10/2024"
+    },
+    "covario": {
+      "title": "Team Lead / Senior Software Engineer (Covario)",
+      "subtitle": "03/2021 - 01/2023"
+    },
+    "amaris": {
+      "title": "Consulente IT (Amaris)",
+      "subtitle": "04/2020 - 03/2021"
+    },
+    "cognizant": {
+      "title": "Sviluppatore Mobile/Backend (Cognizant)",
+      "subtitle": "06/2019 - 04/2020"
+    },
+    "bosch": {
+      "title": "Software Engineer (BOSCH)",
+      "subtitle": "07/2018 - 06/2019"
+    },
+    "topmotive": {
+      "title": "Sviluppatore Web (TOPMOTIVE)",
+      "subtitle": "06/2016 - 07/2018"
+    },
+    "newvtech": {
+      "title": "Tecnico di supporto (NewV Technologies)",
+      "subtitle": "06/2015 - 06/2016"
+    }
+  },
+  "education": {
+    "title": "Istruzione",
+    "subtitle": "Diploma, corsi e specializzazione"
+  },
+  "githubRepos": {
+    "title": "Repository Github in evidenza",
+    "subtitle": "Github"
+  },
+  "sampleScreens": "Schermate di esempio da lavori precedenti.",
+  "tradingApp": "Trading App (Piattaforma di trading crypto)",
+  "about": {
+    "imageAlt": "Immagine Instagram",
+    "role": "🚀 Senior Software Engineer | Full-Stack Engineer | Appassionato di tecnologia",
+    "intro": "Mi specializzo nella creazione di applicazioni ad alte prestazioni utilizzando React, .NET e tecnologie web moderne. Che si tratti di progettare componenti UI robusti, ottimizzare i flussi di dati in tempo reale o architettare soluzioni back-end scalabili, per me conta scrivere codice pulito ed efficiente.",
+    "experience": "Con oltre 9 anni di esperienza nella fintech, nelle piattaforme di trading e nelle soluzioni aziendali, ho sviluppato prodotti che spingono i confini del possibile.",
+    "hobbies": "Quando non sono al computer, amo affrontare nuove sfide – che si tratti di sciare, percorrere sentieri montani o pianificare strategie in una partita di basket. 🚴⛷️🏀",
+    "callToAction": "Costruiamo qualcosa di straordinario."
+  },
+  "educationCard": {
+    "title": "FORMAZIONE E ISTRUZIONE",
+    "highSchool": {
+      "title": "Diploma di maturità",
+      "institution": "Colegiul National \"Unirea\" Targu Mures - Targu Mures, Romania"
+    },
+    "bachelorCSM": {
+      "title": "Laurea in Informatica & Matematica",
+      "institution": "Institut National des Sciences Appliquées de Toulouse - Tolosa, Francia",
+      "description": "Ricevuta una borsa di studio per un programma di scambio di 10 mesi per studiare la matematica teorica.\nFrequentato uno dei 5 migliori programmi di Informatica & Matematica per un anno accademico completo.\nAcquisite competenze pratiche per affrontare sfide ingegneristiche reali ed esperienza nella programmazione ADA.\nVissuta un’esperienza culturalmente arricchente che ha creato amicizie durature, inclusa una con un amico che ora vive a soli 20 minuti da Zurigo."
+    },
+    "bachelorCIT": {
+      "title": "Laurea in Informatica & Tecnologie dell'Informazione",
+      "institution": "Universitatea „Petru Maior” din Târgu-Mureș"
+    }
+  },
+  "mavxCard": {
+    "title": "Senior Software Engineer (Full Stack)",
+    "institution": "MAVERIX Securities AG - Zurigo, Svizzera",
+    "location": "In sede",
+    "responsibilities": [
+      "Progettazione e manutenzione di microservizi per la gestione interna dei dati.",
+      "Sviluppo e manutenzione di componenti .Net in C# e F#.",
+      "Manutenzione della comunicazione interna gRPC.",
+      "Progettazione e manutenzione di componenti UI per un'applicazione frontale dedicata basata su Vue.",
+      "Implementazione e manutenzione della comunicazione tra servizi utilizzando Fake polling, Marten e Kafka.",
+      "Creazione di strumenti per l'import/export dei dati da file CSV.",
+      "Progettazione e manutenzione di migrazioni, modifiche e miglioramenti dei dati tramite script SQL.",
+      "Gestione del processo di rilascio e deployment."
+    ],
+    "techStackLabel": "Stack Tecnologico:",
+    "techStack": ".NET 9, C#, F#, SQL, Postgres, Marten, GRPC, Nuxt e Vue.js.",
+    "workflowLabel": "Workflow:",
+    "workflow": "Clickup per il monitoraggio delle attività, con un approccio Kanban/prioritario e ingegneri dedicati per ogni dipartimento.",
+    "cicdLabel": "CI/CD:",
+    "cicd": "Gitlab, Nomad, Neko, Keysore Vault per la gestione dei secret e degli ambienti."
+  },
+  "fintamaCard": {
+    "title": "Senior Software Developer",
+    "institution": "Fintama AG - Zurigo, Svizzera",
+    "employmentType": "Esterno per Bank Julius Bar",
+    "responsibilities": [
+      "Sviluppo e manutenzione di API minime in JAVA.",
+      "Sviluppo e manutenzione di funzionalità UI in React 17.",
+      "Progettazione e manutenzione di una libreria interna di componenti UI in NPM per JB, utilizzando Rollup per il bundling e Storybook per la presentazione.",
+      "Migrazione di Material UI 5 a 6.",
+      "Refactoring di react-query, rxjs e middleware Epic per utilizzare semplici chiamate API con Redux-thunk.",
+      "Ristrutturazione del routing dei componenti interni per il lazy loading.",
+      "Negoziazione dell'interfaccia DTO tra componenti Front-End e Back-End.",
+      "Implementazione della comunicazione tra componenti IFrame per callback."
+    ],
+    "techStackLabel": "Stack Tecnologico:",
+    "techStack": "React 17, 18, Material UI 4, 5, 6, rxjs, react-query, redux, middleware Epic, Rollup, npm, Storybook.",
+    "sprintLabel": "Sprint:",
+    "sprint": "Jira, iterazioni bisettimanali. Membro di un team di 14 persone che lavora su due componenti principali di backoffice.",
+    "cicdLabel": "CI/CD:",
+    "cicd": "Octopus, Bitbucket, registro NPM interno.",
+    "backendLabel": "Back End:",
+    "backend": "Java; applicazioni React compilate all'interno di una java.jar per la comunicazione tra IFrame."
+  },
+  "covarioCard": {
+    "title": "Team Lead / Senior Software Developer",
+    "institution": "Covario AG - Zug, Svizzera",
+    "responsibilities": [
+      "Sviluppo e manutenzione di funzionalità UI con React.js.",
+      "Implementazione e manutenzione di connessioni UI a un flusso di dati live tramite SignalR.",
+      "Documentazione e analisi dei requisiti tecnici per l'UI di una piattaforma di trading online.",
+      "Coordinamento dei ticket relativi alle funzionalità UI.",
+      "Creazione e manutenzione di un portale amministrativo per gestire autonomamente parti della logica aziendale.",
+      "Sviluppo e manutenzione di strumenti UI interni.",
+      "Analisi e risoluzione delle sfide aziendali derivanti dai flussi di dati in tempo reale.",
+      "Traduzione dell'API Crypto Venues in una struttura interna di middle-office.",
+      "Implementazione e manutenzione di un processo semi-automatizzato di regolamento degli ordini."
+    ],
+    "techStackLabel": "Stack Tecnologico:",
+    "techStack": ".Net Core, React 17, 18, Material UI 5, 6, Rxjs, Redux-Thunk, C#, SignalR, AgGrid, Openfin.",
+    "devOpsLabel": "DevOps:",
+    "devOps": "Docker, Kubernetes.",
+    "cicdLabel": "CI/CD:",
+    "cicd": "Gitlab per il ticketing e la gestione del board SCRUM."
+  },
+  "amarisCard": {
+    "title": "Consulente IT / Full Stack Developer",
+    "institution": "Amaris Consulting - Zurigo, Svizzera",
+    "responsibilities": [
+      "Sviluppo di un'API .NET Core con funzionalità CRUD utilizzando Entity Framework Code First e il pattern Repository.",
+      "Sviluppo di funzionalità CRUD per il front-end con Vue JS e Vuetify.",
+      "Creazione e modifica di storyboard e task in Azure DevOps.",
+      "Gestione dei rilascio dell'applicazione .NET Core tramite Azure DevOps.",
+      "Consulenza per la preparazione dei dati e la connessione tra i modelli.",
+      "Progettazione e manutenzione di funzionalità di import/export dei dati da CSV a SQL.",
+      "Implementazione di funzionalità UX come il tracciamento delle modifiche e il reset dello stato.",
+      "Sviluppo di componenti JS personalizzati per migliorare l'UX.",
+      "Presentazione delle modifiche implementate durante uno sprint."
+    ],
+    "techStackLabel": "Stack Tecnologico:",
+    "techStack": ".Net 5, Vue 2, Vuetify, Vuex."
+  },
+  "cognizantCard": {
+    "title": "Sviluppatore Software",
+    "institution": "Cognizant Softvision - Cluj Napoca, Romania",
+    "responsibilities": [
+      "TDD con particolare attenzione ai test unitari della logica aziendale.",
+      "Sviluppo e manutenzione di funzionalità API.",
+      "Sviluppo di funzionalità UI.",
+      "Sviluppo e manutenzione di database SQL.",
+      "Utilizzo del .NET Framework, MVC con il pattern Unit of Work e Repository.",
+      "Servizi Windows per garantire la coerenza dei dati.",
+      "Utilizzo di Vue.js come framework JavaScript.",
+      "Sviluppo cross-platform, mobile e web.",
+      "Implementazione di funzionalità UI/UX in React Native come proof-of-concept per la migrazione.",
+      "Gestione di un flusso Redux unificato tra diverse applicazioni."
+    ],
+    "techStackLabel": "Stack Tecnologico:",
+    "techStack": "React 16, .Net 5, Vue 1 & 2, Redux, React-Native con Redux-Saga, Node.js (server-side)."
+  },
+  "boschCard": {
+    "title": "Software Development Engineer",
+    "institution": "Bosch Automotive Service Solutions, LLC - Cluj Napoca, Romania",
+    "responsibilitiesLabel": "Responsabilità:",
+    "responsibilities": [
+      "Sviluppo di strumenti: applicazioni web full-stack utilizzando il .NET Framework (C#, MVC, VueJS, React) e refactoring di codice in Vanilla JS/jQuery.",
+      "Gestione del deployment e del rilascio di nuove versioni di applicazioni web basate su .NET.",
+      "Visualizzazione e gestione dei dati con React e Node.js.",
+      "Sviluppo di database SQL e servizi web, gestione dei server Windows, deployment e release.",
+      "Configurazione di JIRA per lo sviluppo agile.",
+      "Creazione e personalizzazione di strumenti per facilitare e velocizzare lo sviluppo di software embedded o basato su modelli."
+    ]
+  },
+  "dvseCard": {
+    "title": "Web Developer",
+    "institution": "DVSE GmbH - Târgu Mureș, Romania",
+    "responsibilitiesLabel": "Responsabilità:",
+    "responsibilities": [
+      "Correzione di bug e sviluppo di funzionalità per applicazioni web.",
+      "Refactoring di CSS e JS.",
+      "Sviluppo di funzionalità all'interno del framework .NET MVC utilizzando Entity Framework, Knockout.js e Angular.js di base.",
+      "Implementazione di nuove funzionalità con React.js e Redux seguendo i modelli MVC/MVVM per i servizi back-end."
+    ]
+  },
+  "itSupportCard": {
+    "title": "Tecnico di Supporto IT",
+    "institution": "New Vision Technologies Inc. - Târgu Mureș, Romania",
+    "responsibilitiesLabel": "Responsabilità:",
+    "responsibilities": [
+      "Risoluzione di problemi di base e personalizzazione delle applicazioni secondo le specifiche del cliente.",
+      "Impostazione e manutenzione di applicazioni personali per gli utenti (AutoCAD, Photoshop, fotografia Canon, Microsoft Office).",
+      "Amministrazione di Active Directory e dei server Exchange.",
+      "Gestione base di siti web.",
+      "Risoluzione dei problemi di rete.",
+      "Scrittura di script per generare e cancellare nuovi utenti.",
+      "Implementazione di DevOps di base per il deployment e la manutenzione di applicazioni web semplici.",
+      "Gestione dei telefoni 3COM."
+    ]
+  },
+  "githubProfile": {
+    "avatarAlt": "Avatar del profilo",
+    "name": "Norbert Pascu",
+    "location": "Zurigo, Svizzera",
+    "specializing": "Specializzato in",
+    "specialties": ".NET, React e F#",
+    "profileDescription": "Full-Stack Engineer | Appassionato di tecnologia | Oltre 9 anni di esperienza in Fintech, retail, automobilistico e industria chimica",
+    "emailLabel": "norbipascu92@gmail.com",
+    "phoneLabel": "+41765951562"
+  }
+}

@@ -127,11 +127,11 @@ const OrderBook: React.FC<OrderBookProps> = ({
     return (
         <div
             onClick={closeOrderBookPopup}
-            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed top-0 left-0 w-full h-auto bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
             <div
                 onClick={(e: MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-                className={`relative p-4 w-11/12 max-w-xl ${
+                className={`relative p-2 w-10/12 max-w-xl ${
                     isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"
                 }`}
             >
@@ -150,7 +150,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     <h2 className="text-lg font-semibold">
                         {selectedSymbolForOrderBook} Order Book
                     </h2>
-                    <div className="flex items-center space-x-2 mt-6">
+                    <div className="flex items-center space-x-2 mt-8">
                         <span>Sort:</span>
                         <select
                             value={sortCriteria}

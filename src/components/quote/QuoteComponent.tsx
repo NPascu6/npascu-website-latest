@@ -231,7 +231,6 @@ const QuotesComponent: React.FC = () => {
 
     return (
         <div
-
             className={`overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}
         >
             {location.pathname !== "/" && (
@@ -246,11 +245,11 @@ const QuotesComponent: React.FC = () => {
             )}
             <div className="mb-2 w-full">
                 <CollapsableSection title="Symbols" isCollapsed={true}>
-                    <div className="grid gap-3 h-56 overflow-y-auto flex-wrap">
+                    <div className="flex h-56 overflow-y-auto flex-wrap items-center justify-center">
                         {availableSymbols.map(symbol => (
                             <label
                                 key={symbol}
-                                className={`flex items-center gap-2 mb-2 ${isDarkTheme ? "text-white" : "text-gray-900"}`}
+                                className={`flex w-full p-1 items-center border-gray-600 border-2 cursor-pointer hover:bg-gray-700 hover:text-sky-50 ${isDarkTheme ? "text-white" : "text-gray-900"}`}
                             >
                                 <input
                                     type="checkbox"
@@ -263,8 +262,12 @@ const QuotesComponent: React.FC = () => {
                         ))}
                     </div>
                     <button
+                        style={{
+                            background: isDarkTheme ? "#20242c" : "#ECEFF1",
+                            color: isDarkTheme ? "#ECEFF1" : "#20242c",
+                        }}
                         onClick={handleSelectAll}
-                        className={`mt-1 w-full rounded bg-${isDarkTheme ? "[#555]" : "blue-600"} py-2 text-white`}
+                        className={`mt-1 w-full rounded py-2 text-white`}
                     >
                         {selectedSymbols.length === availableSymbols.length ? 'Deselect All' : 'Select All'}
                     </button>
@@ -275,7 +278,7 @@ const QuotesComponent: React.FC = () => {
                     <Loading/>
                 </div>
             ) : (
-                <ul className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-1 list-none p-0 overflow-y-auto h-[400px] sm:h-auto">
+                <ul className="grid grid-cols-1 sm:grid-flow-col sm:grid-rows-3 sm:[grid-auto-columns:1fr] gap-1 list-none p-0 overflow-y-auto h-[400px] sm:h-auto">
                     {Object.entries(quotes)
                         .filter(([symbol]) => selectedSymbols.includes(symbol))
                         .map(([symbol, data]) => (

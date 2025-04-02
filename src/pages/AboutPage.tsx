@@ -4,10 +4,12 @@ import CloseIcon from "../assets/icons/CloseIcon";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
+import {useTranslation} from "react-i18next";
 
 const AboutPage = () => {
     const nav = useNavigate();
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+    const {t} = useTranslation();
 
     return (
         <div
@@ -34,39 +36,28 @@ const AboutPage = () => {
                         src={InstagramImage}
                         className="rounded-xl shadow-lg"
                         style={{height: "15em"}}
-                        alt="instagram-alt"
+                        alt={t("about.imageAlt")}
                     />
                 </div>
                 <div className="flex flex-col items-center text-center space-y-3">
-                    <p
-                        className={`text-lg ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        }`}
-                    >
-                        🚀 Senior Software Engineer | Full-Stack Engineer | Tech Enthusiast
+                    <p className={`text-lg ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                        {t("about.role")}
                     </p>
                     <p className={isDarkTheme ? "text-gray-400" : "text-gray-600"}>
-                        I specialize in crafting high-performance applications using React,
-                        .NET, and modern web technologies. Whether it's designing robust UI
-                        components, optimizing real-time data flows, or architecting
-                        scalable back-end solutions, I'm all about clean, efficient code.
+                        {t("about.intro")}
                     </p>
                     <p className={isDarkTheme ? "text-gray-400" : "text-gray-600"}>
-                        With over 9 years of experience across fintech, trading platforms,
-                        and enterprise solutions, I've built products that push the
-                        boundaries of what's possible.
+                        {t("about.experience")}
                     </p>
                     <p className={isDarkTheme ? "text-gray-400" : "text-gray-600"}>
-                        Away from the keyboard, I thrive on challenges—whether it's hitting
-                        the slopes, conquering mountain trails, or strategizing over a game
-                        of basketball. 🚴⛷️🏀
+                        {t("about.hobbies")}
                     </p>
                     <p
                         className={`text-lg font-semibold ${
                             isDarkTheme ? "text-indigo-400" : "text-indigo-600"
                         }`}
                     >
-                        Let’s build something amazing.
+                        {t("about.callToAction")}
                     </p>
                 </div>
             </div>

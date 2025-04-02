@@ -5,6 +5,7 @@ import {RootState} from "../../store/store";
 import ToggleSvgDark from "../../assets/icons/ToggleSvgDark";
 import ToggleSvgLight from "../../assets/icons/ToggleSvgLight";
 import DownloadCVButton from "../common/DownloadCVButton";
+import LanguageSelector from "./LanguageSelector";
 
 const TopBar = () => {
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
@@ -22,6 +23,7 @@ const TopBar = () => {
             <div className="flex justify-between w-full">
                 <DownloadCVButton/>
                 <div className="top-bar-section w-full mr-3">
+                    <LanguageSelector/>
                     <button name="toggle-theme" onClick={changeTheme}>
                         {isDarkTheme ? <ToggleSvgLight/> : <ToggleSvgDark/>}
                     </button>

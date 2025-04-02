@@ -1,11 +1,13 @@
+import React from "react";
+import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import {_githubAvatarUrl} from "../_constant";
-import {useSelector} from "react-redux";
-
 import Email from "../../assets/icons/Email";
 import Phone from "../../assets/icons/Phone";
+import {useTranslation} from "react-i18next";
 
-const GithubProfileCard = () => {
+const GithubProfileCard: React.FC = () => {
+    const {t} = useTranslation();
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
 
     // Define dynamic colors based on the theme
@@ -20,14 +22,14 @@ const GithubProfileCard = () => {
     return (
         <div
             id="github-profile-card"
-            className={`max-w-md mx-auto ${bgColor} shadow-md  overflow-hidden p-1 transition-transform duration-300 hover:scale-105`}
+            className={`max-w-md mx-auto ${bgColor} shadow-md overflow-hidden p-1 transition-transform duration-300 hover:scale-105`}
         >
             <div className="flex flex-col items-center">
                 {/* Profile Avatar */}
                 <div className="h-28 w-28 rounded-full overflow-hidden border-4 border-green-700 shadow-md">
                     <img
                         src={_githubAvatarUrl}
-                        alt="Profile"
+                        alt={t("githubProfile.avatarAlt")}
                         className="w-full h-full object-cover"
                         loading="lazy"
                     />
@@ -35,27 +37,22 @@ const GithubProfileCard = () => {
 
                 {/* Profile Details */}
                 <h2 className={`mt-2 text-2xl font-bold ${textColor}`}>
-                    {"Norbert Pascu"}
+                    {t("githubProfile.name")}
                 </h2>
                 <p className={`mt-1 text-sm ${secondaryTextColor}`}>
-                    Zurich, Switzerland
+                    {t("githubProfile.location")}
                 </p>
 
                 {/* Additional Info */}
                 <div className="mt-2 text-center px-2">
                     <p className={`text-base ${textColor}`}>
-                        Specializing in{" "}
+                        {t("githubProfile.specializing")}{" "}
                         <span className={`font-semibold ${accentColor}`}>
-              .NET, React, and F#
+              {t("githubProfile.specialties")}
             </span>
                     </p>
                     <p className={`mt-1 text-sm ${textColor}`}>
-                        <span className="font-semibold">Full-Stack Engineer</span> |{" "}
-                        <span className="font-semibold">Tech Enthusiast</span> | 9+ years of
-                        experience in{" "}
-                        <span className="font-semibold">
-              Fintech, Retail, Automobile, and Chemical Industry
-            </span>
+                        {t("githubProfile.profileDescription")}
                     </p>
                 </div>
             </div>
@@ -64,17 +61,17 @@ const GithubProfileCard = () => {
             <div className="mt-2 grid grid-cols-1 gap-2">
                 <a
                     href="mailto:norbipascu92@gmail.com"
-                    className={`flex items-center justify-center gap-2 px-2 py-2 border ${borderColor}  text-green-500 ${hoverBgColor} ${hoverTextColor} transition-colors duration-300`}
+                    className={`flex items-center justify-center gap-2 px-2 py-2 border ${borderColor} text-green-500 ${hoverBgColor} ${hoverTextColor} transition-colors duration-300`}
                 >
                     <Email/>
-                    <span>norbipascu92@gmail.com</span>
+                    <span>{t("githubProfile.emailLabel")}</span>
                 </a>
                 <a
                     href="tel:+41765951562"
-                    className={`flex items-center justify-center gap-2 px-2 py-2 border ${borderColor}  text-green-500 ${hoverBgColor} ${hoverTextColor} transition-colors duration-300`}
+                    className={`flex items-center justify-center gap-2 px-2 py-2 border ${borderColor} text-green-500 ${hoverBgColor} ${hoverTextColor} transition-colors duration-300`}
                 >
                     <Phone/>
-                    <span>+41765951562</span>
+                    <span>{t("githubProfile.phoneLabel")}</span>
                 </a>
             </div>
         </div>

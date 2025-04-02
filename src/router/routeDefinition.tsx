@@ -35,7 +35,7 @@ export const routeDefinition: RouteDefinition[] = [
         element: withSuspense(QuotePage),
     },
     {
-        path: "/dynamic",
+        path: "/dynamic-components",
         exact: true,
         element: withSuspense(DynamicComponentsContainerPage),
     },

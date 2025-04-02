@@ -5,8 +5,8 @@ import {RootState} from "./store/store";
 import {useSwipeable} from "react-swipeable";
 import Loading from "./pages/generic/Loading";
 import {useLocation} from "react-router-dom";
+import './i18n';
 
-// Lazy load components
 const TopBar = lazy(() => import("./components/app/TopBar"));
 const SideBar = lazy(() => import("./components/app/SideBar"));
 const InstallPWAButton = lazy(() => import("./components/app/InstallPWAButton"));
@@ -28,7 +28,6 @@ const App: React.FC = () => {
         else setIsDrawerOpen(true);
     }, [location.pathname]);
 
-    // Global swipe handler for the entire app with default behavior prevention
     const swipeHandlers = useSwipeable({
         onSwipedLeft: closeSidebar,
         onSwipedRight: openSidebar,
@@ -37,7 +36,6 @@ const App: React.FC = () => {
         delta: 10, // Reduce sensitivity (prevents accidental swipes)
     });
 
-    // Prevent body scrolling when sidebar is open
     useEffect(() => {
         document.body.style.overflow = isDrawerOpen ? "hidden" : "";
     }, [isDrawerOpen]);
