@@ -219,7 +219,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                     className="grid grid-cols-3 p-1 transition-all duration-300"
                                     style={{
                                         backgroundColor: rowBg,
-                                        color: isDarkTheme ? "#fff" : undefined,
+                                        color: isDarkTheme ? "#fff" : "#f2222",
                                         fontWeight: index < 10 ? "bold" : "normal",
                                     }}
                                 >

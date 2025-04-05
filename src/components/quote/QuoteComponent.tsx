@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as signalR from '@microsoft/signalr';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {Link, useLocation} from 'react-router-dom';
-import CollapsableSection from "../common/CollapsableSection";
+import CollapsableSection from '../common/CollapsableSection';
 import {FaArrowDown, FaArrowUp} from 'react-icons/fa';
-import Loading from "../../pages/generic/Loading";
-import OrderBook from "./OrderBook";
-import DepthChart from "./DepthChartCompontent";
+import Loading from '../../pages/generic/Loading';
+import OrderBook from './OrderBook';
+import DepthChart from './DepthChartCompontent';
 
 // --- Interfaces ---
 export interface FinnhubQuote {
@@ -16,16 +16,16 @@ export interface FinnhubQuote {
     l: number;
     o: number;
     pc: number;
-    t: number;  // timestamp in seconds
+    t: number;  // timestamp in seconds (or ms if you convert)
 }
 
 export interface FinnhubTrade {
     p: number;  // trade price
     s: string;  // symbol
-    t: number;  // timestamp in milliseconds
+    t: number;  // timestamp in ms
     v: number;  // volume
     c?: number | null;
-    side?: 'buy' | 'sell';  // added side
+    side?: 'buy' | 'sell';
 }
 
 interface QuoteData {
@@ -43,25 +43,25 @@ interface OrderBooks {
 }
 
 const blinkDuration = 500;
-
 const symbolEmojis: { [symbol: string]: string } = {
-    "BINANCE:BTCUSDT": "🪙",  // Bitcoin
-    "BINANCE:ETHUSDT": "💎",  // Ethereum
-    "BINANCE:XRPUSDT": "🚀",  // Ripple
-    "BINANCE:BNBUSDT": "💛",  // Binance Coin (using a yellow heart)
-    "BINANCE:ADAUSDT": "🧡",  // Cardano
-    "BINANCE:SOLUSDT": "🌞",  // Solana
-    "BINANCE:DOGEUSDT": "🐶", // Dogecoin
-    "BINANCE:DOTUSDT": "📌",  // Polkadot
-    "BINANCE:LTCUSDT": "💰",  // Litecoin
-    "BINANCE:LINKUSDT": "🔗", // Chainlink
-    "BINANCE:UNIUSDT": "🦄",  // Uniswap
-    "BINANCE:MATICUSDT": "🔷",// MATIC (using a blue diamond)
-    "BINANCE:AVAXUSDT": "❄️",  // Avalanche
-    "BINANCE:ALGOUSDT": "🥇",  // Algorand (gold medal)
-    "BINANCE:ATOMUSDT": "🌌"   // Cosmos
+    "BINANCE:BTCUSDT": "🪙",
+    "BINANCE:ETHUSDT": "💎",
+    "BINANCE:XRPUSDT": "🚀",
+    "BINANCE:BNBUSDT": "💛",
+    "BINANCE:ADAUSDT": "🧡",
+    "BINANCE:SOLUSDT": "🌞",
+    "BINANCE:DOGEUSDT": "🐶",
+    "BINANCE:DOTUSDT": "📌",
+    "BINANCE:LTCUSDT": "💰",
+    "BINANCE:LINKUSDT": "🔗",
+    "BINANCE:UNIUSDT": "🦄",
+    "BINANCE:MATICUSDT": "🔷",
+    "BINANCE:AVAXUSDT": "❄️",
+    "BINANCE:ALGOUSDT": "🥇",
+    "BINANCE:ATOMUSDT": "🌌"
 };
 
+// The symbols you display
 export const availableSymbols = [
     "BINANCE:BTCUSDT",
     "BINANCE:ETHUSDT",
@@ -89,24 +89,26 @@ const QuotesComponent: React.FC = () => {
     const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const [selectedSymbolForOrderBook, setSelectedSymbolForOrderBook] = useState<string | null>(null);
     const [selectedSymbolForDepthChart, setSelectedSymbolForDepthChart] = useState<string | null>(null);
-    const [lastTradeSide, setLastTradeSide] = useState<{ [symbol: string]: 'buy' | 'sell' }>({});
 
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const location = useLocation();
-    const FaArrowDownIcon: any = FaArrowDown;
-    const FaArrowUpIcon: any = FaArrowUp;
+
+    // ------------------------------
+    // Pattern array to produce trades
+    // e.g. 1,2,3,4,5,4,3,2 => repeat
+    // ------------------------------
+    const pattern = useRef<number[]>([1, 2, 3, 4, 5, 4, 3, 2]);
+    const patternIndex = useRef<number>(0);
+
+    // We'll track last time from real feed. If your feed is slow, you can do "offline simulation" too
+    const lastRealUpdateRef = useRef<number>(Date.now());
 
     useEffect(() => {
         setSelectedSymbols(availableSymbols);
     }, []);
 
     useEffect(() => {
-        function applyRandomPercentage(value: number): number {
-            const randomFactor = (Math.random() - 0.5) * 0.02;
-            const newValue = value * (1 + randomFactor);
-            return newValue === value ? value * 1.0001 : newValue;
-        }
-
+        // 1) Setup the SignalR connection
         const connection = new signalR.HubConnectionBuilder()
             .withUrl(import.meta.env.VITE_API_KEY)
             .withAutomaticReconnect()
@@ -116,9 +118,17 @@ const QuotesComponent: React.FC = () => {
             .then(() => console.log('Connected to quotes hub.'))
             .catch(err => console.error('Error connecting to quotes hub:', err));
 
-        // Handle ReceiveQuote
+        // 2) "ReceiveQuote"
         connection.on('ReceiveQuote', (symbol: string, newQuote: FinnhubQuote) => {
-            const randomizedQuote = {
+            lastRealUpdateRef.current = Date.now();
+
+            const applyRandomPercentage = (value: number) => {
+                const randomFactor = (Math.random() - 0.5) * 0.02; // ±1%
+                const newValue = value * (1 + randomFactor);
+                return newValue === value ? value * 1.0001 : newValue;
+            };
+
+            const randomizedQuote: FinnhubQuote = {
                 ...newQuote,
                 c: applyRandomPercentage(newQuote.c),
                 t: applyRandomPercentage(newQuote.t)
@@ -136,7 +146,9 @@ const QuotesComponent: React.FC = () => {
                 }
                 const direction = prevData?.direction || 'neutral';
                 const newData: QuoteData = {quote: randomizedQuote, updated, direction};
+
                 if (updated) {
+                    // blink the tile for blinkDuration ms
                     setTimeout(() => {
                         setQuotes(current => {
                             const data = current[symbol];
@@ -151,34 +163,76 @@ const QuotesComponent: React.FC = () => {
             });
         });
 
-        // Handle ReceiveTrade (Balanced Buys/Sells)
-        connection.on('ReceiveTrade', (symbol: string, newTrade: FinnhubTrade) => {
-            const randomizedTrade: FinnhubTrade = {
-                ...newTrade,
-                p: applyRandomPercentage(newTrade.p)
-            };
+        // 3) "ReceiveTrade" -> produce multiple buy/sell trades in a pattern
+        connection.on('ReceiveTrade', (symbol: string, incomingTrade: FinnhubTrade) => {
+            lastRealUpdateRef.current = Date.now();
 
-            const previousSide = lastTradeSide[symbol] || 'sell';
-            const nextSide = previousSide === 'buy' ? 'sell' : 'buy';
-            randomizedTrade.side = nextSide;
+            const currentQuote = quotes[symbol]?.quote;
+            const midPrice = currentQuote?.c ?? incomingTrade.p;
 
-            setLastTradeSide(prev => ({...prev, [symbol]: nextSide}));
+            // patternIndex => how many trades we produce this time
+            const howMany = pattern.current[patternIndex.current];
+            // increment patternIndex (wrap around)
+            patternIndex.current = (patternIndex.current + 1) % pattern.current.length;
 
+            // We'll produce "howMany" buy trades + "howMany" sell trades,
+            // each with small randomization around midPrice
+            const tradesToAdd: FinnhubTrade[] = [];
+
+            for (let i = 0; i < howMany; i++) {
+                // Slight random factor (±0.05%)
+                const variationFactor = 1 + (Math.random() - 0.5) * 0.001;
+                const basePrice = incomingTrade.p * variationFactor;
+
+                // Force buy below mid
+                const buyAdjustment = Math.abs(Math.random() * 0.001);
+                const buyPrice = Math.min(basePrice * (1 - buyAdjustment), midPrice * (1 - buyAdjustment));
+                tradesToAdd.push({
+                    ...incomingTrade,
+                    p: parseFloat(buyPrice.toFixed(6)),
+                    side: 'buy',
+                    t: Date.now(),
+                    v: incomingTrade.v * (1 + Math.random() * 0.1),
+                });
+            }
+
+            for (let i = 0; i < howMany; i++) {
+                // Slight random factor (±0.05%)
+                const variationFactor = 1 + (Math.random() - 0.5) * 0.001;
+                const basePrice = incomingTrade.p * variationFactor;
+
+                // Force sell above mid
+                const sellAdjustment = Math.abs(Math.random() * 0.001);
+                const sellPrice = Math.max(basePrice * (1 + sellAdjustment), midPrice * (1 + sellAdjustment));
+                tradesToAdd.push({
+                    ...incomingTrade,
+                    p: parseFloat(sellPrice.toFixed(6)),
+                    side: 'sell',
+                    t: Date.now(),
+                    v: incomingTrade.v * (1 + Math.random() * 0.1),
+                });
+            }
+
+            // Add them to the order book
             setOrderBooks(prev => {
                 const currentTrades = prev[symbol] || [];
-                const updatedTrades = [randomizedTrade, ...currentTrades];
+                // Prepend new trades
+                const updatedTrades = [...tradesToAdd, ...currentTrades];
                 return {...prev, [symbol]: updatedTrades.slice(0, 1000)};
             });
 
-            setQuotes(prev => {
-                const prevData = prev[symbol];
-                if (prevData) {
+            // Also update the quotes direction based on the last buy
+            // (or pick any of the trades, your choice)
+            const lastBuy = tradesToAdd.find(t => t.side === 'buy');
+            if (lastBuy) {
+                setQuotes(prev => {
+                    const prevData = prev[symbol];
+                    if (!prevData) return prev;
+
                     let direction: 'up' | 'down' | 'neutral' = 'neutral';
-                    if (randomizedTrade.p > prevData.quote.c) {
-                        direction = 'up';
-                    } else if (randomizedTrade.p < prevData.quote.c) {
-                        direction = 'down';
-                    }
+                    if (lastBuy.p > prevData.quote.c) direction = 'up';
+                    else if (lastBuy.p < prevData.quote.c) direction = 'down';
+
                     return {
                         ...prev,
                         [symbol]: {
@@ -187,19 +241,23 @@ const QuotesComponent: React.FC = () => {
                             direction,
                         },
                     };
-                }
-                return prev;
-            });
+                });
+            }
         });
 
         return () => {
             connection.stop().catch(err => console.error('Error stopping connection:', err));
         };
-    }, []); // Dependency array updated to avoid repeated reconnections
+    }, []);
+
+    // (Optional) If your API feed is slow, you can do an "offline simulation" approach
+    // every X seconds to produce trades or randomize quotes
 
     const handleCheckboxChange = (symbol: string) => {
         setSelectedSymbols(prev =>
-            prev.includes(symbol) ? prev.filter(s => s !== symbol) : [...prev, symbol]
+            prev.includes(symbol)
+                ? prev.filter(s => s !== symbol)
+                : [...prev, symbol]
         );
     };
 
@@ -214,7 +272,6 @@ const QuotesComponent: React.FC = () => {
     const handleOpenOrderBook = (symbol: string) => {
         setSelectedSymbolForOrderBook(symbol);
     };
-
     const closeOrderBookPopup = () => {
         setSelectedSymbolForOrderBook(null);
     };
@@ -222,7 +279,6 @@ const QuotesComponent: React.FC = () => {
     const handleOpenDepthChart = (symbol: string) => {
         setSelectedSymbolForDepthChart(symbol);
     };
-
     const closeDepthChartPopup = () => {
         setSelectedSymbolForDepthChart(null);
     };
@@ -230,9 +286,7 @@ const QuotesComponent: React.FC = () => {
     const isLoading = Object.keys(quotes).length === 0;
 
     return (
-        <div
-            className={`overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}
-        >
+        <div className={`overflow-y-auto p-1 ${isDarkTheme ? "bg-[#1a1d24] text-white" : "bg-white text-gray-900"}`}>
             {location.pathname !== "/" && (
                 <div className="flex justify-end">
                     <Link
@@ -243,13 +297,17 @@ const QuotesComponent: React.FC = () => {
                     </Link>
                 </div>
             )}
+
+            {/* Symbols Section */}
             <div className="mb-2 w-full">
                 <CollapsableSection title="Symbols" isCollapsed={true}>
                     <div className="flex h-56 overflow-y-auto flex-wrap items-center justify-center">
                         {availableSymbols.map(symbol => (
                             <label
                                 key={symbol}
-                                className={`flex w-full p-1 items-center border-gray-600 border-2 cursor-pointer hover:bg-gray-700 hover:text-sky-50 ${isDarkTheme ? "text-white" : "text-gray-900"}`}
+                                className={`flex w-full p-1 items-center border-gray-600 border-2 cursor-pointer hover:bg-gray-700 hover:text-sky-50 ${
+                                    isDarkTheme ? "text-white" : "text-gray-900"
+                                }`}
                             >
                                 <input
                                     type="checkbox"
@@ -267,12 +325,14 @@ const QuotesComponent: React.FC = () => {
                             color: isDarkTheme ? "#ECEFF1" : "#20242c",
                         }}
                         onClick={handleSelectAll}
-                        className={`mt-1 w-full rounded py-2 text-white`}
+                        className="mt-1 w-full rounded py-2 text-white"
                     >
                         {selectedSymbols.length === availableSymbols.length ? 'Deselect All' : 'Select All'}
                     </button>
                 </CollapsableSection>
             </div>
+
+            {/* Main Content */}
             {isLoading ? (
                 <div className="text-center py-8">
                     <Loading/>
@@ -303,24 +363,24 @@ const QuotesComponent: React.FC = () => {
                                 </strong>
                                 <div className="mt-2 flex items-center justify-between">
                                     <div className="flex items-center">
-            <span
-                className={`text-base font-bold ${
-                    data.direction === "up"
-                        ? "text-green-500"
-                        : data.direction === "down"
-                            ? "text-red-500"
-                            : isDarkTheme
-                                ? "text-white"
-                                : "text-gray-900"
-                }`}
-            >
-              {data.quote.c.toFixed(2)}
-            </span>
+                    <span
+                        className={`text-base font-bold ${
+                            data.direction === "up"
+                                ? "text-green-500"
+                                : data.direction === "down"
+                                    ? "text-red-500"
+                                    : isDarkTheme
+                                        ? "text-white"
+                                        : "text-gray-900"
+                        }`}
+                    >
+                      {data.quote.c.toFixed(2)}
+                    </span>
                                         {data.direction === "up" && (
-                                            <FaArrowUpIcon className="ml-2" color="#00cc00"/>
+                                            <FaArrowUp className="ml-2" color="#00cc00"/>
                                         )}
                                         {data.direction === "down" && (
-                                            <FaArrowDownIcon className="ml-2" color="#ff3333"/>
+                                            <FaArrowDown className="ml-2" color="#ff3333"/>
                                         )}
                                     </div>
                                     <div className="space-x-2 space-y-2">
@@ -348,7 +408,6 @@ const QuotesComponent: React.FC = () => {
                             </li>
                         ))}
                 </ul>
-
             )}
 
             <OrderBook
