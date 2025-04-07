@@ -78,80 +78,92 @@ const DepthChart: React.FC<DepthChartProps> = ({
     );
   }
 
-  // 3) Bin trades by price with a very fine BIN_SIZE for granularity.
-  const BIN_SIZE = 0.001;
-  const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
+  // 3) Process and memoize the chart data.
+  const { cumulativeBuys, cumulativeSells, xMin, xMax, yMax } = useMemo(() => {
+    const BIN_SIZE = 0.001;
+    const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
 
-  // Separate trades into buy and sell bins based on midPrice.
-  const buyBins: Record<number, number> = {};
-  const sellBins: Record<number, number> = {};
+    // Bin trades into buys and sells based on midPrice.
+    const buyBins: Record<number, number> = {};
+    const sellBins: Record<number, number> = {};
 
-  trades.forEach((trade) => {
-    const binned = binPrice(trade.p);
-    if (trade.p < midPrice) {
-      buyBins[binned] = (buyBins[binned] || 0) + trade.v;
-    } else {
-      sellBins[binned] = (sellBins[binned] || 0) + trade.v;
+    trades.forEach((trade) => {
+      const binned = binPrice(trade.p);
+      if (trade.p < midPrice) {
+        buyBins[binned] = (buyBins[binned] || 0) + trade.v;
+      } else {
+        sellBins[binned] = (sellBins[binned] || 0) + trade.v;
+      }
+    });
+
+    // Convert bins to points.
+    let buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
+      price: parseFloat(price),
+      volume: vol as number,
+    }));
+    let sellPoints = Object.entries(sellBins).map(([price, vol]) => ({
+      price: parseFloat(price),
+      volume: vol as number,
+    }));
+
+    // Ensure at least two points per side for proper line rendering.
+    if (buyPoints.length === 0) {
+      buyPoints.push({ price: midPrice - BIN_SIZE, volume: 0 });
+      buyPoints.push({ price: midPrice - 2 * BIN_SIZE, volume: 0 });
+    } else if (buyPoints.length === 1) {
+      buyPoints.push({
+        price: buyPoints[0].price - BIN_SIZE,
+        volume: buyPoints[0].volume,
+      });
     }
-  });
+    if (sellPoints.length === 0) {
+      sellPoints.push({ price: midPrice + BIN_SIZE, volume: 0 });
+      sellPoints.push({ price: midPrice + 2 * BIN_SIZE, volume: 0 });
+    } else if (sellPoints.length === 1) {
+      sellPoints.push({
+        price: sellPoints[0].price + BIN_SIZE,
+        volume: sellPoints[0].volume,
+      });
+    }
 
-  // Convert bins to arrays of { price, volume }
-  let buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
-    price: parseFloat(price),
-    volume: vol as number,
-  }));
-  let sellPoints = Object.entries(sellBins).map(([price, vol]) => ({
-    price: parseFloat(price),
-    volume: vol as number,
-  }));
+    // Sort: buys descending, sells ascending.
+    buyPoints.sort((a, b) => b.price - a.price);
+    sellPoints.sort((a, b) => a.price - b.price);
 
-  // 4) Ensure both sides have at least one data point.
-  if (buyPoints.length === 0) {
-    buyPoints.push({ price: midPrice - BIN_SIZE, volume: 0 });
-  }
-  if (sellPoints.length === 0) {
-    sellPoints.push({ price: midPrice + BIN_SIZE, volume: 0 });
-  }
-
-  // 5) Sort points:
-  // - For buys: sort descending (so curve extends leftwards from midPrice)
-  // - For sells: sort ascending (so curve extends rightwards)
-  buyPoints.sort((a, b) => b.price - a.price);
-  sellPoints.sort((a, b) => a.price - b.price);
-
-  // 6) Compute cumulative volumes.
-  const cumulativeBuys = useMemo(() => {
+    // Compute cumulative volumes.
     let sum = 0;
-    return buyPoints.map((pt) => {
+    const cumulativeBuys = buyPoints.map((pt) => {
       sum += pt.volume;
       return { x: pt.price, y: sum };
     });
-  }, [buyPoints]);
-
-  const cumulativeSells = useMemo(() => {
-    let sum = 0;
-    return sellPoints.map((pt) => {
+    sum = 0;
+    const cumulativeSells = sellPoints.map((pt) => {
       sum += pt.volume;
       return { x: pt.price, y: sum };
     });
-  }, [sellPoints]);
 
-  // Determine the maximum cumulative volume for the y-axis.
-  const yMax = Math.max(
-    ...cumulativeBuys.map((pt) => pt.y),
-    ...cumulativeSells.map((pt) => pt.y)
-  );
+    // Determine maximum cumulative volume.
+    const yMax = Math.max(
+      ...cumulativeBuys.map((pt) => pt.y),
+      ...cumulativeSells.map((pt) => pt.y)
+    );
 
-  // 7) Build the Chart.js data with three datasets:
-  // - Bids (buy side)
-  // - Asks (sell side)
-  // - A dashed vertical line for the midPrice.
+    // Set the x-axis domain to cover both sides.
+    const buyMin = Math.min(...buyPoints.map((pt) => pt.price));
+    const sellMax = Math.max(...sellPoints.map((pt) => pt.price));
+    const xMin = Math.min(buyMin, midPrice);
+    const xMax = Math.max(sellMax, midPrice);
+
+    return { cumulativeBuys, cumulativeSells, xMin, xMax, yMax };
+  }, [trades, midPrice]);
+
+  // 4) Build the Chart.js data.
   const chartData = {
     datasets: [
       {
         label: "Bids",
         data: cumulativeBuys,
-        borderColor: "rgba(255,0,0,1)", // red
+        borderColor: "rgba(255,0,0,1)",
         backgroundColor: (context: any) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
@@ -173,7 +185,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
       {
         label: "Asks",
         data: cumulativeSells,
-        borderColor: "rgba(0,255,0,1)", // green
+        borderColor: "rgba(0,255,0,1)",
         backgroundColor: (context: any) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
@@ -198,7 +210,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
           { x: midPrice, y: 0 },
           { x: midPrice, y: yMax },
         ],
-        borderColor: "rgba(255,255,0,1)", // yellow
+        borderColor: "rgba(255,255,0,1)",
         borderWidth: 2,
         borderDash: [6, 6],
         fill: false,
@@ -208,7 +220,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     ],
   };
 
-  // 8) Chart.js options with animations disabled for stability.
+  // 5) Chart.js options with explicit x-axis boundaries.
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -217,6 +229,8 @@ const DepthChart: React.FC<DepthChartProps> = ({
     scales: {
       x: {
         type: "linear" as const,
+        min: xMin,
+        max: xMax,
         title: {
           display: true,
           text: "Price",
@@ -257,7 +271,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     },
   };
 
-  // 9) Render the popup & chart.
+  // 6) Render the popup & chart.
   return (
     <div
       style={{ zIndex: 1000 }}
