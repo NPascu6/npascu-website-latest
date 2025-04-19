@@ -80,7 +80,7 @@ div.ag-root-wrapper {
 .ag-row:hover {
     background-color: #efeee9;
     cursor: pointer;
-    color:rgba(0, 0, 0, 0.4);
+    color: rgba(0, 0, 0, 0.4);
 }
 
 .ag-header-active {

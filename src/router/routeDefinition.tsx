@@ -11,7 +11,6 @@ const DynamicComponentsContainerPage = lazy(() =>
 );
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 
-// Optionally, create a helper to wrap lazy components with Suspense
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
     <Suspense fallback={<Loading/>}>
         <Component/>
