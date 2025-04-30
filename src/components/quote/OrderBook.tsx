@@ -34,6 +34,7 @@ function getRowColorByVolume(
 
 interface OrderBookProps {
     selectedSymbolForOrderBook: string | null;
+    closeOrderBookPopup : () => void;
     isDarkTheme: boolean;
     orderBooks: { [symbol: string]: FinnhubTrade[] };
     quotes: { [symbol: string]: { quote: { c: number } } };

@@ -1,7 +1,7 @@
 {
   "language": "EN",
   "marketData": {
-    "title": "Demo Real-time market data",
+    "title": "Demo Real-Time market data",
     "subtitle": "Using my personal .NET API hosted on Render to get data from Finnhub"
   },
   "dynamicComponents": {
