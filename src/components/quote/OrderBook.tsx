@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FinnhubTrade } from "./QuoteComponent";
+import CommonDialog from "../common/CommonDialog";
 
 // --- Helpers -------------------------------------------------------------
 
@@ -17,7 +18,7 @@ function getRowColorByVolume(
     volume: number,
     maxVolume: number,
     dark: boolean,
-    isSell: boolean,
+    isAsk: boolean,
     top10: boolean
 ): string {
     const ratio = volume / maxVolume;
@@ -25,7 +26,7 @@ function getRowColorByVolume(
     const base = dark ? 60 : 80;
     const delta = dark ? 40 : 50;
     let lightness = base - adjusted * delta;
-    const hue = isSell ? 120 : 0;
+    const hue = isAsk ? 120 : 0;
     if (top10) lightness = Math.max(lightness - 15, 0);
     return `hsl(${hue}, 100%, ${lightness}%)`;
 }
@@ -34,7 +35,7 @@ function getRowColorByVolume(
 
 interface OrderBookProps {
     selectedSymbolForOrderBook: string | null;
-    closeOrderBookPopup : () => void;
+    closeOrderBookPopup: () => void;
     isDarkTheme: boolean;
     orderBooks: { [symbol: string]: FinnhubTrade[] };
     quotes: { [symbol: string]: { quote: { c: number } } };
@@ -43,6 +44,7 @@ interface OrderBookProps {
 const OrderBook: React.FC<OrderBookProps> = ({
                                                  selectedSymbolForOrderBook,
                                                  isDarkTheme,
+                                                 closeOrderBookPopup,
                                                  orderBooks,
                                                  quotes,
                                              }) => {
@@ -54,31 +56,31 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const raw = orderBooks[selectedSymbolForOrderBook] || [];
     const trades: FinnhubTrade[] = [];
     raw.forEach((t) => {
-        trades.push({ ...t, side: "buy" });
-        trades.push({ ...t, side: "sell" });
+        trades.push({ ...t, side: "bid" });
+        trades.push({ ...t, side: "ask" });
     });
     const limited = trades.slice(0, 1000);
 
-    let sells = limited.filter((t) => t.side === "sell");
-    let buys = limited.filter((t) => t.side === "buy");
+    let asks = limited.filter((t) => t.side === "ask");
+    let bids = limited.filter((t) => t.side === "bid");
 
     // Sort
     if (sortCriteria === "price") {
-        sells.sort((a, b) => a.p - b.p);
-        buys.sort((a, b) => b.p - a.p);
+        asks.sort((a, b) => a.p - b.p);
+        bids.sort((a, b) => b.p - a.p);
     } else {
-        sells.sort((a, b) => b.v - a.v);
-        buys.sort((a, b) => b.v - a.v);
+        asks.sort((a, b) => b.v - a.v);
+        bids.sort((a, b) => b.v - a.v);
     }
 
     // Limit to top 500
-    sells = sells.slice(0, 500);
-    buys = buys.slice(0, 500);
+    asks = asks.slice(0, 500);
+    bids = bids.slice(0, 500);
 
-    const maxVol = Math.max(...[...sells, ...buys].map((t) => t.v), 1);
+    const maxVol = Math.max(...[...asks, ...bids].map((t) => t.v), 1);
 
-    const [bestBidPrice, bestBidVol] = buys[0] ? [buys[0].p, buys[0].v] : [0, 0];
-    const [bestAskPrice, bestAskVol] = sells[0] ? [sells[0].p, sells[0].v] : [0, 0];
+    const [bestBidPrice, bestBidVol] = bids[0] ? [bids[0].p, bids[0].v] : [0, 0];
+    const [bestAskPrice, bestAskVol] = asks[0] ? [asks[0].p, asks[0].v] : [0, 0];
 
     const bidPriceDecimals = checkNumberLengthToAdjustDecimals(bestBidPrice);
     const bidVolDecimals = checkNumberLengthToAdjustDecimals(bestBidVol);
@@ -88,7 +90,11 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const midPrice = quotes[selectedSymbolForOrderBook]?.quote.c || 0;
 
     return (
-        <div>
+        <CommonDialog
+            title={`Order Book: ${selectedSymbolForOrderBook}`}
+            isOpen={true}
+            onClose={closeOrderBookPopup}
+        >
             <div className="mb-4 flex justify-end items-center space-x-2">
                 <span>Sort:</span>
                 <select
@@ -101,13 +107,12 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 </select>
             </div>
 
-            {/* Order Book Static View */}
             <div className="relative h-[60vh] w-full">
-                {/* Sells above mid (grow upward) */}
-                <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-hidden flex flex-col-reverse">
-                    {sells.map((t, i) => (
+                {/* Asks above mid (scrollable upward) */}
+                <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-y-auto flex flex-col-reverse">
+                    {asks.slice().reverse().map((t, i) => (
                         <div
-                            key={`sell-${i}`}
+                            key={`ask-${i}`}
                             className="grid grid-cols-3 p-1"
                             style={{
                                 backgroundColor: getRowColorByVolume(
@@ -129,15 +134,15 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 </div>
 
                 {/* Mid-price divider */}
-                <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold">
+                <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 z-10 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold">
                     {midPrice ? `MID ${midPrice.toFixed(4)}` : "Mid Price Unavailable"}
                 </div>
 
-                {/* Buys below mid (grow downward) */}
-                <div className="absolute inset-x-0 top-1/2 bottom-0 overflow-hidden flex flex-col">
-                    {buys.map((t, i) => (
+                {/* Bids below mid (scrollable downward) */}
+                <div className="absolute inset-x-0 top-1/2 bottom-0 overflow-y-auto flex flex-col">
+                    {bids.map((t, i) => (
                         <div
-                            key={`buy-${i}`}
+                            key={`bid-${i}`}
                             className="grid grid-cols-3 p-1"
                             style={{
                                 backgroundColor: getRowColorByVolume(
@@ -158,7 +163,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     ))}
                 </div>
             </div>
-        </div>
+        </CommonDialog>
     );
 };
 

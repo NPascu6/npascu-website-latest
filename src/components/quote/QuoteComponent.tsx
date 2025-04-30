@@ -26,7 +26,7 @@ export interface FinnhubTrade {
     t: number; // timestamp in ms
     v: number; // volume
     c?: number | null;
-    side?: "buy" | "sell";
+    side?: "bid" | "ask";
 }
 
 interface QuoteData {
@@ -210,7 +210,7 @@ const QuotesComponent: React.FC = () => {
                     tradesToAdd.push({
                         ...incomingTrade,
                         p: parseFloat(buyPrice.toFixed(6)),
-                        side: "buy",
+                        side: "bid",
                         t: Date.now(),
                         v: incomingTrade.v * (1 + Math.random() * 0.1),
                     });
@@ -230,7 +230,7 @@ const QuotesComponent: React.FC = () => {
                     tradesToAdd.push({
                         ...incomingTrade,
                         p: parseFloat(sellPrice.toFixed(6)),
-                        side: "sell",
+                        side: "ask",
                         t: Date.now(),
                         v: incomingTrade.v * (1 + Math.random() * 0.1),
                     });
@@ -246,7 +246,7 @@ const QuotesComponent: React.FC = () => {
 
                 // Also update the quotes direction based on the last buy
                 // (or pick any of the trades, your choice)
-                const lastBuy = tradesToAdd.find((t) => t.side === "buy");
+                const lastBuy = tradesToAdd.find((t) => t.side === "bid");
                 if (lastBuy) {
                     setQuotes((prev) => {
                         const prevData = prev[symbol];
