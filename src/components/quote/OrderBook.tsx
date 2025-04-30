@@ -135,12 +135,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const sVDec = checkNumberLengthToAdjustDecimals(sV);
 
     return (
-        <CommonDialog
-            isOpen={!!selectedSymbolForOrderBook}
-            onClose={closeOrderBookPopup}
-            title={`${selectedSymbolForOrderBook} Order Book`}
-        >
-            {/* Sort Control */}
+        <div>
             <div className="mb-4 flex justify-end items-center space-x-2">
                 <span>Sort:</span>
                 <select
@@ -214,7 +209,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     </div>
                 ))}
             </div>
-        </CommonDialog>
+        </div>
     );
 };
 
