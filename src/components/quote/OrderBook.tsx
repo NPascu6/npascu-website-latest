@@ -5,23 +5,11 @@ import React, {
     useState,
 } from "react";
 import { FinnhubTrade } from "./QuoteComponent";
-import CommonDialog from "../common/CommonDialog";
 
 // --- Helpers -------------------------------------------------------------
 
 const formatTime = (timestamp: number): string =>
     new Date(timestamp > 1e10 ? timestamp : timestamp * 1000).toLocaleTimeString();
-
-function throttle<T extends (...args: any[]) => void>(func: T, limit: number): T {
-    let inThrottle = false;
-    return function (this: any, ...args: any[]) {
-        if (!inThrottle) {
-            func.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => (inThrottle = false), limit);
-        }
-    } as T;
-}
 
 function checkNumberLengthToAdjustDecimals(value: number): number {
     const intLen = Math.floor(Math.abs(value)).toString().length;
@@ -84,27 +72,20 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
     // scroll-to-mid logic
     const scrollToMid = useCallback(() => {
-        const c = containerRef.current;
-        const m = midRef.current;
-        if (c && m) {
-            const cRect = c.getBoundingClientRect();
-            const mRect = m.getBoundingClientRect();
-            const offset = mRect.top - cRect.top - cRect.height / 2 + mRect.height / 2;
-            c.scrollBy({ top: offset, behavior: "smooth" });
+        const container = containerRef.current;
+        const midElement = midRef.current;
+        if (container && midElement) {
+            const offset = midElement.offsetTop - container.clientHeight / 2 + midElement.clientHeight / 2;
+            container.scrollTo({ top: offset, behavior: "auto" });
         }
     }, []);
 
-    const throttled = useCallback(throttle(scrollToMid, 250), [scrollToMid]);
-
+    // Only scroll once on symbol or data change
     useEffect(() => {
-        if (selectedSymbolForOrderBook) throttled();
-    }, [selectedSymbolForOrderBook, sortCriteria, throttled]);
-
-    useEffect(() => {
-        if (!selectedSymbolForOrderBook) return;
-        const id = setInterval(throttled, 2000);
-        return () => clearInterval(id);
-    }, [selectedSymbolForOrderBook, sortCriteria, throttled]);
+        if (selectedSymbolForOrderBook) {
+            scrollToMid();
+        }
+    }, [selectedSymbolForOrderBook, localTrades, scrollToMid]);
 
     if (!selectedSymbolForOrderBook) return null;
 
@@ -126,13 +107,13 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
     const maxVol = Math.max(...[...sells, ...buys].map((t) => t.v), 1);
 
-    const [bP, bV] = buys[0] ? [buys[0].p, buys[0].v] : [0, 0];
-    const [sP, sV] = sells[0] ? [sells[0].p, sells[0].v] : [0, 0];
+    const [bestBidPrice, bestBidVol] = buys[0] ? [buys[0].p, buys[0].v] : [0, 0];
+    const [bestAskPrice, bestAskVol] = sells[0] ? [sells[0].p, sells[0].v] : [0, 0];
 
-    const bPDec = checkNumberLengthToAdjustDecimals(bP);
-    const bVDec = checkNumberLengthToAdjustDecimals(bV);
-    const sPDec = checkNumberLengthToAdjustDecimals(sP);
-    const sVDec = checkNumberLengthToAdjustDecimals(sV);
+    const bidPriceDecimals = checkNumberLengthToAdjustDecimals(bestBidPrice);
+    const bidVolDecimals = checkNumberLengthToAdjustDecimals(bestBidVol);
+    const askPriceDecimals = checkNumberLengthToAdjustDecimals(bestAskPrice);
+    const askVolDecimals = checkNumberLengthToAdjustDecimals(bestAskVol);
 
     return (
         <div>
@@ -140,9 +121,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 <span>Sort:</span>
                 <select
                     value={sortCriteria}
-                    onChange={(e) =>
-                        setSortCriteria(e.target.value as "price" | "volume")
-                    }
+                    onChange={(e) => setSortCriteria(e.target.value as "price" | "volume")}
                     className="p-1 rounded bg-gray-200 text-black dark:bg-gray-700 dark:text-white"
                 >
                     <option value="price">Price</option>
@@ -153,7 +132,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
             {/* Order Book List */}
             <div
                 ref={containerRef}
-                className="grid gap-2 h-[60vh] overflow-y-auto"
+                className="grid gap-2 h-[60vh] overflow-y-auto relative"
             >
                 {/* Sells (asks) */}
                 {sells.map((t, i) => (
@@ -172,8 +151,8 @@ const OrderBook: React.FC<OrderBookProps> = ({
                             fontWeight: i < 10 ? "bold" : "normal",
                         }}
                     >
-                        <div>{t.p.toFixed(sPDec)}</div>
-                        <div>{t.v.toFixed(sVDec)}</div>
+                        <div>{t.p.toFixed(askPriceDecimals)}</div>
+                        <div>{t.v.toFixed(askVolDecimals)}</div>
                         <div>{formatTime(t.t)}</div>
                     </div>
                 ))}
@@ -181,7 +160,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 {/* Mid-price divider */}
                 <div
                     ref={midRef}
-                    className="sticky top-[50%] flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold"
+                    className="sticky top-1/2 transform -translate-y-1/2 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold"
                 >
                     {midPrice ? `MID ${midPrice.toFixed(4)}` : "Mid Price Unavailable"}
                 </div>
@@ -203,8 +182,8 @@ const OrderBook: React.FC<OrderBookProps> = ({
                             fontWeight: i < 10 ? "bold" : "normal",
                         }}
                     >
-                        <div>{t.p.toFixed(bPDec)}</div>
-                        <div>{t.v.toFixed(bVDec)}</div>
+                        <div>{t.p.toFixed(bidPriceDecimals)}</div>
+                        <div>{t.v.toFixed(bidVolDecimals)}</div>
                         <div>{formatTime(t.t)}</div>
                     </div>
                 ))}
