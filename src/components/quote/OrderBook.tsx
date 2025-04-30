@@ -98,7 +98,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
         <div
         >
             {/* Sort selector */}
-            <div className="mb-4 flex justify-end items-center space-x-2">
+            <div className="mb-6 flex justify-end items-center space-x-2">
                 <span>Sort:</span>
                 <select
                     value={sortCriteria}
@@ -152,6 +152,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
             absolute inset-x-0 top-1/2
             transform -translate-y-1/2
             z-20
+            text-stone-950  dark:text-white
             bg-white dark:bg-gray-800 bg-opacity-90
             border-t-2 border-b-2 border-gray-400
             py-2 font-bold
