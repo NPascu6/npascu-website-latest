@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {FinnhubTrade} from "./QuoteComponent";
+import React, { useState } from "react";
+import { FinnhubTrade } from "./QuoteComponent";
 import CommonDialog from "../common/CommonDialog";
 
 // --- Helpers -------------------------------------------------------------
@@ -52,15 +52,16 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
     if (!selectedSymbolForOrderBook) return null;
 
-    // Prepare raw trades
+    // Build full trade list with sides
     const raw = orderBooks[selectedSymbolForOrderBook] || [];
     const trades: FinnhubTrade[] = [];
     raw.forEach((t) => {
-        trades.push({...t, side: "bid"});
-        trades.push({...t, side: "ask"});
+        trades.push({ ...t, side: "bid" });
+        trades.push({ ...t, side: "ask" });
     });
-    const limited = trades.slice(0, 1000);
 
+    // Limit & split
+    const limited = trades.slice(0, 1000);
     let asks = limited.filter((t) => t.side === "ask");
     let bids = limited.filter((t) => t.side === "bid");
 
@@ -73,15 +74,18 @@ const OrderBook: React.FC<OrderBookProps> = ({
         bids.sort((a, b) => b.v - a.v);
     }
 
-    // Limit to top 500
+    // Trim to top 500
     asks = asks.slice(0, 500);
     bids = bids.slice(0, 500);
 
-    const maxVol = Math.max(...[...asks, ...bids].map((t) => t.v), 1);
+    // If viewing by volume, reverse bids so the highest‐volume ones sit closest to mid
+    const displayBids =
+        sortCriteria === "volume" ? bids.slice().reverse() : bids;
 
+    // Decimals
+    const maxVol = Math.max(...[...asks, ...bids].map((t) => t.v), 1);
     const [bestBidPrice, bestBidVol] = bids[0] ? [bids[0].p, bids[0].v] : [0, 0];
     const [bestAskPrice, bestAskVol] = asks[0] ? [asks[0].p, asks[0].v] : [0, 0];
-
     const bidPriceDecimals = checkNumberLengthToAdjustDecimals(bestBidPrice);
     const bidVolDecimals = checkNumberLengthToAdjustDecimals(bestBidVol);
     const askPriceDecimals = checkNumberLengthToAdjustDecimals(bestAskPrice);
@@ -90,12 +94,18 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const midPrice = quotes[selectedSymbolForOrderBook]?.quote.c || 0;
 
     return (
-        <div>
+        <CommonDialog
+            title={`Order Book: ${selectedSymbolForOrderBook}`}
+            isOpen={true}
+            onClose={closeOrderBookPopup}
+        >
             <div className="mb-4 flex justify-end items-center space-x-2">
                 <span>Sort:</span>
                 <select
                     value={sortCriteria}
-                    onChange={(e) => setSortCriteria(e.target.value as "price" | "volume")}
+                    onChange={(e) =>
+                        setSortCriteria(e.target.value as "price" | "volume")
+                    }
                     className="p-1 rounded bg-gray-200 text-black dark:bg-gray-700 dark:text-white"
                 >
                     <option value="price">Price</option>
@@ -104,12 +114,14 @@ const OrderBook: React.FC<OrderBookProps> = ({
             </div>
 
             <div className="relative h-[60vh] w-full">
-                {/* Asks above mid (scrollable upward) */}
+                {/* Asks (grow upward) */}
                 <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-y-auto flex flex-col-reverse">
                     {asks.slice().reverse().map((t, i) => (
                         <div
                             key={`ask-${i}`}
-                            className="grid grid-cols-3 p-1"
+                            className={`grid grid-cols-3 p-1 ${
+                                isDarkTheme ? "text-white" : "text-black"
+                            }`}
                             style={{
                                 backgroundColor: getRowColorByVolume(
                                     t.v,
@@ -118,7 +130,6 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                     true,
                                     i < 10
                                 ),
-                                color: isDarkTheme ? "#fff" : undefined,
                                 fontWeight: i < 10 ? "bold" : "normal",
                             }}
                         >
@@ -130,17 +141,18 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 </div>
 
                 {/* Mid-price divider */}
-                <div
-                    className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 z-10 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold">
+                <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 z-10 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold">
                     {midPrice ? `MID ${midPrice.toFixed(4)}` : "Mid Price Unavailable"}
                 </div>
 
-                {/* Bids below mid (scrollable downward) */}
+                {/* Bids (grow downward) */}
                 <div className="absolute inset-x-0 top-1/2 bottom-0 overflow-y-auto flex flex-col">
-                    {bids.map((t, i) => (
+                    {displayBids.map((t, i) => (
                         <div
                             key={`bid-${i}`}
-                            className="grid grid-cols-3 p-1"
+                            className={`grid grid-cols-3 p-1 ${
+                                isDarkTheme ? "text-white" : "text-black"
+                            }`}
                             style={{
                                 backgroundColor: getRowColorByVolume(
                                     t.v,
@@ -149,7 +161,6 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                     false,
                                     i < 10
                                 ),
-                                color: isDarkTheme ? "#fff" : "#f2222",
                                 fontWeight: i < 10 ? "bold" : "normal",
                             }}
                         >
@@ -160,7 +171,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     ))}
                 </div>
             </div>
-        </div>
+        </CommonDialog>
     );
 };
 
