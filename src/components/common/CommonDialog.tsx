@@ -35,14 +35,15 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
                 className={`
           bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
           w-full max-w-3xl max-h-[90vh] overflow-y-auto
-          rounded-2xl shadow-2xl
+          shadow-2xl
           transform transition-all duration-200 ease-out
           scale-95 opacity-0
           animate-modal-in
-          p-6
+          p-2
+          m-2
         `}
             >
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-2">
                     <h2 className="text-2xl font-semibold">{title}</h2>
                     <button
                         onClick={onClose}

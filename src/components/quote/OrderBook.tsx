@@ -1,6 +1,7 @@
 import React, {
     useCallback,
     useEffect,
+    useLayoutEffect,
     useRef,
     useState,
 } from "react";
@@ -54,9 +55,16 @@ const OrderBook: React.FC<OrderBookProps> = ({
                                              }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const midRef = useRef<HTMLDivElement>(null);
+    // guard to scroll only once per symbol
+    const hasScrolled = useRef(false);
 
     const [sortCriteria, setSortCriteria] = useState<"price" | "volume">("price");
     const [localTrades, setLocalTrades] = useState<FinnhubTrade[]>([]);
+
+    // Reset scroll guard when symbol or sort changes
+    useEffect(() => {
+        hasScrolled.current = false;
+    }, [selectedSymbolForOrderBook, sortCriteria]);
 
     // Build localTrades whenever symbol or data changes
     useEffect(() => {
@@ -80,10 +88,15 @@ const OrderBook: React.FC<OrderBookProps> = ({
         }
     }, []);
 
-    // Only scroll once on symbol or data change
-    useEffect(() => {
-        if (selectedSymbolForOrderBook) {
+    // Only scroll ONCE when localTrades updates first time for a symbol
+    useLayoutEffect(() => {
+        if (
+            selectedSymbolForOrderBook &&
+            !hasScrolled.current &&
+            localTrades.length > 0
+        ) {
             scrollToMid();
+            hasScrolled.current = true;
         }
     }, [selectedSymbolForOrderBook, localTrades, scrollToMid]);
 
@@ -122,7 +135,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 <select
                     value={sortCriteria}
                     onChange={(e) => setSortCriteria(e.target.value as "price" | "volume")}
-                    className="p-1 rounded bg-gray-200 text-black dark:bg-gray-700 dark:text-white"
+                    className="p-1 bg-gray-200 text-black dark:bg-gray-700 dark:text-white"
                 >
                     <option value="price">Price</option>
                     <option value="volume">Volume</option>
@@ -138,7 +151,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 {sells.map((t, i) => (
                     <div
                         key={`sell-${i}`}
-                        className="grid grid-cols-3 p-1 transition-all duration-150"
+                        className="grid grid-cols-3 p-1"
                         style={{
                             backgroundColor: getRowColorByVolume(
                                 t.v,
@@ -169,7 +182,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 {buys.map((t, i) => (
                     <div
                         key={`buy-${i}`}
-                        className="grid grid-cols-3 p-1 transition-all duration-150"
+                        className="grid grid-cols-3 p-1"
                         style={{
                             backgroundColor: getRowColorByVolume(
                                 t.v,
