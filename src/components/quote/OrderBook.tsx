@@ -94,10 +94,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const midPrice = quotes[selectedSymbolForOrderBook]?.quote.c || 0;
 
     return (
-        <CommonDialog
-            title={`Order Book: ${selectedSymbolForOrderBook}`}
-            isOpen={true}
-            onClose={closeOrderBookPopup}
+        <div
         >
             <div className="mb-4 flex justify-end items-center space-x-2">
                 <span>Sort:</span>
@@ -171,7 +168,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
                     ))}
                 </div>
             </div>
-        </CommonDialog>
+        </div>
     );
 };
 
