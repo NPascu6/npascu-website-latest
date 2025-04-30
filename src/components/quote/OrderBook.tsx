@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { FinnhubTrade } from "./QuoteComponent";
+// OrderBook.tsx
+import React, {useState} from "react";
+import {FinnhubTrade} from "./QuoteComponent";
 import CommonDialog from "../common/CommonDialog";
 
 // --- Helpers -------------------------------------------------------------
@@ -52,20 +53,20 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
     if (!selectedSymbolForOrderBook) return null;
 
-    // Build full trade list with sides
+    // Prepare trades with side
     const raw = orderBooks[selectedSymbolForOrderBook] || [];
     const trades: FinnhubTrade[] = [];
     raw.forEach((t) => {
-        trades.push({ ...t, side: "bid" });
-        trades.push({ ...t, side: "ask" });
+        trades.push({...t, side: "bid"});
+        trades.push({...t, side: "ask"});
     });
-
-    // Limit & split
     const limited = trades.slice(0, 1000);
+
+    // Split asks/bids
     let asks = limited.filter((t) => t.side === "ask");
     let bids = limited.filter((t) => t.side === "bid");
 
-    // Sort
+    // Sort by price or volume
     if (sortCriteria === "price") {
         asks.sort((a, b) => a.p - b.p);
         bids.sort((a, b) => b.p - a.p);
@@ -74,15 +75,15 @@ const OrderBook: React.FC<OrderBookProps> = ({
         bids.sort((a, b) => b.v - a.v);
     }
 
-    // Trim to top 500
+    // Limit to top 500 each
     asks = asks.slice(0, 500);
     bids = bids.slice(0, 500);
 
-    // If viewing by volume, reverse bids so the highest‐volume ones sit closest to mid
+    // If sorting by volume, reverse bids so largest sit against mid
     const displayBids =
         sortCriteria === "volume" ? bids.slice().reverse() : bids;
 
-    // Decimals
+    // Compute decimals and max volume
     const maxVol = Math.max(...[...asks, ...bids].map((t) => t.v), 1);
     const [bestBidPrice, bestBidVol] = bids[0] ? [bids[0].p, bids[0].v] : [0, 0];
     const [bestAskPrice, bestAskVol] = asks[0] ? [asks[0].p, asks[0].v] : [0, 0];
@@ -96,6 +97,7 @@ const OrderBook: React.FC<OrderBookProps> = ({
     return (
         <div
         >
+            {/* Sort selector */}
             <div className="mb-4 flex justify-end items-center space-x-2">
                 <span>Sort:</span>
                 <select
@@ -110,9 +112,16 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 </select>
             </div>
 
+            {/* Static order book panes */}
             <div className="relative h-[60vh] w-full">
-                {/* Asks (grow upward) */}
-                <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-y-auto flex flex-col-reverse">
+                {/* Asks (grow upward), stopping just above mid */}
+                <div
+                    className="
+            absolute inset-x-0 top-0
+            bottom-[calc(50%+1rem)]
+            overflow-y-auto flex flex-col-reverse
+          "
+                >
                     {asks.slice().reverse().map((t, i) => (
                         <div
                             key={`ask-${i}`}
@@ -138,12 +147,27 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 </div>
 
                 {/* Mid-price divider */}
-                <div style={{color: 'aquamarine'}} className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 z-10 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-opacity-90 font-bold">
+                <div
+                    className="
+            absolute inset-x-0 top-1/2
+            transform -translate-y-1/2
+            z-20
+            bg-white dark:bg-gray-800 bg-opacity-90
+            border-t-2 border-b-2 border-gray-400
+            py-2 font-bold
+          "
+                >
                     {midPrice ? `MID ${midPrice.toFixed(4)}` : "Mid Price Unavailable"}
                 </div>
 
-                {/* Bids (grow downward) */}
-                <div className="absolute inset-x-0 top-1/2 bottom-0 overflow-y-auto flex flex-col">
+                {/* Bids (grow downward), starting just below mid */}
+                <div
+                    className="
+            absolute inset-x-0
+            top-[calc(50%+1rem)] bottom-0
+            overflow-y-auto flex flex-col
+          "
+                >
                     {displayBids.map((t, i) => (
                         <div
                             key={`bid-${i}`}
