@@ -1,4 +1,3 @@
-// CommonDialog.tsx
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 
@@ -32,24 +31,23 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`
-          w-full max-w-3xl max-h-[90vh] overflow-y-auto
-          shadow-2xl
+                className={
+                    `relative w-full max-w-3xl max-h-[90vh] overflow-y-auto
+          bg-white dark:bg-gray-900 shadow-2xl
           transform transition-all duration-200 ease-out
-          scale-95 opacity-0
-          animate-modal-in
-          p-2
-          m-2
-        `}
+          scale-100 opacity-100
+          p-4 m-4`}
             >
-                <div className="flex justify-between items-center mb-2">
-                    <h2 className="text-2xl font-semibold">{title}</h2>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl"
-                    >
-                        &times;
-                    </button>
+                {/* Close Button in top-right */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white text-2xl"
+                    aria-label="Close dialog"
+                >
+                    &times;
+                </button>
+                <div className="mb-4">
+                    <h2 className="text-2xl font-semibold text-center">{title}</h2>
                 </div>
                 <div>{children}</div>
             </div>
