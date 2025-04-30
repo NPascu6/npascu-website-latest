@@ -33,7 +33,6 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
             <div
                 onClick={(e) => e.stopPropagation()}
                 className={`
-          bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
           w-full max-w-3xl max-h-[90vh] overflow-y-auto
           shadow-2xl
           transform transition-all duration-200 ease-out

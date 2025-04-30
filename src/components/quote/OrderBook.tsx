@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "react";
+import React, { useState } from "react";
 import { FinnhubTrade } from "./QuoteComponent";
 
 // --- Helpers -------------------------------------------------------------
@@ -41,7 +35,6 @@ function getRowColorByVolume(
 interface OrderBookProps {
     selectedSymbolForOrderBook: string | null;
     isDarkTheme: boolean;
-    closeOrderBookPopup: () => void;
     orderBooks: { [symbol: string]: FinnhubTrade[] };
     quotes: { [symbol: string]: { quote: { c: number } } };
 }
@@ -49,72 +42,35 @@ interface OrderBookProps {
 const OrderBook: React.FC<OrderBookProps> = ({
                                                  selectedSymbolForOrderBook,
                                                  isDarkTheme,
-                                                 closeOrderBookPopup,
                                                  orderBooks,
                                                  quotes,
                                              }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const midRef = useRef<HTMLDivElement>(null);
-    // guard to scroll only once per symbol
-    const hasScrolled = useRef(false);
-
     const [sortCriteria, setSortCriteria] = useState<"price" | "volume">("price");
-    const [localTrades, setLocalTrades] = useState<FinnhubTrade[]>([]);
-
-    // Reset scroll guard when symbol or sort changes
-    useEffect(() => {
-        hasScrolled.current = false;
-    }, [selectedSymbolForOrderBook, sortCriteria]);
-
-    // Build localTrades whenever symbol or data changes
-    useEffect(() => {
-        if (!selectedSymbolForOrderBook) return;
-        const raw = orderBooks[selectedSymbolForOrderBook] || [];
-        const duped: FinnhubTrade[] = [];
-        raw.forEach((t) => {
-            duped.push({ ...t, side: "buy" });
-            duped.push({ ...t, side: "sell" });
-        });
-        setLocalTrades(duped.slice(0, 1000));
-    }, [selectedSymbolForOrderBook, orderBooks]);
-
-    // scroll-to-mid logic
-    const scrollToMid = useCallback(() => {
-        const container = containerRef.current;
-        const midElement = midRef.current;
-        if (container && midElement) {
-            const offset = midElement.offsetTop - container.clientHeight / 2 + midElement.clientHeight / 2;
-            container.scrollTo({ top: offset, behavior: "auto" });
-        }
-    }, []);
-
-    // Only scroll ONCE when localTrades updates first time for a symbol
-    useLayoutEffect(() => {
-        if (
-            selectedSymbolForOrderBook &&
-            !hasScrolled.current &&
-            localTrades.length > 0
-        ) {
-            scrollToMid();
-            hasScrolled.current = true;
-        }
-    }, [selectedSymbolForOrderBook, localTrades, scrollToMid]);
 
     if (!selectedSymbolForOrderBook) return null;
 
-    // Prepare data
-    const midPrice = quotes[selectedSymbolForOrderBook]?.quote.c || 0;
-    let sells = localTrades.filter((t) => t.side === "sell");
-    let buys = localTrades.filter((t) => t.side === "buy");
+    // Prepare raw trades
+    const raw = orderBooks[selectedSymbolForOrderBook] || [];
+    const trades: FinnhubTrade[] = [];
+    raw.forEach((t) => {
+        trades.push({ ...t, side: "buy" });
+        trades.push({ ...t, side: "sell" });
+    });
+    const limited = trades.slice(0, 1000);
 
+    let sells = limited.filter((t) => t.side === "sell");
+    let buys = limited.filter((t) => t.side === "buy");
+
+    // Sort
     if (sortCriteria === "price") {
         sells.sort((a, b) => a.p - b.p);
         buys.sort((a, b) => b.p - a.p);
     } else {
         sells.sort((a, b) => b.v - a.v);
-        buys.sort((a, b) => a.v - b.v);
+        buys.sort((a, b) => b.v - a.v);
     }
 
+    // Limit to top 500
     sells = sells.slice(0, 500);
     buys = buys.slice(0, 500);
 
@@ -128,6 +84,8 @@ const OrderBook: React.FC<OrderBookProps> = ({
     const askPriceDecimals = checkNumberLengthToAdjustDecimals(bestAskPrice);
     const askVolDecimals = checkNumberLengthToAdjustDecimals(bestAskVol);
 
+    const midPrice = quotes[selectedSymbolForOrderBook]?.quote.c || 0;
+
     return (
         <div>
             <div className="mb-4 flex justify-end items-center space-x-2">
@@ -135,71 +93,69 @@ const OrderBook: React.FC<OrderBookProps> = ({
                 <select
                     value={sortCriteria}
                     onChange={(e) => setSortCriteria(e.target.value as "price" | "volume")}
-                    className="p-1 bg-gray-200 text-black dark:bg-gray-700 dark:text-white"
+                    className="p-1 rounded bg-gray-200 text-black dark:bg-gray-700 dark:text-white"
                 >
                     <option value="price">Price</option>
                     <option value="volume">Volume</option>
                 </select>
             </div>
 
-            {/* Order Book List */}
-            <div
-                ref={containerRef}
-                className="grid gap-2 h-[60vh] overflow-y-auto relative"
-            >
-                {/* Sells (asks) */}
-                {sells.map((t, i) => (
-                    <div
-                        key={`sell-${i}`}
-                        className="grid grid-cols-3 p-1"
-                        style={{
-                            backgroundColor: getRowColorByVolume(
-                                t.v,
-                                maxVol,
-                                isDarkTheme,
-                                true,
-                                i < 10
-                            ),
-                            color: isDarkTheme ? "#fff" : undefined,
-                            fontWeight: i < 10 ? "bold" : "normal",
-                        }}
-                    >
-                        <div>{t.p.toFixed(askPriceDecimals)}</div>
-                        <div>{t.v.toFixed(askVolDecimals)}</div>
-                        <div>{formatTime(t.t)}</div>
-                    </div>
-                ))}
+            {/* Order Book Static View */}
+            <div className="relative h-[60vh] w-full">
+                {/* Sells above mid (grow upward) */}
+                <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-hidden flex flex-col-reverse">
+                    {sells.map((t, i) => (
+                        <div
+                            key={`sell-${i}`}
+                            className="grid grid-cols-3 p-1"
+                            style={{
+                                backgroundColor: getRowColorByVolume(
+                                    t.v,
+                                    maxVol,
+                                    isDarkTheme,
+                                    true,
+                                    i < 10
+                                ),
+                                color: isDarkTheme ? "#fff" : undefined,
+                                fontWeight: i < 10 ? "bold" : "normal",
+                            }}
+                        >
+                            <div>{t.p.toFixed(askPriceDecimals)}</div>
+                            <div>{t.v.toFixed(askVolDecimals)}</div>
+                            <div>{formatTime(t.t)}</div>
+                        </div>
+                    ))}
+                </div>
 
                 {/* Mid-price divider */}
-                <div
-                    ref={midRef}
-                    className="sticky top-1/2 transform -translate-y-1/2 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold"
-                >
+                <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center border-t-2 border-b-2 border-gray-400 py-2 bg-white dark:bg-gray-800 bg-opacity-90 font-bold">
                     {midPrice ? `MID ${midPrice.toFixed(4)}` : "Mid Price Unavailable"}
                 </div>
 
-                {/* Buys (bids) */}
-                {buys.map((t, i) => (
-                    <div
-                        key={`buy-${i}`}
-                        className="grid grid-cols-3 p-1"
-                        style={{
-                            backgroundColor: getRowColorByVolume(
-                                t.v,
-                                maxVol,
-                                isDarkTheme,
-                                false,
-                                i < 10
-                            ),
-                            color: isDarkTheme ? "#fff" : "#f2222",
-                            fontWeight: i < 10 ? "bold" : "normal",
-                        }}
-                    >
-                        <div>{t.p.toFixed(bidPriceDecimals)}</div>
-                        <div>{t.v.toFixed(bidVolDecimals)}</div>
-                        <div>{formatTime(t.t)}</div>
-                    </div>
-                ))}
+                {/* Buys below mid (grow downward) */}
+                <div className="absolute inset-x-0 top-1/2 bottom-0 overflow-hidden flex flex-col">
+                    {buys.map((t, i) => (
+                        <div
+                            key={`buy-${i}`}
+                            className="grid grid-cols-3 p-1"
+                            style={{
+                                backgroundColor: getRowColorByVolume(
+                                    t.v,
+                                    maxVol,
+                                    isDarkTheme,
+                                    false,
+                                    i < 10
+                                ),
+                                color: isDarkTheme ? "#fff" : "#f2222",
+                                fontWeight: i < 10 ? "bold" : "normal",
+                            }}
+                        >
+                            <div>{t.p.toFixed(bidPriceDecimals)}</div>
+                            <div>{t.v.toFixed(bidVolDecimals)}</div>
+                            <div>{formatTime(t.t)}</div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
