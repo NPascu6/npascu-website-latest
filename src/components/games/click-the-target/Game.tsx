@@ -210,7 +210,6 @@ const Game = ({setStarted}: GameProps) => {
                             style={{
                                 left: `${target.position.x}px`,
                                 top: `${target.position.y}px`,
-                                position: "absolute",
                                 height: "calc(100dvh - 7em)",
                                 overflow: "auto",
                             }}
