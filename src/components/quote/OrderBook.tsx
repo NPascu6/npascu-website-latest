@@ -53,14 +53,10 @@ const OrderBook: React.FC<OrderBookProps> = ({
 
     if (!selectedSymbolForOrderBook) return null;
 
-    // Prepare trades with side
-    const raw = orderBooks[selectedSymbolForOrderBook] || [];
-    const trades: FinnhubTrade[] = [];
-    raw.forEach((t) => {
-        trades.push({...t, side: "bid"});
-        trades.push({...t, side: "ask"});
-    });
-    const limited = trades.slice(0, 1000);
+    // Use trades directly from state. Each trade already has a `side`
+    // property, so we no longer duplicate them into both directions
+    const rawTrades = orderBooks[selectedSymbolForOrderBook] || [];
+    const limited = rawTrades.slice(0, 1000);
 
     // Split asks/bids
     let asks = limited.filter((t) => t.side === "ask");
