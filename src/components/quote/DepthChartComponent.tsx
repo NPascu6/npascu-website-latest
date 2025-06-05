@@ -44,8 +44,23 @@ const DepthChart: React.FC<DepthChartProps> = ({
     // 1) If no symbol is selected, render nothing.
     if (!selectedSymbolForDepthChart) return null;
 
-    // 2) If no midPrice or trades, show a fallback message.
-    if (!midPrice || trades.length === 0) {
+    // Derive a mid price from trades when none is supplied
+    const effectiveMidPrice = useMemo(() => {
+        if (midPrice) return midPrice;
+        if (trades.length === 0) return 0;
+        const bids = trades.filter((t) => t.side ? t.side === "bid" : true).map((t) => t.p);
+        const asks = trades.filter((t) => t.side ? t.side === "ask" : false).map((t) => t.p);
+        if (bids.length && asks.length) {
+            const bestBid = Math.max(...bids);
+            const bestAsk = Math.min(...asks);
+            return (bestBid + bestAsk) / 2;
+        }
+        const allPrices = trades.map((t) => t.p);
+        return allPrices.reduce((a, b) => a + b, 0) / allPrices.length;
+    }, [midPrice, trades]);
+
+    // 2) If no trades, show a fallback message.
+    if (trades.length === 0) {
         return (
             <div
                 onClick={closeDepthChartPopup}
@@ -81,10 +96,10 @@ const DepthChart: React.FC<DepthChartProps> = ({
         // Separate trades into bids and asks using the side property when
         // available. If side is missing fall back to midPrice comparison.
         const bids = trades.filter((t) =>
-            t.side ? t.side === "bid" : t.p < midPrice
+            t.side ? t.side === "bid" : t.p < effectiveMidPrice
         );
         const asks = trades.filter((t) =>
-            t.side ? t.side === "ask" : t.p >= midPrice
+            t.side ? t.side === "ask" : t.p >= effectiveMidPrice
         );
 
         // Sort them like the order book (bids desc, asks asc)
@@ -108,14 +123,14 @@ const DepthChart: React.FC<DepthChartProps> = ({
         if (cumulativeBuys.length === 1) {
             cumulativeBuys.push({x: bids[bids.length - 1].p - 0.0001, y: sum});
         } else if (cumulativeBuys.length === 0) {
-            cumulativeBuys.push({x: midPrice - 0.0001, y: 0});
-            cumulativeBuys.push({x: midPrice - 0.0002, y: 0});
+            cumulativeBuys.push({x: effectiveMidPrice - 0.0001, y: 0});
+            cumulativeBuys.push({x: effectiveMidPrice - 0.0002, y: 0});
         }
         if (cumulativeSells.length === 1) {
             cumulativeSells.push({x: asks[asks.length - 1].p + 0.0001, y: sum});
         } else if (cumulativeSells.length === 0) {
-            cumulativeSells.push({x: midPrice + 0.0001, y: 0});
-            cumulativeSells.push({x: midPrice + 0.0002, y: 0});
+            cumulativeSells.push({x: effectiveMidPrice + 0.0001, y: 0});
+            cumulativeSells.push({x: effectiveMidPrice + 0.0002, y: 0});
         }
 
         // Determine max cumulative volume for scaling.
@@ -125,13 +140,13 @@ const DepthChart: React.FC<DepthChartProps> = ({
         );
 
         const xMin = bids.length
-            ? Math.min(bids[bids.length - 1].p, midPrice)
-            : midPrice;
+            ? Math.min(bids[bids.length - 1].p, effectiveMidPrice)
+            : effectiveMidPrice;
         const xMax = asks.length
-            ? Math.max(asks[asks.length - 1].p, midPrice)
-            : midPrice;
+            ? Math.max(asks[asks.length - 1].p, effectiveMidPrice)
+            : effectiveMidPrice;
         return {cumulativeBuys, cumulativeSells, xMin, xMax, yMax};
-    }, [trades, midPrice]);
+    }, [trades, effectiveMidPrice]);
 
     // 4) Build the Chart.js data.
     const chartData = {
@@ -187,8 +202,8 @@ const DepthChart: React.FC<DepthChartProps> = ({
             {
                 label: "Mid Price",
                 data: [
-                    {x: midPrice, y: 0},
-                    {x: midPrice, y: yMax},
+                    {x: effectiveMidPrice, y: 0},
+                    {x: effectiveMidPrice, y: yMax},
                 ],
                 borderColor: "rgba(255,255,0,1)",
                 borderWidth: 2,
