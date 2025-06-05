@@ -7,6 +7,7 @@ import {HashRouter} from "react-router-dom";
 import store from "./store/store";
 import "./assets/styles/darkTheme.css";
 import "./assets/styles/lightTheme.css";
+import "./assets/styles/blueTheme.css";
 import "./assets/styles/snake.css";
 import "./assets/styles/topBar.css";
 

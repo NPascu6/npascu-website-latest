@@ -1,6 +1,6 @@
 import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setTheme} from "./store/reducers/appReducer";
+import {setTheme, ThemeType} from "./store/reducers/appReducer";
 import {RootState} from "./store/store";
 import {useSwipeable} from "react-swipeable";
 import Loading from "./pages/generic/Loading";
@@ -16,6 +16,7 @@ const Toaster = lazy(() => import("./components/common/Toaster"));
 
 const App: React.FC = () => {
     const dispatch = useDispatch();
+    const theme = useSelector((state: RootState) => state.app.theme);
     const darkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const location = useLocation();
@@ -42,23 +43,26 @@ const App: React.FC = () => {
 
     // Load theme from localStorage, defaulting to dark mode if no value is saved
     useEffect(() => {
-        // If nothing is stored in localStorage, default to dark mode (true)
-        const savedThemeStr = localStorage.getItem("isDarkTheme");
-        const savedTheme = savedThemeStr === null ? true : savedThemeStr === "true";
-        if (savedTheme !== darkTheme) {
+        let savedTheme = 'dark' as ThemeType;
+        const savedThemeStr = localStorage.getItem('theme');
+        if (savedThemeStr) {
+            savedTheme = savedThemeStr as ThemeType;
+        } else {
+            const oldThemeStr = localStorage.getItem('isDarkTheme');
+            const oldTheme = oldThemeStr === null ? true : oldThemeStr === 'true';
+            savedTheme = oldTheme ? 'dark' : 'light';
+        }
+        if (savedTheme !== theme) {
             dispatch(setTheme(savedTheme));
         }
-        document.documentElement.setAttribute(
-            "data-theme",
-            savedTheme ? "dark" : "light"
-        );
-    }, [dispatch, darkTheme]);
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }, [dispatch, theme]);
 
     return (
         <div
             id="app"
             {...swipeHandlers} // Attach swipe gestures
-            className={`${darkTheme ? "dark" : "light"}-theme app select-none`}
+            className={`${theme}-theme app select-none`}
             style={{touchAction: "none"}} // Prevent system gestures like back swipe
         >
             {/* Top Bar */}

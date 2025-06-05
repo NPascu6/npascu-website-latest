@@ -1,6 +1,9 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+export type ThemeType = 'dark' | 'light' | 'blue';
+
 interface AppState {
+    theme: ThemeType;
     isDarkTheme: boolean;
     toaster: {
         showToaster: boolean;
@@ -12,6 +15,7 @@ interface AppState {
 }
 
 const initialState: AppState = {
+    theme: 'dark',
     isDarkTheme: true,
     toaster: {
         showToaster: false,
@@ -25,8 +29,9 @@ const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setTheme: (state: AppState, action: PayloadAction<boolean>) => {
-            state.isDarkTheme = action.payload;
+        setTheme: (state: AppState, action: PayloadAction<ThemeType>) => {
+            state.theme = action.payload;
+            state.isDarkTheme = action.payload !== 'light';
         },
         setShowToaster: (state: AppState, action: PayloadAction<boolean>) => {
             state.toaster.showToaster = action.payload;
