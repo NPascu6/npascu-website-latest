@@ -34,6 +34,7 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
                 className={
                     `relative w-full max-w-3xl max-h-[90vh] overflow-y-auto
           bg-white dark:bg-gray-900 shadow-2xl
+          text-gray-900 dark:text-white
           transform transition-all duration-200 ease-out
           scale-100 opacity-100
           p-4 m-4`}
