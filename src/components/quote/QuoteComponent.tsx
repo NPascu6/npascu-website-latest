@@ -9,6 +9,7 @@ import Loading from "../../pages/generic/Loading";
 import OrderBook from "./OrderBook";
 import DepthChart from "./DepthChartComponent";
 import CommonDialog from "../common/CommonDialog";
+import PriceHistoryChart from "./PriceHistoryChart";
 
 // --- Interfaces ---
 export interface FinnhubQuote {
@@ -89,11 +90,16 @@ const formatTime = (timestamp: number): string =>
 const QuotesComponent: React.FC = () => {
     const [quotes, setQuotes] = useState<Quotes>({});
     const [orderBooks, setOrderBooks] = useState<OrderBooks>({});
+    const [priceHistory, setPriceHistory] = useState<{
+        [symbol: string]: { t: number; p: number }[];
+    }>({});
     const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const [selectedSymbolForOrderBook, setSelectedSymbolForOrderBook] = useState<
         string | null
     >(null);
     const [selectedSymbolForDepthChart, setSelectedSymbolForDepthChart] =
+        useState<string | null>(null);
+    const [selectedSymbolForPriceHistory, setSelectedSymbolForPriceHistory] =
         useState<string | null>(null);
 
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
@@ -176,6 +182,13 @@ const QuotesComponent: React.FC = () => {
                     }, blinkDuration);
                 }
                 return {...prev, [symbol]: newData};
+            });
+
+            setPriceHistory((prev) => {
+                const arr = prev[symbol] ? [...prev[symbol]] : [];
+                arr.push({t: Date.now(), p: randomizedQuote.c});
+                if (arr.length > 100) arr.shift();
+                return {...prev, [symbol]: arr};
             });
         });
 
@@ -317,15 +330,26 @@ const QuotesComponent: React.FC = () => {
         setSelectedSymbolForDepthChart(null);
     };
 
+    const handleOpenPriceHistory = (symbol: string) => {
+        setIsPriceHistoryOpen(true);
+        setSelectedSymbolForPriceHistory(symbol);
+    };
+    const closePriceHistoryPopup = () => {
+        setIsPriceHistoryOpen(false);
+        setSelectedSymbolForPriceHistory(null);
+    };
+
     const isLoading = Object.keys(quotes).length === 0;
     const [isOrderBookOpen, setIsOrderBookOpen] = useState(false);
     const [isDepthChartOpen, setIsDepthChartOpen] = useState(false);
+    const [isPriceHistoryOpen, setIsPriceHistoryOpen] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
                 closeOrderBookPopup();
                 closeDepthChartPopup();
+                closePriceHistoryPopup();
             }
         };
         window.addEventListener("keydown", handleKeyDown);
@@ -350,12 +374,19 @@ const QuotesComponent: React.FC = () => {
             ) {
                 closeDepthChartPopup();
             }
+            if (
+                selectedSymbolForPriceHistory &&
+                event.target instanceof HTMLElement &&
+                !event.target.closest(".price-history-popup")
+            ) {
+                closePriceHistoryPopup();
+            }
         };
         window.addEventListener("click", handleClickOutside);
         return () => {
             window.removeEventListener("click", handleClickOutside);
         };
-    }, [selectedSymbolForOrderBook, selectedSymbolForDepthChart]);
+    }, [selectedSymbolForOrderBook, selectedSymbolForDepthChart, selectedSymbolForPriceHistory]);
 
     return (
         <div
@@ -484,6 +515,15 @@ const QuotesComponent: React.FC = () => {
                                         >
                                             Depth Chart
                                         </button>
+                                        <button
+                                            className="rounded bg-purple-700 py-1 px-2 text-sm text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleOpenPriceHistory(symbol);
+                                            }}
+                                        >
+                                            Price History
+                                        </button>
                                     </div>
                                 </div>
                                 <small className="block mt-1">{formatTime(data.quote.t)}</small>
@@ -503,6 +543,21 @@ const QuotesComponent: React.FC = () => {
                     closeOrderBookPopup={closeOrderBookPopup}
                     orderBooks={orderBooks}
                     quotes={quotes}
+                />
+            </CommonDialog>
+
+            <CommonDialog
+                title={selectedSymbolForPriceHistory || ""}
+                onClose={closePriceHistoryPopup}
+                isOpen={isPriceHistoryOpen}
+            >
+                <PriceHistoryChart
+                    history={
+                        selectedSymbolForPriceHistory
+                            ? priceHistory[selectedSymbolForPriceHistory] || []
+                            : []
+                    }
+                    isDarkTheme={isDarkTheme}
                 />
             </CommonDialog>
 
