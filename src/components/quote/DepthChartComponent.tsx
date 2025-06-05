@@ -3,6 +3,7 @@ import {
     CategoryScale,
     Chart as ChartJS,
     Legend,
+    Filler,
     LinearScale,
     LineElement,
     PointElement,
@@ -19,7 +20,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
 
 export interface FinnhubTrade {
