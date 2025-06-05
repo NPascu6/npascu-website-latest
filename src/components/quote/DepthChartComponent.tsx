@@ -84,80 +84,58 @@ const DepthChart: React.FC<DepthChartProps> = ({
 
     // 3) Process and memoize the chart data.
     const {cumulativeBuys, cumulativeSells, xMin, xMax, yMax} = useMemo(() => {
-        const BIN_SIZE = 0.001;
-        const binPrice = (price: number) => Math.round(price / BIN_SIZE) * BIN_SIZE;
+        // Separate trades into bids and asks using the side property when
+        // available. If side is missing fall back to midPrice comparison.
+        const bids = trades.filter((t) =>
+            t.side ? t.side === "bid" : t.p < midPrice
+        );
+        const asks = trades.filter((t) =>
+            t.side ? t.side === "ask" : t.p >= midPrice
+        );
 
-        // Bin trades into buys and sells based on midPrice.
-        const buyBins: Record<number, number> = {};
-        const sellBins: Record<number, number> = {};
+        // Sort them like the order book (bids desc, asks asc)
+        bids.sort((a, b) => b.p - a.p);
+        asks.sort((a, b) => a.p - b.p);
 
-        trades.forEach((trade) => {
-            const binned = binPrice(trade.p);
-            if (trade.p < midPrice) {
-                buyBins[binned] = (buyBins[binned] || 0) + trade.v;
-            } else {
-                sellBins[binned] = (sellBins[binned] || 0) + trade.v;
-            }
-        });
-
-        // Convert bins to points.
-        let buyPoints = Object.entries(buyBins).map(([price, vol]) => ({
-            price: parseFloat(price),
-            volume: vol as number,
-        }));
-        let sellPoints = Object.entries(sellBins).map(([price, vol]) => ({
-            price: parseFloat(price),
-            volume: vol as number,
-        }));
-
-        // Ensure at least two points per side for proper line rendering.
-        if (buyPoints.length === 0) {
-            buyPoints.push({price: midPrice - BIN_SIZE, volume: 0});
-            buyPoints.push({price: midPrice - 2 * BIN_SIZE, volume: 0});
-        } else if (buyPoints.length === 1) {
-            buyPoints.push({
-                price: buyPoints[0].price - BIN_SIZE,
-                volume: buyPoints[0].volume,
-            });
-        }
-        if (sellPoints.length === 0) {
-            sellPoints.push({price: midPrice + BIN_SIZE, volume: 0});
-            sellPoints.push({price: midPrice + 2 * BIN_SIZE, volume: 0});
-        } else if (sellPoints.length === 1) {
-            sellPoints.push({
-                price: sellPoints[0].price + BIN_SIZE,
-                volume: sellPoints[0].volume,
-            });
-        }
-
-        // Sort: buys descending, sells ascending.
-        buyPoints.sort((a, b) => b.price - a.price);
-        sellPoints.sort((a, b) => a.price - b.price);
-
-        // Compute cumulative volumes.
+        // Compute cumulative volumes based on each individual trade to
+        // keep the same granularity as the order book.
         let sum = 0;
-        const cumulativeBuys = buyPoints.map((pt) => {
-            sum += pt.volume;
-            return {x: pt.price, y: sum};
+        const cumulativeBuys = bids.map((trade) => {
+            sum += trade.v;
+            return {x: trade.p, y: sum};
         });
         sum = 0;
-        const cumulativeSells = sellPoints.map((pt) => {
-            sum += pt.volume;
-            return {x: pt.price, y: sum};
+        const cumulativeSells = asks.map((trade) => {
+            sum += trade.v;
+            return {x: trade.p, y: sum};
         });
 
-        // Determine maximum cumulative volume.
+        // Use at least two points per side for Chart.js stepped lines
+        if (cumulativeBuys.length === 1) {
+            cumulativeBuys.push({x: bids[bids.length - 1].p - 0.0001, y: sum});
+        } else if (cumulativeBuys.length === 0) {
+            cumulativeBuys.push({x: midPrice - 0.0001, y: 0});
+            cumulativeBuys.push({x: midPrice - 0.0002, y: 0});
+        }
+        if (cumulativeSells.length === 1) {
+            cumulativeSells.push({x: asks[asks.length - 1].p + 0.0001, y: sum});
+        } else if (cumulativeSells.length === 0) {
+            cumulativeSells.push({x: midPrice + 0.0001, y: 0});
+            cumulativeSells.push({x: midPrice + 0.0002, y: 0});
+        }
+
+        // Determine max cumulative volume for scaling.
         const yMax = Math.max(
             ...cumulativeBuys.map((pt) => pt.y),
             ...cumulativeSells.map((pt) => pt.y)
         );
 
-        // Set the x-axis domain to cover both sides.
-        const buyMin = Math.min(...buyPoints.map((pt) => pt.price));
-        const sellMax = Math.max(...sellPoints.map((pt) => pt.price));
-        const xMin = Math.min(buyMin, midPrice);
-        const xMax = Math.max(sellMax, midPrice);
-
+        const xMin = bids.length
+            ? Math.min(bids[bids.length - 1].p, midPrice)
+            : midPrice;
+        const xMax = asks.length
+            ? Math.max(asks[asks.length - 1].p, midPrice)
+            : midPrice;
         return {cumulativeBuys, cumulativeSells, xMin, xMax, yMax};
     }, [trades, midPrice]);
 
