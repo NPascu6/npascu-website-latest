@@ -10,6 +10,7 @@ import OrderBook from "./OrderBook";
 import DepthChart from "./DepthChartComponent";
 import CommonDialog from "../common/CommonDialog";
 import PriceHistoryChart from "./PriceHistoryChart";
+import VolumeHistoryChart from "./VolumeHistoryChart";
 
 // --- Interfaces ---
 export interface FinnhubQuote {
@@ -93,6 +94,9 @@ const QuotesComponent: React.FC = () => {
     const [priceHistory, setPriceHistory] = useState<{
         [symbol: string]: { t: number; p: number }[];
     }>({});
+    const [volumeHistory, setVolumeHistory] = useState<{
+        [symbol: string]: { t: number; v: number }[];
+    }>({});
     const [selectedSymbols, setSelectedSymbols] = useState<string[]>([]);
     const [selectedSymbolForOrderBook, setSelectedSymbolForOrderBook] = useState<
         string | null
@@ -100,6 +104,8 @@ const QuotesComponent: React.FC = () => {
     const [selectedSymbolForDepthChart, setSelectedSymbolForDepthChart] =
         useState<string | null>(null);
     const [selectedSymbolForPriceHistory, setSelectedSymbolForPriceHistory] =
+        useState<string | null>(null);
+    const [selectedSymbolForVolumeHistory, setSelectedSymbolForVolumeHistory] =
         useState<string | null>(null);
 
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
@@ -261,6 +267,14 @@ const QuotesComponent: React.FC = () => {
                     return {...prev, [symbol]: updatedTrades.slice(0, 1000)};
                 });
 
+                const totalVol = tradesToAdd.reduce((sum, t) => sum + t.v, 0);
+                setVolumeHistory((prev) => {
+                    const arr = prev[symbol] ? [...prev[symbol]] : [];
+                    arr.push({ t: Date.now(), v: totalVol });
+                    if (arr.length > 100) arr.shift();
+                    return { ...prev, [symbol]: arr };
+                });
+
                 // Also update the quotes direction based on the last buy
                 // (or pick any of the trades, your choice)
                 const lastBuy = tradesToAdd.find((t) => t.side === "bid");
@@ -338,11 +352,20 @@ const QuotesComponent: React.FC = () => {
         setIsPriceHistoryOpen(false);
         setSelectedSymbolForPriceHistory(null);
     };
+    const handleOpenVolumeHistory = (symbol: string) => {
+        setIsVolumeHistoryOpen(true);
+        setSelectedSymbolForVolumeHistory(symbol);
+    };
+    const closeVolumeHistoryPopup = () => {
+        setIsVolumeHistoryOpen(false);
+        setSelectedSymbolForVolumeHistory(null);
+    };
 
     const isLoading = Object.keys(quotes).length === 0;
     const [isOrderBookOpen, setIsOrderBookOpen] = useState(false);
     const [isDepthChartOpen, setIsDepthChartOpen] = useState(false);
     const [isPriceHistoryOpen, setIsPriceHistoryOpen] = useState(false);
+    const [isVolumeHistoryOpen, setIsVolumeHistoryOpen] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -350,6 +373,7 @@ const QuotesComponent: React.FC = () => {
                 closeOrderBookPopup();
                 closeDepthChartPopup();
                 closePriceHistoryPopup();
+                closeVolumeHistoryPopup();
             }
         };
         window.addEventListener("keydown", handleKeyDown);
@@ -381,12 +405,24 @@ const QuotesComponent: React.FC = () => {
             ) {
                 closePriceHistoryPopup();
             }
+            if (
+                selectedSymbolForVolumeHistory &&
+                event.target instanceof HTMLElement &&
+                !event.target.closest(".volume-history-popup")
+            ) {
+                closeVolumeHistoryPopup();
+            }
         };
         window.addEventListener("click", handleClickOutside);
         return () => {
             window.removeEventListener("click", handleClickOutside);
         };
-    }, [selectedSymbolForOrderBook, selectedSymbolForDepthChart, selectedSymbolForPriceHistory]);
+    }, [
+        selectedSymbolForOrderBook,
+        selectedSymbolForDepthChart,
+        selectedSymbolForPriceHistory,
+        selectedSymbolForVolumeHistory,
+    ]);
 
     return (
         <div
@@ -496,7 +532,7 @@ const QuotesComponent: React.FC = () => {
                                             <FaArrowDown className="ml-2" color="#ff3333"/>
                                         )}
                                     </div>
-                                    <div className="space-x-2 space-y-2">
+                                    <div className="grid grid-cols-2 gap-2">
                                         <button
                                             className="rounded bg-green-700 py-1 px-2 text-sm text-white"
                                             onClick={(e) => {
@@ -523,6 +559,15 @@ const QuotesComponent: React.FC = () => {
                                             }}
                                         >
                                             Price History
+                                        </button>
+                                        <button
+                                            className="rounded bg-yellow-700 py-1 px-2 text-sm text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleOpenVolumeHistory(symbol);
+                                            }}
+                                        >
+                                            Volume History
                                         </button>
                                     </div>
                                 </div>
@@ -555,6 +600,21 @@ const QuotesComponent: React.FC = () => {
                     history={
                         selectedSymbolForPriceHistory
                             ? priceHistory[selectedSymbolForPriceHistory] || []
+                            : []
+                    }
+                    isDarkTheme={isDarkTheme}
+                />
+            </CommonDialog>
+
+            <CommonDialog
+                title={selectedSymbolForVolumeHistory || ""}
+                onClose={closeVolumeHistoryPopup}
+                isOpen={isVolumeHistoryOpen}
+            >
+                <VolumeHistoryChart
+                    history={
+                        selectedSymbolForVolumeHistory
+                            ? volumeHistory[selectedSymbolForVolumeHistory] || []
                             : []
                     }
                     isDarkTheme={isDarkTheme}
