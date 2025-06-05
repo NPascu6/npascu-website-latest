@@ -15,7 +15,7 @@ TypeScript. It includes various essential libraries and tools to kickstart your 
 
 - `npm start`: Start the development server.
 - `npm run build`: Build the application for production.
-- `npm test`: Run tests using the Jest testing framework.
+- `npm test`: Run tests using the Vitest testing framework.
 - `npm run eject`: Eject from Create React App for advanced configuration.
 
 ### Usage
@@ -32,10 +32,10 @@ TypeScript. Feel free to customize and expand it to meet your specific project r
 
 - **@apollo/client** (v3.8.6): A powerful state management and data-fetching library for React applications.
 - **@reduxjs/toolkit** (v1.9.7): A toolset for efficient Redux development.
-- **@testing-library/jest-dom** (v5.17.0): Utilities for testing DOM elements with Jest.
+ - **@testing-library/jest-dom** (v5.17.0): Utilities for testing DOM elements with Vitest.
 - **@testing-library/react** (v13.4.0): A library for testing React components.
 - **@testing-library/user-event** (v13.5.0): A utility library for simulating user events.
-- **@types/jest** (v27.5.2): TypeScript definitions for Jest.
+ - **@types/jest** (v27.5.2): TypeScript definitions for Jest (used by jest-dom).
 - **@types/node** (v16.18.59): TypeScript definitions for Node.js.
 - **@types/react** (v18.2.31): TypeScript definitions for React.
 - **@types/react-dom** (v18.2.14): TypeScript definitions for React DOM.
