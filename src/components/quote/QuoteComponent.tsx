@@ -124,14 +124,18 @@ const QuotesComponent: React.FC = () => {
         fetch('/backfill-trades.json')
             .then((res) => res.json())
             .then((data: OrderBooks) => {
-                setOrderBooks(data);
+                const limitedOrderBooks: OrderBooks = {};
+                Object.entries(data).forEach(([symbol, trades]) => {
+                    limitedOrderBooks[symbol] = trades.slice(-1000);
+                });
+                setOrderBooks(limitedOrderBooks);
 
                 const ph: { [symbol: string]: { t: number; p: number }[] } = {};
                 const vh: { [symbol: string]: { t: number; v: number }[] } = {};
 
                 Object.entries(data).forEach(([symbol, trades]) => {
-                    ph[symbol] = trades.map((t) => ({ t: t.t, p: t.p })).slice(-100);
-                    vh[symbol] = trades.map((t) => ({ t: t.t, v: t.v })).slice(-100);
+                    ph[symbol] = trades.map((t) => ({ t: t.t, p: t.p })).slice(-1000);
+                    vh[symbol] = trades.map((t) => ({ t: t.t, v: t.v })).slice(-1000);
                 });
 
                 setPriceHistory(ph);
@@ -206,7 +210,7 @@ const QuotesComponent: React.FC = () => {
             setPriceHistory((prev) => {
                 const arr = prev[symbol] ? [...prev[symbol]] : [];
                 arr.push({t: Date.now(), p: randomizedQuote.c});
-                if (arr.length > 100) arr.shift();
+                if (arr.length > 1000) arr.shift();
                 return {...prev, [symbol]: arr};
             });
         });
@@ -284,7 +288,7 @@ const QuotesComponent: React.FC = () => {
                 setVolumeHistory((prev) => {
                     const arr = prev[symbol] ? [...prev[symbol]] : [];
                     arr.push({ t: Date.now(), v: totalVol });
-                    if (arr.length > 100) arr.shift();
+                    if (arr.length > 1000) arr.shift();
                     return { ...prev, [symbol]: arr };
                 });
 
