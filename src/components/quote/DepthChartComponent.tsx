@@ -181,7 +181,9 @@ const DepthChart: React.FC<DepthChartProps> = ({
                     return gradient;
                 },
                 fill: true,
-                tension: 0.4,
+                pointRadius: 0,
+                stepped: true,
+                tension: 0,
                 order: 1,
             },
             {
@@ -203,7 +205,9 @@ const DepthChart: React.FC<DepthChartProps> = ({
                     return gradient;
                 },
                 fill: true,
-                tension: 0.4,
+                pointRadius: 0,
+                stepped: true,
+                tension: 0,
                 order: 1,
             },
             {
