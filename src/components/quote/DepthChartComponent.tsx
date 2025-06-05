@@ -24,7 +24,7 @@ ChartJS.register(
     Filler
 );
 
-import { FinnhubTrade } from "./types";
+import {FinnhubTrade} from "./types";
 
 interface DepthChartProps {
     selectedSymbolForDepthChart: string | null;
@@ -32,35 +32,49 @@ interface DepthChartProps {
     closeDepthChartPopup: () => void;
     trades: FinnhubTrade[]; // trades for the selected symbol
     midPrice: number; // midPrice (e.g. current price from quotes)
+    inline?: boolean; // render inline instead of popup
 }
 
 const DepthChart: React.FC<DepthChartProps> = ({
-                                                   selectedSymbolForDepthChart,
-                                                   isDarkTheme,
-                                                   closeDepthChartPopup,
-                                                   trades,
-                                                   midPrice,
-                                               }) => {
+    selectedSymbolForDepthChart,
+    isDarkTheme,
+    closeDepthChartPopup,
+    trades,
+    midPrice,
+    inline = false,
+}) => {
     // 1) If no symbol is selected, render nothing.
     if (!selectedSymbolForDepthChart) return null;
 
-    // Derive a mid price from trades when none is supplied
+    // Derive a mid price primarily from order book data
     const effectiveMidPrice = useMemo(() => {
-        if (midPrice) return midPrice;
-        if (trades.length === 0) return 0;
-        const bids = trades.filter((t) => t.side ? t.side === "bid" : true).map((t) => t.p);
-        const asks = trades.filter((t) => t.side ? t.side === "ask" : false).map((t) => t.p);
-        if (bids.length && asks.length) {
-            const bestBid = Math.max(...bids);
-            const bestAsk = Math.min(...asks);
-            return (bestBid + bestAsk) / 2;
+        if (trades.length) {
+            const bidPrices = trades
+                .filter((t) => (t.side ? t.side === "bid" : true))
+                .map((t) => t.p);
+            const askPrices = trades
+                .filter((t) => (t.side ? t.side === "ask" : false))
+                .map((t) => t.p);
+            if (bidPrices.length && askPrices.length) {
+                const bestBid = Math.max(...bidPrices);
+                const bestAsk = Math.min(...askPrices);
+                return (bestBid + bestAsk) / 2;
+            }
+            const all = trades.map((t) => t.p);
+            return all.reduce((a, b) => a + b, 0) / all.length;
         }
-        const allPrices = trades.map((t) => t.p);
-        return allPrices.reduce((a, b) => a + b, 0) / allPrices.length;
+        return midPrice;
     }, [midPrice, trades]);
 
     // 2) If no trades, show a fallback message.
     if (trades.length === 0) {
+        if (inline) {
+            return (
+                <div className="h-96 w-full flex items-center justify-center">
+                    <p>No data available to draw chart.</p>
+                </div>
+            );
+        }
         return (
             <div
                 onClick={closeDepthChartPopup}
@@ -267,6 +281,14 @@ const DepthChart: React.FC<DepthChartProps> = ({
     };
 
     // 6) Render the popup & chart.
+    if (inline) {
+        return (
+            <div className="h-96 w-full">
+                <Line data={chartData} options={chartOptions} />
+            </div>
+        );
+    }
+
     return (
         <div
             style={{zIndex: 1000}}
@@ -290,7 +312,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                     ×
                 </button>
                 <div className="h-96 w-full">
-                    <Line data={chartData} options={chartOptions}/>
+                    <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
         </div>
