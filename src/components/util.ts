@@ -20,7 +20,7 @@ export const getRandomNumber = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const formatFieldToUpperCaseAndBreakCammelCase = (field: string) => {
+export const formatFieldToUpperCaseAndBreakCamelCase = (field: string) => {
     return field
         .replace(/([A-Z])/g, " $1")
         .replace(/^./, (str) => str.toUpperCase());
