@@ -53,7 +53,9 @@ const DepthChart: React.FC<DepthChartProps> = ({
         return (
             <div
                 onClick={closeDepthChartPopup}
-                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+                className={`fixed inset-0 flex justify-center items-center z-50 ${
+                    isDarkTheme ? "bg-gray-900 bg-opacity-75" : "bg-gray-300 bg-opacity-75"
+                }`}
             >
                 <div
                     onClick={(e) => e.stopPropagation()}
@@ -163,28 +165,6 @@ const DepthChart: React.FC<DepthChartProps> = ({
             {
                 label: "Bids",
                 data: cumulativeBuys,
-                borderColor: "rgba(255,0,0,1)",
-                backgroundColor: (context: any) => {
-                    const chart = context.chart;
-                    const {ctx, chartArea} = chart;
-                    if (!chartArea) return "rgba(255,0,0,0.2)";
-                    const gradient = ctx.createLinearGradient(
-                        0,
-                        chartArea.top,
-                        0,
-                        chartArea.bottom
-                    );
-                    gradient.addColorStop(0, "rgba(255,0,0,0.2)");
-                    gradient.addColorStop(1, "rgba(255,0,0,0.4)");
-                    return gradient;
-                },
-                fill: true,
-                tension: 0.4,
-                order: 1,
-            },
-            {
-                label: "Asks",
-                data: cumulativeSells,
                 borderColor: "rgba(0,255,0,1)",
                 backgroundColor: (context: any) => {
                     const chart = context.chart;
@@ -198,6 +178,28 @@ const DepthChart: React.FC<DepthChartProps> = ({
                     );
                     gradient.addColorStop(0, "rgba(0,255,0,0.2)");
                     gradient.addColorStop(1, "rgba(0,255,0,0.4)");
+                    return gradient;
+                },
+                fill: true,
+                tension: 0.4,
+                order: 1,
+            },
+            {
+                label: "Asks",
+                data: cumulativeSells,
+                borderColor: "rgba(255,0,0,1)",
+                backgroundColor: (context: any) => {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+                    if (!chartArea) return "rgba(255,0,0,0.2)";
+                    const gradient = ctx.createLinearGradient(
+                        0,
+                        chartArea.top,
+                        0,
+                        chartArea.bottom
+                    );
+                    gradient.addColorStop(0, "rgba(255,0,0,0.2)");
+                    gradient.addColorStop(1, "rgba(255,0,0,0.4)");
                     return gradient;
                 },
                 fill: true,
@@ -276,7 +278,9 @@ const DepthChart: React.FC<DepthChartProps> = ({
         <div
             style={{zIndex: 1000}}
             onClick={closeDepthChartPopup}
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className={`fixed inset-0 flex justify-center items-center z-50 ${
+                isDarkTheme ? "bg-gray-900 bg-opacity-75" : "bg-gray-300 bg-opacity-75"
+            }`}
         >
             <div
                 onClick={(e) => e.stopPropagation()}

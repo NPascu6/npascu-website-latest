@@ -7,7 +7,7 @@ import CollapsableSection from "../common/CollapsableSection";
 import {FaArrowDown, FaArrowUp} from "react-icons/fa";
 import Loading from "../../pages/generic/Loading";
 import OrderBook from "./OrderBook";
-import DepthChart from "./DepthChartCompontent";
+import DepthChart from "./DepthChartComponent";
 import CommonDialog from "../common/CommonDialog";
 
 // --- Interfaces ---
