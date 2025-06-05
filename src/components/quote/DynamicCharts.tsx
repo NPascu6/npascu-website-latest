@@ -43,6 +43,7 @@ const DynamicCharts: React.FC<DynamicChartsProps> = ({priceHistory, volumeHistor
                         closeDepthChartPopup={() => {}}
                         trades={orderBooks[selectedSymbol] || []}
                         midPrice={quotes[selectedSymbol]?.quote.c || 0}
+                        inline
                     />
                 );
             case "Moving Average":
