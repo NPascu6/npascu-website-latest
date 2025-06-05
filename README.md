@@ -6,7 +6,7 @@ https://pascu.io
 
 Norbert Pascu's website
 
-**Version:** 0.1.0
+**Version:** 1.0.0
 
 This project is marked as private and serves as a boilerplate for a modern web application built with React, Redux, and
 TypeScript. It includes various essential libraries and tools to kickstart your development process.
