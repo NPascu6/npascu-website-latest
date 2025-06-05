@@ -1,0 +1,21 @@
+{
+  "BINANCE:BTCUSDT": [
+    { "p": 30000.1, "s": "BINANCE:BTCUSDT", "t": 1690000000000, "v": 0.15, "side": "bid" },
+    { "p": 30000.3, "s": "BINANCE:BTCUSDT", "t": 1690000001000, "v": 0.20, "side": "bid" },
+    { "p": 30000.7, "s": "BINANCE:BTCUSDT", "t": 1690000002000, "v": 0.10, "side": "ask" },
+    { "p": 30000.9, "s": "BINANCE:BTCUSDT", "t": 1690000003000, "v": 0.05, "side": "ask" },
+    { "p": 30001.0, "s": "BINANCE:BTCUSDT", "t": 1690000004000, "v": 0.25, "side": "bid" }
+  ],
+  "BINANCE:ETHUSDT": [
+    { "p": 2000.5, "s": "BINANCE:ETHUSDT", "t": 1690000010000, "v": 1.2, "side": "bid" },
+    { "p": 2000.7, "s": "BINANCE:ETHUSDT", "t": 1690000011000, "v": 0.9, "side": "bid" },
+    { "p": 2001.0, "s": "BINANCE:ETHUSDT", "t": 1690000012000, "v": 0.5, "side": "ask" },
+    { "p": 2001.5, "s": "BINANCE:ETHUSDT", "t": 1690000013000, "v": 0.7, "side": "ask" }
+  ],
+  "BINANCE:XRPUSDT": [
+    { "p": 0.5, "s": "BINANCE:XRPUSDT", "t": 1690000020000, "v": 400, "side": "bid" },
+    { "p": 0.51, "s": "BINANCE:XRPUSDT", "t": 1690000021000, "v": 350, "side": "ask" },
+    { "p": 0.52, "s": "BINANCE:XRPUSDT", "t": 1690000022000, "v": 300, "side": "bid" },
+    { "p": 0.53, "s": "BINANCE:XRPUSDT", "t": 1690000023000, "v": 250, "side": "ask" }
+  ]
+}

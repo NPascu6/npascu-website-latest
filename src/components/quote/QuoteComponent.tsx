@@ -22,14 +22,7 @@ export interface FinnhubQuote {
     t: number; // timestamp in seconds (or ms if you convert)
 }
 
-export interface FinnhubTrade {
-    p: number; // trade price
-    s: string; // symbol
-    t: number; // timestamp in ms
-    v: number; // volume
-    c?: number | null;
-    side?: "bid" | "ask";
-}
+import { FinnhubTrade } from "./types";
 
 interface QuoteData {
     quote: FinnhubQuote;
@@ -125,6 +118,26 @@ const QuotesComponent: React.FC = () => {
 
     useEffect(() => {
         setSelectedSymbols(availableSymbols);
+    }, []);
+
+    useEffect(() => {
+        fetch('/backfill-trades.json')
+            .then((res) => res.json())
+            .then((data: OrderBooks) => {
+                setOrderBooks(data);
+
+                const ph: { [symbol: string]: { t: number; p: number }[] } = {};
+                const vh: { [symbol: string]: { t: number; v: number }[] } = {};
+
+                Object.entries(data).forEach(([symbol, trades]) => {
+                    ph[symbol] = trades.map((t) => ({ t: t.t, p: t.p })).slice(-100);
+                    vh[symbol] = trades.map((t) => ({ t: t.t, v: t.v })).slice(-100);
+                });
+
+                setPriceHistory(ph);
+                setVolumeHistory(vh);
+            })
+            .catch((err) => console.error('Error loading backfill data:', err));
     }, []);
 
     useEffect(() => {
