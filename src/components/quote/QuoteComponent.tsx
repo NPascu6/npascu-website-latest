@@ -11,6 +11,7 @@ import DepthChart from "./DepthChartComponent";
 import CommonDialog from "../common/CommonDialog";
 import PriceHistoryChart from "./PriceHistoryChart";
 import VolumeHistoryChart from "./VolumeHistoryChart";
+import DynamicCharts from "./DynamicCharts";
 
 // --- Interfaces ---
 export interface FinnhubQuote {
@@ -378,11 +379,22 @@ const QuotesComponent: React.FC = () => {
         setSelectedSymbolForVolumeHistory(null);
     };
 
+    const [chartDashboardSymbol, setChartDashboardSymbol] = useState<string | null>(null);
+    const openChartDashboard = (symbol?: string) => {
+        setChartDashboardSymbol(symbol ?? null);
+        setIsChartDashboardOpen(true);
+    };
+    const closeChartDashboard = () => {
+        setIsChartDashboardOpen(false);
+        setChartDashboardSymbol(null);
+    };
+
     const isLoading = Object.keys(quotes).length === 0;
     const [isOrderBookOpen, setIsOrderBookOpen] = useState(false);
     const [isDepthChartOpen, setIsDepthChartOpen] = useState(false);
     const [isPriceHistoryOpen, setIsPriceHistoryOpen] = useState(false);
     const [isVolumeHistoryOpen, setIsVolumeHistoryOpen] = useState(false);
+    const [isChartDashboardOpen, setIsChartDashboardOpen] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -391,6 +403,7 @@ const QuotesComponent: React.FC = () => {
                 closeDepthChartPopup();
                 closePriceHistoryPopup();
                 closeVolumeHistoryPopup();
+                closeChartDashboard();
             }
         };
         window.addEventListener("keydown", handleKeyDown);
@@ -429,6 +442,13 @@ const QuotesComponent: React.FC = () => {
             ) {
                 closeVolumeHistoryPopup();
             }
+            if (
+                isChartDashboardOpen &&
+                event.target instanceof HTMLElement &&
+                !event.target.closest(".dynamic-charts-popup")
+            ) {
+                closeChartDashboard();
+            }
         };
         window.addEventListener("click", handleClickOutside);
         return () => {
@@ -439,6 +459,7 @@ const QuotesComponent: React.FC = () => {
         selectedSymbolForDepthChart,
         selectedSymbolForPriceHistory,
         selectedSymbolForVolumeHistory,
+        isChartDashboardOpen,
     ]);
 
     return (
@@ -494,6 +515,16 @@ const QuotesComponent: React.FC = () => {
                         {selectedSymbols.length === availableSymbols.length
                             ? "Deselect All"
                             : "Select All"}
+                    </button>
+                    <button
+                        style={{
+                            background: isDarkTheme ? "#20242c" : "#ECEFF1",
+                            color: isDarkTheme ? "#ECEFF1" : "#20242c",
+                        }}
+                        onClick={() => openChartDashboard()}
+                        className="mt-1 w-full rounded py-2 text-white"
+                    >
+                        Charts Dashboard
                     </button>
                 </CollapsableSection>
             </div>
@@ -586,6 +617,15 @@ const QuotesComponent: React.FC = () => {
                                         >
                                             Volume History
                                         </button>
+                                        <button
+                                            className="rounded bg-gray-700 py-1 px-2 text-sm text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openChartDashboard(symbol);
+                                            }}
+                                        >
+                                            Charts
+                                        </button>
                                     </div>
                                 </div>
                                 <small className="block mt-1">{formatTime(data.quote.t)}</small>
@@ -636,6 +676,23 @@ const QuotesComponent: React.FC = () => {
                     }
                     isDarkTheme={isDarkTheme}
                 />
+            </CommonDialog>
+
+            <CommonDialog
+                title="Charts Dashboard"
+                onClose={closeChartDashboard}
+                isOpen={isChartDashboardOpen}
+            >
+                <div className="dynamic-charts-popup">
+                    <DynamicCharts
+                        priceHistory={priceHistory}
+                        volumeHistory={volumeHistory}
+                        orderBooks={orderBooks}
+                        quotes={quotes}
+                        isDarkTheme={isDarkTheme}
+                        initialSymbol={chartDashboardSymbol || undefined}
+                    />
+                </div>
             </CommonDialog>
 
             <DepthChart
