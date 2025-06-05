@@ -6,7 +6,7 @@ import SelectInput from "./inputs/SelectInput";
 import DateInput from "./inputs/DateInput";
 import FormEditor from "./FormEditor";
 import FormPreview from "./FormPreview";
-import {formatFieldToUpperCaseAndBreakCammelCase} from "../util";
+import {formatFieldToUpperCaseAndBreakCamelCase} from "../util";
 import InputField from "./inputs/InputField";
 import {formDb} from "../../assets/formDb";
 import CollapsibleSection from "../common/CollapsableSection";
@@ -79,7 +79,7 @@ const FormDetail: React.FC<FormDetailProps> = ({id}) => {
                 valid = false;
                 setErrors((prevErrors) => ({
                     ...prevErrors,
-                    [field.name]: `${formatFieldToUpperCaseAndBreakCammelCase(
+                    [field.name]: `${formatFieldToUpperCaseAndBreakCamelCase(
                         field.name
                     )} is required`,
                 }));
