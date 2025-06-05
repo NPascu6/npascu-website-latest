@@ -104,7 +104,9 @@ const QuotesComponent: React.FC = () => {
     // e.g. 1,2,3,4,5,4,3,2 => repeat
     // ------------------------------
     const pattern = useRef<number[]>([1, 2, 3, 4, 5, 4, 3, 2]);
-    const patternIndex = useRef<number>(0);
+    // Keep an independent pattern index for each symbol so trade generation
+    // for one symbol doesn't affect the others
+    const patternIndicesRef = useRef<{ [symbol: string]: number }>({});
 
     // We'll track last time from real feed. If your feed is slow, you can do "offline simulation" too
     const lastRealUpdateRef = useRef<number>(Date.now());
@@ -186,11 +188,13 @@ const QuotesComponent: React.FC = () => {
                 const currentQuote = quotes[symbol]?.quote;
                 const midPrice = currentQuote?.c ?? incomingTrade.p;
 
-                // patternIndex => how many trades we produce this time
-                const howMany = pattern.current[patternIndex.current];
-                // increment patternIndex (wrap around)
-                patternIndex.current =
-                    (patternIndex.current + 1) % pattern.current.length;
+                // Each symbol maintains its own index into the pattern so
+                // updates happen independently across symbols
+                const currentIndex =
+                    patternIndicesRef.current[symbol] ?? 0;
+                const howMany = pattern.current[currentIndex];
+                patternIndicesRef.current[symbol] =
+                    (currentIndex + 1) % pattern.current.length;
 
                 // We'll produce "howMany" buy trades + "howMany" sell trades,
                 // each with small randomization around midPrice
