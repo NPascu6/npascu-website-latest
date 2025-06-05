@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import DynamicTableContainer from "./dynamic-components/DynamicTableContainer";
 import FormList from "./dynamic-components/FormListContainer";
+import ChartContainer from "./dynamic-components/ChartContainer";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
 import CloseIcon from "../../assets/icons/CloseIcon";
@@ -53,11 +54,23 @@ const DynamicComponentsContainerPage = () => {
                     >
                         📊 Data Table
                     </button>
+                    <button
+                        onClick={() => setActiveTab("chart")}
+                        className={`flex-1 py-3 text-center font-semibold transition ${
+                            activeTab === "chart"
+                                ? "border-b-2"
+                                : "text-gray-400 hover:text-gray-300"
+                        }`}
+                    >
+                        📈 Charts
+                    </button>
                 </div>
 
                 {/* Tab Content */}
                 <div className="p-1">
-                    {activeTab === "form" ? <FormList/> : <DynamicTableContainer/>}
+                    {activeTab === "form" && <FormList/>}
+                    {activeTab === "table" && <DynamicTableContainer/>}
+                    {activeTab === "chart" && <ChartContainer/>}
                 </div>
             </div>
         </div>
