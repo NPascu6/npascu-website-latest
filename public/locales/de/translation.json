@@ -99,7 +99,7 @@
     "workflowLabel": "Workflow:",
     "workflow": "Clickup für Aufgabenverfolgung, arbeitend in einem Kanban-/Prioritätsansatz mit dedizierten Ingenieuren pro Abteilung.",
     "cicdLabel": "CI/CD:",
-    "cicd": "Gitlab, Nomad, Neko, Keysore Vault für die Verwaltung von Secrets und Umgebungen."
+    "cicd": "Gitlab, Nomad, Neko, Keystore Vault für die Verwaltung von Secrets und Umgebungen."
   },
   "fintamaCard": {
     "title": "Senior Software Engineer",
