@@ -15,7 +15,8 @@ TypeScript. It includes various essential libraries and tools to kickstart your 
 
 - `npm start`: Start the development server.
 - `npm run build`: Build the application for production.
-- `npm test`: Run tests using the Vitest testing framework.
+- `npm test`: Run tests using the Vitest testing framework. Make sure to
+  install dependencies first with `npm install` or `yarn`.
 - `npm run eject`: Eject from Create React App for advanced configuration.
 
 ### Usage

@@ -1,0 +1,109 @@
+.blue-theme {
+    color: #ffffff;
+    background-color: #1e3a8a;
+    font-family: "Nunito", sans-serif;
+}
+
+.blue-theme table {
+    color: #ffffff;
+    background-color: #1e3a8a;
+    padding: 1em;
+}
+
+.blue-theme .footer {
+    color: #ffffff;
+    background-color: #1e3a8a;
+}
+
+.blue-theme ::-webkit-scrollbar-thumb {
+    background-color: #333333;
+    /* Scrollbar thumb color */
+    border-radius: 4px;
+}
+
+.blue-theme ::-webkit-scrollbar-thumb:hover {
+    background-color: #444444;
+    /* Hover color for scrollbar thumb */
+}
+
+.blue-theme ::-webkit-scrollbar {
+    width: 6px;
+    /* Scrollbar width */
+    background: #0c4a6e;
+    /* Scrollbar background color */
+}
+
+#siteseal {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.blue-theme #selected-photo {
+    border: 1px solid #ffffff;
+    background-color: #1e3a8a;
+}
+
+.blue-theme #photo-canvas-details {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+
+.blue-theme #photo-canvas-details select {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+
+.blue-theme #product-basket {
+    color: #1e3a8a;
+}
+
+.blue-theme .collapsable-section {
+    background-color: #172554;
+}
+
+.blue-theme .collapsable-section .collapsable-section-header {
+    background-color: #172554;
+}
+
+.blue-theme .collapsable-section .collapsable-section-body {
+    background-color: #172554;
+}
+
+.blue-theme .card {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+
+.blue-theme game-card {
+    background-color: #172554;
+    color: #ffffff;
+}
+
+.blue-theme #github-profile-card {
+    background-color: #172554;
+    color: #ffffff;
+}
+
+.blue-theme #top-bar {
+    background-color: #172554;
+    color: #ffffff;
+}
+
+.blue-theme .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333333;
+    /* Dark background color for tooltip */
+    color: #ffffff;
+    /* White text color for tooltip */
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+}
