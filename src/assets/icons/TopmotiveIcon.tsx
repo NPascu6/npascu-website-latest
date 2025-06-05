@@ -1,6 +1,14 @@
 const TopmotiveIcon = () => {
-    return <img width="44" height="42" src="https://ro.topmotive.eu/wp-content/uploads/TOPMOTIVE_Logo_RGB-1.svg"
-                className="attachment-full wp-image-14864" alt=""/>
+    return (
+        <img
+            width="44"
+            height="42"
+            src="https://ro.topmotive.eu/wp-content/uploads/TOPMOTIVE_Logo_RGB-1.svg"
+            className="attachment-full wp-image-14864"
+            alt=""
+            loading="lazy"
+        />
+    );
 }
 
 export default TopmotiveIcon;

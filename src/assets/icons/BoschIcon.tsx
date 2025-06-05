@@ -12,7 +12,9 @@ const SVGPath: React.FC<SVGPathProps> = ({id = 'logotype-s-47', fill = '#ed0007'
     return (
         <img
             style={{height: '2em', width: '70%'}}
-            src="https://s19531.pcdn.co/wp-content/uploads/2017/12/bosch-wiper-blade-1221600.jpg"/>
+            src="https://s19531.pcdn.co/wp-content/uploads/2017/12/bosch-wiper-blade-1221600.jpg"
+            loading="lazy"
+        />
     );
 };
 
