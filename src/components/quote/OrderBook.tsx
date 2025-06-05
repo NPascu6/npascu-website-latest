@@ -1,6 +1,6 @@
 // OrderBook.tsx
 import React, {useState} from "react";
-import {FinnhubTrade} from "./QuoteComponent";
+import {FinnhubTrade} from "./types";
 import CommonDialog from "../common/CommonDialog";
 
 // --- Helpers -------------------------------------------------------------

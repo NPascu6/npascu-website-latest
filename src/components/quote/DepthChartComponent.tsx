@@ -24,13 +24,7 @@ ChartJS.register(
     Filler
 );
 
-export interface FinnhubTrade {
-    p: number; // price
-    s: string; // symbol
-    t: number; // timestamp (ms)
-    v: number; // volume
-    c?: number | null;
-}
+import { FinnhubTrade } from "./types";
 
 interface DepthChartProps {
     selectedSymbolForDepthChart: string | null;
