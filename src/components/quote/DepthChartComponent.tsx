@@ -84,7 +84,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
             >
                 <div
                     onClick={(e) => e.stopPropagation()}
-                    className={`relative p-2 w-11/12 max-w-3xl max-h-[90vh] overflow-y-auto ${
+                    className={`depth-chart-popup relative p-2 w-11/12 max-w-3xl max-h-[90vh] overflow-y-auto ${
                         isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"
                     } rounded shadow-lg`}
                 >
@@ -299,7 +299,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
         >
             <div
                 onClick={(e) => e.stopPropagation()}
-                className={`relative p-2 w-11/12 max-w-3xl max-h-[90vh] overflow-y-auto ${
+                className={`depth-chart-popup relative p-2 w-11/12 max-w-3xl max-h-[90vh] overflow-y-auto ${
                     isDarkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"
                 } rounded shadow-lg`}
             >
