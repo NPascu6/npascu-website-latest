@@ -381,6 +381,8 @@ const QuotesComponent: React.FC = () => {
 
     const [chartDashboardSymbol, setChartDashboardSymbol] = useState<string | null>(null);
     const openChartDashboard = (symbol?: string) => {
+        // Ensure depth chart popup is closed when opening the dashboard
+        closeDepthChartPopup();
         setChartDashboardSymbol(symbol ?? null);
         setIsChartDashboardOpen(true);
     };
