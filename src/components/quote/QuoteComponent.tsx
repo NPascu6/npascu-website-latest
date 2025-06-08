@@ -537,13 +537,19 @@ const QuotesComponent: React.FC = () => {
                     <Loading/>
                 </div>
             ) : (
-                <ul className="grid grid-cols-1 sm:grid-flow-col sm:grid-rows-3 sm:[grid-auto-columns:1fr] gap-1 list-none p-0 overflow-y-auto h-[600px] sm:h-auto">
+                <ul
+                    className="grid grid-cols-1 sm:grid-flow-col sm:grid-rows-3 sm:[grid-auto-columns:1fr] gap-3 list-none p-0 overflow-y-auto h-[600px] sm:h-auto"
+                >
                     {Object.entries(quotes)
                         .filter(([symbol]) => selectedSymbols.includes(symbol))
                         .map(([symbol, data]) => (
                             <li
                                 key={symbol}
-                                className="relative border border-green-900 rounded p-3 transition-colors duration-300"
+                                className={`relative cursor-pointer rounded-lg p-4 border shadow-md transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg ${
+                                    isDarkTheme
+                                        ? "bg-gray-800 border-gray-700"
+                                        : "bg-white border-gray-300"
+                                }`}
                                 onClick={() => handleOpenOrderBook(symbol)}
                             >
                                 <div
@@ -555,7 +561,7 @@ const QuotesComponent: React.FC = () => {
                                 >
                                     ×
                                 </div>
-                                <strong className="text-xl">
+                                <strong className="block text-xl font-semibold">
                                     {symbolEmojis[symbol]
                                         ? `${symbolEmojis[symbol]} ${symbol}`
                                         : symbol}
@@ -563,7 +569,7 @@ const QuotesComponent: React.FC = () => {
                                 <div className="mt-2 flex items-center justify-between">
                                     <div className="flex items-center">
                     <span
-                        className={`text-base font-bold ${
+                        className={`text-lg font-bold ${
                             data.direction === "up"
                                 ? "text-green-500"
                                 : data.direction === "down"
@@ -630,7 +636,9 @@ const QuotesComponent: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <small className="block mt-1">{formatTime(data.quote.t)}</small>
+                                <small className="block mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    {formatTime(data.quote.t)}
+                                </small>
                             </li>
                         ))}
                 </ul>
