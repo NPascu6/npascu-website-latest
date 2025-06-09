@@ -1,8 +1,9 @@
 import React, {Suspense} from 'react';
-import {Route, Routes} from 'react-router-dom';
+import {Route, Routes, useLocation} from 'react-router-dom';
 import {routeDefinition} from './routeDefinition';
 import Loading from '../pages/generic/Loading';
 import {RouteDefinition} from '../models/common/common';
+import {AnimatePresence} from 'framer-motion';
 
 const renderRoutes = (routes: RouteDefinition[]) => {
     return routes.map((route: RouteDefinition, index) => (
@@ -17,12 +18,15 @@ const renderRoutes = (routes: RouteDefinition[]) => {
 };
 
 const RoutesSwitch = () => {
+    const location = useLocation();
     return (
-        <Suspense fallback={<Loading/>}>
-            <Routes>
-                {renderRoutes(routeDefinition)}
-            </Routes>
-        </Suspense>
+        <AnimatePresence mode="wait">
+            <Suspense fallback={<Loading/>}>
+                <Routes location={location} key={location.pathname}>
+                    {renderRoutes(routeDefinition)}
+                </Routes>
+            </Suspense>
+        </AnimatePresence>
     );
 };
 
