@@ -28,6 +28,14 @@ html {
     min-height: 100dvh;
 }
 
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', sans-serif;
+}
+
 ::-webkit-scrollbar-thumb {
     border-radius: 2px;
     background-color: #8888;
