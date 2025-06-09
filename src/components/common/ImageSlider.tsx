@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
 import useFullScreenToggle from "../../hooks/useToggleFullscreen";
 
+import LazyImage from "./LazyImage";
+
 const ChevronLeft = React.lazy(() => import("../../assets/icons/ChevronLeft"));
 const ChevronRight = React.lazy(
     () => import("../../assets/icons/ChevronRight")
@@ -92,8 +94,7 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
                 >
-                    <img
-                        loading="lazy"
+                    <LazyImage
                         src={images[currentImageIndex]}
                         alt={`${currentImageIndex + 1}`}
                         className="w-full  object-contain p-1"

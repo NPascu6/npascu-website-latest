@@ -1,6 +1,8 @@
+import LazyImage from '../../components/common/LazyImage';
+
 const CovarioIcon = () => {
     return (
-        <img
+        <LazyImage
             style={{
                 height: "2em",
                 width: "2em",
@@ -9,10 +11,9 @@ const CovarioIcon = () => {
             alt="Covario AG jobs"
             title="Covario AG jobs"
             className="img-fluid job-details-company-image px-md-0"
-            loading="lazy"
         />
     );
 }
 
 
-export default CovarioIcon
+export default CovarioIcon;

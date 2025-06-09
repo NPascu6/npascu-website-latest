@@ -5,6 +5,7 @@ import {_githubAvatarUrl} from "../_constant";
 import Email from "../../assets/icons/Email";
 import Phone from "../../assets/icons/Phone";
 import {useTranslation} from "react-i18next";
+import LazyImage from "../common/LazyImage";
 
 const GithubProfileCard: React.FC = () => {
     const {t} = useTranslation();
@@ -27,11 +28,10 @@ const GithubProfileCard: React.FC = () => {
             <div className="flex flex-col items-center">
                 {/* Profile Avatar */}
                 <div className="h-28 w-28 rounded-full overflow-hidden border-4 border-green-700 shadow-md">
-                    <img
+                    <LazyImage
                         src={_githubAvatarUrl}
                         alt={t("githubProfile.avatarAlt")}
                         className="w-full h-full object-cover"
-                        loading="lazy"
                     />
                 </div>
 
