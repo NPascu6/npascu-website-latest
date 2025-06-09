@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import compression from 'vite-plugin-compression';
 import {VitePWA} from 'vite-plugin-pwa';
+import viteImagemin from 'vite-plugin-imagemin';
 
 export default defineConfig({
     base: './',
@@ -19,6 +20,15 @@ export default defineConfig({
         compression({
             algorithm: 'gzip',
             threshold: 1024,
+        }),
+        viteImagemin({
+            gifsicle: { optimizationLevel: 7, interlaced: false },
+            optipng: { optimizationLevel: 7 },
+            mozjpeg: { quality: 70 },
+            pngquant: { quality: [0.7, 0.9], speed: 4 },
+            svgo: {
+                plugins: [{ name: 'removeViewBox', active: false }],
+            },
         }),
         VitePWA({
             registerType: 'autoUpdate',

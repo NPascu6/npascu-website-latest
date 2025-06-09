@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {RootState} from "../store/store";
 import {useTranslation} from "react-i18next";
+import LazyImage from "../components/common/LazyImage";
 
 const AboutPage = () => {
     const nav = useNavigate();
@@ -30,8 +31,7 @@ const AboutPage = () => {
                     </div>
                 </div>
                 <div className="mb-2 flex justify-center">
-                    <img
-                        loading="lazy"
+                    <LazyImage
                         id="about-image"
                         src={InstagramImage}
                         className="rounded-xl shadow-lg"

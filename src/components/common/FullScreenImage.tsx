@@ -1,5 +1,7 @@
 import React from "react";
 
+import LazyImage from "./LazyImage";
+
 const CloseIcon = React.lazy(() => import("../../assets/icons/CloseIcon"));
 const ChevronLeft = React.lazy(() => import("../../assets/icons/ChevronLeft"));
 const ChevronRight = React.lazy(
@@ -34,8 +36,7 @@ const FullScreenImage = ({
                     onTouchEnd={onTouchEnd && onTouchEnd}
                 >
                     {/* Full-screen image */}
-                    <img
-                        loading="lazy"
+                    <LazyImage
                         style={{maxHeight: "70dvh", maxWidth: "87vw"}}
                         src={selectedImage}
                         alt={selectedImage}

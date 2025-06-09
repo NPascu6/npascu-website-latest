@@ -1,6 +1,7 @@
+import LazyImage from "../../components/common/LazyImage";
 const NewVTech = () => {
-    return <img
-        src="https://newvtech.com/assets/images/nvtlogodark.png" loading="lazy"/>
+    return <LazyImage
+        src="https://newvtech.com/assets/images/nvtlogodark.png"/>
 }
 
 export default NewVTech;
