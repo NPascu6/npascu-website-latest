@@ -58,6 +58,12 @@ const App: React.FC = () => {
         document.documentElement.setAttribute('data-theme', savedTheme);
     }, [dispatch, theme]);
 
+    useEffect(() => {
+        import("./pages/AboutPage");
+        import("./pages/game/GamesContainer");
+    }, []);
+
+
     return (
         <div
             id="app"
