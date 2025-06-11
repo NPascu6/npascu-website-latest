@@ -31,7 +31,7 @@ export default function DownloadCVButton() {
             {/* The main button to open/close the dropdown */}
             <button
                 onClick={toggleDropdown}
-                className="inline-flex items-center px-2 py-1 bg-green-500 text-white hover:bg-green-700 border border-gray-600 transition-colors duration-300 ease-in-out"
+                className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 border border-gray-600 transition-colors duration-300 ease-in-out"
             >
                 Download CV
                 <span className="ml-2">

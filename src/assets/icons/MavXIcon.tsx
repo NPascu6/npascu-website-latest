@@ -9,7 +9,7 @@ const MavXIcon = () => {
                 height: "26px",
                 width: "26px",
             }}
-            alt=""
+            alt="MavX logo"
             data-csiid="ap9BaPegCqin1fIPz-rjqQw_2"
             data-atf="1"
         />

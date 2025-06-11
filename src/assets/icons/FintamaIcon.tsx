@@ -10,7 +10,7 @@ const FintamaIcon = () => {
                 height: "2em",
                 width: "2em",
             }}
-            alt=""
+            alt="Fintama logo"
             data-csiid="mvikZ9WZCsW69u8P7OHV0AE_2"
             data-atf="1"
         />
