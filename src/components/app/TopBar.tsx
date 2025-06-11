@@ -27,7 +27,7 @@ const TopBar = () => {
                 <DownloadCVButton/>
                 <div className="top-bar-section w-full mr-3">
                     <LanguageSelector/>
-                    <button name="toggle-theme" onClick={changeTheme}>
+                    <button name="toggle-theme" aria-label="Toggle theme" onClick={changeTheme}>
                         {isDarkTheme ? <ToggleSvgLight/> : <ToggleSvgDark/>}
                     </button>
                 </div>

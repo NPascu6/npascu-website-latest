@@ -16,6 +16,7 @@ const BottomBar = () => {
                 <div className="text-center w-full">
                     <a
                         href="mailto:norbipascu92@gmail.com"
+                        aria-label="Send email"
                         className={`cursor-pointer flex justify-center items-center w-full`}
                     >
                         <span style={{color: "green", marginLeft: 10}}>
@@ -26,6 +27,7 @@ const BottomBar = () => {
                 <div className="text-center w-full">
                     <a
                         href="tel:+41765951562"
+                        aria-label="Call phone"
                         className={`cursor-pointer flex justify-center items-center w-full`}
                     >
                         <span style={{color: "green", marginLeft: 10}}>
@@ -40,6 +42,7 @@ const BottomBar = () => {
                         href="https://www.linkedin.com/in/norbert-pascu-5b1857116/"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="LinkedIn profile"
                         className={`cursor-pointer flex justify-center items-center w-full`}
                     >
                         <div>
@@ -52,6 +55,7 @@ const BottomBar = () => {
                         href={githubProfile?.html_url}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="GitHub profile"
                         className={`cursor-pointer flex justify-center items-center w-full`}
                     >
                         <div>
@@ -66,6 +70,7 @@ const BottomBar = () => {
                         href="https://www.facebook.com/norbi.pascu"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Facebook profile"
                         className={`cursor-pointer mt-1 flex justify-center items-center w-full`}
                     >
                         <div>
@@ -78,6 +83,7 @@ const BottomBar = () => {
                         href="https://www.instagram.com/norbipascu/?hl=en"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Instagram profile"
                         className={`cursor-pointer flex justify-center items-center w-full mt-1`}
                     >
                         <div>
