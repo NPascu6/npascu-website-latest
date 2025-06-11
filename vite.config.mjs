@@ -4,12 +4,36 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import compression from 'vite-plugin-compression';
 import {VitePWA} from 'vite-plugin-pwa';
 import viteImagemin from 'vite-plugin-imagemin';
+import { createHtmlPlugin } from 'vite-plugin-html';
 
 export default defineConfig({
     base: './',
     build: {
         outDir: './build',
         emptyOutDir: true,
+        minify: 'terser',
+        assetsInlineLimit: 0,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: [
+                        'react',
+                        'react-dom',
+                        'react-router-dom',
+                    ],
+                    chart: [
+                        'chart.js',
+                        'react-chartjs-2',
+                    ],
+                    grid: [
+                        'ag-grid-react',
+                        'ag-grid-community',
+                    ],
+                    signalr: ['@microsoft/signalr'],
+                    motion: ['framer-motion'],
+                },
+            },
+        },
     },
     test: {
         // your test config...
@@ -17,8 +41,14 @@ export default defineConfig({
     plugins: [
         react(),
         viteTsconfigPaths(),
+        createHtmlPlugin({ minify: true }),
         compression({
             algorithm: 'gzip',
+            threshold: 1024,
+        }),
+        compression({
+            algorithm: 'brotliCompress',
+            ext: '.br',
             threshold: 1024,
         }),
         viteImagemin({
@@ -26,6 +56,7 @@ export default defineConfig({
             optipng: { optimizationLevel: 7 },
             mozjpeg: { quality: 70 },
             pngquant: { quality: [0.7, 0.9], speed: 4 },
+            webp: { quality: 75 },
             svgo: {
                 plugins: [{ name: 'removeViewBox', active: false }],
             },

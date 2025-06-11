@@ -2,9 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
     src: string;
+    width?: number | string;
+    height?: number | string;
+    srcSet?: string;
+    sizes?: string;
+    fetchpriority?: 'high' | 'low' | 'auto';
 }
 
-const LazyImage: React.FC<LazyImageProps> = ({ src, ...props }) => {
+const LazyImage: React.FC<LazyImageProps> = ({ src, width, height, srcSet, sizes, fetchpriority, ...props }) => {
     const [source, setSource] = useState<string | undefined>(undefined);
     const ref = useRef<HTMLImageElement | null>(null);
 
@@ -16,7 +21,7 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, ...props }) => {
                     observer.disconnect();
                 }
             },
-            { rootMargin: '100px' }
+            { rootMargin: '200px' }
         );
         if (ref.current) {
             observer.observe(ref.current);
@@ -24,7 +29,21 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, ...props }) => {
         return () => observer.disconnect();
     }, [src]);
 
-    return <img ref={ref} src={source} loading="lazy" {...props} />;
+    return (
+        <img
+            ref={ref}
+            src={source}
+            loading="lazy"
+            decoding="async"
+            crossOrigin="anonymous"
+            width={width}
+            height={height}
+            srcSet={srcSet}
+            sizes={sizes}
+            fetchpriority={fetchpriority}
+            {...props}
+        />
+    );
 };
 
 export default LazyImage;
