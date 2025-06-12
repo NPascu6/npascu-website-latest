@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^8.0.7",
-    "@reduxjs/toolkit": "^1.9.7",
+    "@reduxjs/toolkit": "^2.8.2",
     "ag-grid-community": "^32.0.0",
     "ag-grid-react": "^32.0.0",
     "axios": "^1.5.1",
@@ -34,7 +34,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.17.0",
     "react-swipeable": "^7.0.2",
-    "react-tailwindcss-datepicker": "^1.7.3"
+    "react-tailwindcss-datepicker": "^2.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -47,9 +47,9 @@
     "typescript": "^5.0.4",
     "vite": "^5.2.6",
     "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-html": "^3.2.2",
     "vite-plugin-imagemin": "^0.6.1",
     "vite-plugin-pwa": "^0.6.5",
-    "vite-plugin-html": "^3.2.2",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^3.0.6"
   },

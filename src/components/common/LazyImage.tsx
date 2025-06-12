@@ -6,10 +6,10 @@ interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
     height?: number | string;
     srcSet?: string;
     sizes?: string;
-    fetchpriority?: 'high' | 'low' | 'auto';
+    fetchPriority?: 'high' | 'low' | 'auto';
 }
 
-const LazyImage: React.FC<LazyImageProps> = ({ src, width, height, srcSet, sizes, fetchpriority, ...props }) => {
+const LazyImage: React.FC<LazyImageProps> = ({ src, width, height, srcSet, sizes, fetchPriority, ...props }) => {
     const [source, setSource] = useState<string | undefined>(undefined);
     const ref = useRef<HTMLImageElement | null>(null);
 
@@ -40,7 +40,7 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, width, height, srcSet, sizes
             height={height}
             srcSet={srcSet}
             sizes={sizes}
-            fetchpriority={fetchpriority}
+            fetchPriority={fetchPriority}
             {...props}
         />
     );
