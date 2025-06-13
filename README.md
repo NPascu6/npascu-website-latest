@@ -24,9 +24,11 @@ TypeScript. It includes various essential libraries and tools to kickstart your 
 This project is a great starting point for building modern web applications with a focus on React, Redux, and
 TypeScript. Feel free to customize and expand it to meet your specific project requirements.
 
+To enable the contact form's email sending feature, set the `VITE_EMAIL_API` environment variable to the URL of your email service.
+
 ### New Features
 
-- **Contact Page**: Reach out directly using the new `/contact` route with a simple form that opens your mail client.
+- **Contact Page**: The `/contact` route now submits the form directly from the app. Configure `VITE_EMAIL_API` to enable sending emails automatically.
 
 ### Browser Support
 

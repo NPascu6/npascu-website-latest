@@ -235,6 +235,9 @@
     "name": "Nome",
     "email": "Email",
     "message": "Messaggio",
-    "send": "Invia"
+    "send": "Invia",
+    "invalidEmail": "Inserisci un indirizzo email valido",
+    "success": "Messaggio inviato con successo",
+    "error": "Invio del messaggio non riuscito"
   }
 }
