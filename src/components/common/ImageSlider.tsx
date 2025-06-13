@@ -98,6 +98,8 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
                         src={images[currentImageIndex]}
                         alt={`${currentImageIndex + 1}`}
                         className="w-full  object-contain p-1"
+                        width="2560"
+                        height="1280"
                     />
                 </div>
             </div>

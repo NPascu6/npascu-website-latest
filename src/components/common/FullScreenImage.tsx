@@ -40,6 +40,8 @@ const FullScreenImage = ({
                         style={{maxHeight: "70dvh", maxWidth: "87vw"}}
                         src={selectedImage}
                         alt={selectedImage}
+                        width="2560"
+                        height="1280"
                     />
                 </div>
                 {handleNextClick && (

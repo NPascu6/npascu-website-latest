@@ -7,7 +7,7 @@ import viteImagemin from 'vite-plugin-imagemin';
 import { createHtmlPlugin } from 'vite-plugin-html';
 
 export default defineConfig({
-    base: './',
+    base: '/',
     build: {
         outDir: './build',
         emptyOutDir: true,

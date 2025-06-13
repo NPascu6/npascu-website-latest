@@ -3,7 +3,7 @@ import "./assets/styles/index.css";
 import "./assets/styles/App.css";
 import App from "./App";
 import {Provider} from "react-redux";
-import {HashRouter} from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 import store from "./store/store";
 import "./assets/styles/darkTheme.css";
 import "./assets/styles/lightTheme.css";
@@ -17,8 +17,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <Provider store={store}>
-        <HashRouter>
+        <BrowserRouter>
             <App/>
-        </HashRouter>
+        </BrowserRouter>
     </Provider>
 );
