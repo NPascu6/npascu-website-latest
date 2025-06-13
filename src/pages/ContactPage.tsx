@@ -32,9 +32,9 @@ const ContactPage: React.FC = () => {
         >
             <button
                 onClick={() => navigate("/")}
-                className="absolute left-2 top-2 px-2 py-1 bg-green-800 text-white hover:bg-green-900 transition-colors rounded text-sm border border-gray-600"
+                className="absolute right-2 top-2 px-2 py-1 bg-green-800 text-white hover:bg-green-900 transition-colors rounded text-sm border border-gray-600"
             >
-                Back
+                X
             </button>
             <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4 p-4 shadow-xl bg-white dark:bg-gray-800">
                 <h2 className="text-2xl font-bold text-center">{t("contact.title")}</h2>
