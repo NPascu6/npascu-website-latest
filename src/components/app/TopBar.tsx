@@ -7,10 +7,12 @@ import ToggleSvgLight from "../../assets/icons/ToggleSvgLight";
 import DownloadCVButton from "../common/DownloadCVButton";
 import LanguageSelector from "./LanguageSelector";
 import { Link, useLocation } from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const TopBar = () => {
     const theme = useSelector((state: RootState) => state.app.theme);
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -32,14 +34,14 @@ const TopBar = () => {
                         to="/"
                         className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 border border-gray-600 transition-colors duration-300 ease-in-out"
                     >
-                        Back
+                        {t('navigation.back')}
                     </Link>
                 ) : (
                     <Link
                         to="/contact"
                         className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 border border-gray-600 transition-colors duration-300 ease-in-out"
                     >
-                        Contact
+                        {t('navigation.contact')}
                     </Link>
                 )}
             </div>
