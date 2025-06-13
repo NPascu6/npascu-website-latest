@@ -35,7 +35,6 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, width, height, srcSet, sizes
             src={source}
             loading="lazy"
             decoding="async"
-            crossOrigin="anonymous"
             width={width}
             height={height}
             srcSet={srcSet}
