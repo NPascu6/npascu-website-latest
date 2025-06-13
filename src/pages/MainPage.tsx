@@ -17,10 +17,10 @@ import NewVTech from "../assets/icons/NewVTech";
 import {FaChartLine} from "react-icons/fa";
 import MavxIcon from "../assets/icons/MavXIcon";
 import {useTranslation} from "react-i18next";
+import GithubProfileCard from "../components/main-page/GithubProfileCard";
 
 // --- Lazy Imports ---
 const EducationCard = lazy(() => import("../components/main-page/EducationAndTraining"));
-const GithubProfileCard = lazy(() => import("../components/main-page/GithubProfileCard"));
 const YoutubeVideoLink = lazy(() => import("../components/main-page/YoutubeVideoLink"));
 const CollapsibleSection = lazy(() => import("../components/common/CollapsableSection"));
 const HighlightedRepos = lazy(() => import("../components/main-page/HighlightedRepos"));
@@ -106,9 +106,7 @@ const MainPage = () => {
             style={{height: "calc(100vh - 6rem)", overflow: "auto"}}
         >
             <div className="flex items-center justify-center">
-                <Suspense fallback={<Loading/>}>
-                    <GithubProfileCard/>
-                </Suspense>
+                <GithubProfileCard/>
             </div>
             {/* NEW: Live Quotes Section */}
             <Suspense fallback={<Loading/>}>
