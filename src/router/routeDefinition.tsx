@@ -4,7 +4,7 @@ import Loading from "../pages/generic/Loading";
 import {motion} from 'framer-motion';
 
 // Lazy load the page components
-const MainPage = lazy(() => import("../pages/MainPage"));
+import MainPage from "../pages/MainPage";
 const GamesCardPage = lazy(() => import("../pages/game/GamesContainer"));
 const QuotePage = lazy(() => import("../components/quote/QuoteComponent"));
 const DynamicComponentsContainerPage = lazy(() =>
@@ -29,7 +29,7 @@ export const routeDefinition: RouteDefinition[] = [
     {
         path: "*",
         exact: true,
-        element: withSuspense(MainPage),
+        element: <MainPage/>,
     },
     {
         path: "/games/*",
