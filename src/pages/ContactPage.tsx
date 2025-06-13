@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/store";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { setShowToaster, setToasterMessage } from "../store/reducers/appReducer";
+import { EmailService } from "../services/EmailService";
 
 const ContactPage: React.FC = () => {
     const { t } = useTranslation();
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -15,12 +18,25 @@ const ContactPage: React.FC = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const mailtoLink = `mailto:norbipascu92@gmail.com?subject=Portfolio%20Contact%20from%20${encodeURIComponent(
-            formData.name
-        )}&body=${encodeURIComponent(formData.message)}%0A%0A${formData.email}`;
-        window.location.href = mailtoLink;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            dispatch(setToasterMessage(t("contact.invalidEmail")));
+            dispatch(setShowToaster(true));
+            return;
+        }
+
+        const service = new EmailService();
+        try {
+            await service.sendContactEmail(formData.name, formData.email, formData.message);
+            dispatch(setToasterMessage(t("contact.success")));
+            dispatch(setShowToaster(true));
+            setFormData({ name: "", email: "", message: "" });
+        } catch (err) {
+            dispatch(setToasterMessage(t("contact.error")));
+            dispatch(setShowToaster(true));
+        }
     };
 
     return (
@@ -44,7 +60,7 @@ const ContactPage: React.FC = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white"
                     placeholder={t("contact.name") || "Name"}
                 />
                 <input
@@ -53,7 +69,7 @@ const ContactPage: React.FC = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white"
                     placeholder={t("contact.email") || "Email"}
                 />
                 <textarea
@@ -62,7 +78,7 @@ const ContactPage: React.FC = () => {
                     onChange={handleChange}
                     rows={4}
                     required
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-full p-2 border border-gray-300 rounded dark:bg-gray-700 dark:text-white"
                     placeholder={t("contact.message") || "Message"}
                 />
                 <button type="submit" className="w-full bg-green-800 text-white py-2 hover:bg-green-900 transition-colors">
