@@ -33,8 +33,12 @@ const ContactPage: React.FC = () => {
             dispatch(setToasterMessage(t("contact.success")));
             dispatch(setShowToaster(true));
             setFormData({ name: "", email: "", message: "" });
-        } catch (err) {
-            dispatch(setToasterMessage(t("contact.error")));
+        } catch (err: any) {
+            if (typeof err === 'string' && err.includes('not configured')) {
+                dispatch(setToasterMessage(t('contact.serviceError')));
+            } else {
+                dispatch(setToasterMessage(t('contact.error')));
+            }
             dispatch(setShowToaster(true));
         }
     };

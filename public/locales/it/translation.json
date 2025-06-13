@@ -227,7 +227,11 @@
     "specialties": ".NET e React",
     "profileDescription": "Full-Stack Engineer | Appassionato di tecnologia | Oltre 9 anni di esperienza in Fintech, retail, automobilistico e industria chimica",
     "emailLabel": "norbipascu92@gmail.com",
-    "phoneLabel": "+41765951562"
+  "phoneLabel": "+41765951562"
+  },
+  "navigation": {
+    "contact": "Contatto",
+    "back": "Indietro"
   },
   "contact": {
     "title": "Contatto",
@@ -238,6 +242,7 @@
     "send": "Invia",
     "invalidEmail": "Inserisci un indirizzo email valido",
     "success": "Messaggio inviato con successo",
-    "error": "Invio del messaggio non riuscito"
+    "error": "Invio del messaggio non riuscito",
+    "serviceError": "Servizio email non configurato"
   }
 }

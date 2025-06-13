@@ -25,6 +25,7 @@ This project is a great starting point for building modern web applications with
 TypeScript. Feel free to customize and expand it to meet your specific project requirements.
 
 To enable the contact form's email sending feature, set the `VITE_EMAIL_API` environment variable to the URL of your email service.
+If this variable is left empty, the form will still render but no message will be sent.
 
 ### New Features
 
