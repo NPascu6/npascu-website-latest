@@ -24,37 +24,35 @@ const TopBar = () => {
     };
 
     return (
-        <div id="top-bar" data-testid="top-bar-test" className="top-bar">
-            <div className="flex justify-between w-full items-center">
-                <div className="flex items-center gap-2">
-                    <DownloadCVButton/>
-                    {location.pathname === "/contact" ? (
-                        <Link
-                            to="/"
-                            className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 transition-colors rounded text-sm border border-gray-600 whitespace-nowrap"
-                        >
-                            Back
-                        </Link>
-                    ) : (
-                        <Link
-                            to="/contact"
-                            className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 transition-colors rounded text-sm border border-gray-600 whitespace-nowrap"
-                        >
-                            Contact
-                        </Link>
-                    )}
-                </div>
-                <div className="top-bar-section w-full flex items-center justify-end gap-2">
-                    <LanguageSelector/>
-                    <button
-                        name="toggle-theme"
-                        aria-label="Toggle theme"
-                        onClick={changeTheme}
-                        className="p-1"
+        <div id="top-bar" data-testid="top-bar-test" className="top-bar flex justify-between items-center w-full">
+            <div className="flex items-center gap-2">
+                <DownloadCVButton/>
+                {location.pathname === "/contact" ? (
+                    <Link
+                        to="/"
+                        className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 border border-gray-600 transition-colors duration-300 ease-in-out"
                     >
-                        {isDarkTheme ? <ToggleSvgLight/> : <ToggleSvgDark/>}
-                    </button>
-                </div>
+                        Back
+                    </Link>
+                ) : (
+                    <Link
+                        to="/contact"
+                        className="inline-flex items-center px-2 py-1 bg-green-800 text-white hover:bg-green-900 border border-gray-600 transition-colors duration-300 ease-in-out"
+                    >
+                        Contact
+                    </Link>
+                )}
+            </div>
+            <div className="flex items-center gap-2">
+                <LanguageSelector/>
+                <button
+                    name="toggle-theme"
+                    aria-label="Toggle theme"
+                    onClick={changeTheme}
+                    className="p-1"
+                >
+                    {isDarkTheme ? <ToggleSvgLight/> : <ToggleSvgDark/>}
+                </button>
             </div>
         </div>
     );
