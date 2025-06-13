@@ -24,6 +24,10 @@ TypeScript. It includes various essential libraries and tools to kickstart your 
 This project is a great starting point for building modern web applications with a focus on React, Redux, and
 TypeScript. Feel free to customize and expand it to meet your specific project requirements.
 
+### New Features
+
+- **Contact Page**: Reach out directly using the new `/contact` route with a simple form that opens your mail client.
+
 ### Browser Support
 
 - **Production**: Targeting modern browsers with a global usage share of more than 0.2%.
