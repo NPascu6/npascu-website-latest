@@ -6,6 +6,7 @@ import ToggleSvgDark from "../../assets/icons/ToggleSvgDark";
 import ToggleSvgLight from "../../assets/icons/ToggleSvgLight";
 import DownloadCVButton from "../common/DownloadCVButton";
 import LanguageSelector from "./LanguageSelector";
+import { Link } from "react-router-dom";
 
 const TopBar = () => {
     const theme = useSelector((state: RootState) => state.app.theme);
@@ -23,9 +24,14 @@ const TopBar = () => {
 
     return (
         <div id="top-bar" data-testid="top-bar-test" className="top-bar">
-            <div className="flex justify-between w-full">
-                <DownloadCVButton/>
-                <div className="top-bar-section w-full mr-3">
+            <div className="flex justify-between w-full items-center">
+                <div className="flex items-center gap-2">
+                    <DownloadCVButton/>
+                    <Link to="/contact" className="px-2 py-1 bg-green-800 text-white hover:bg-green-900 transition-colors rounded text-sm">
+                        Contact
+                    </Link>
+                </div>
+                <div className="top-bar-section w-full mr-3 flex items-center justify-end gap-2">
                     <LanguageSelector/>
                     <button name="toggle-theme" aria-label="Toggle theme" onClick={changeTheme}>
                         {isDarkTheme ? <ToggleSvgLight/> : <ToggleSvgDark/>}

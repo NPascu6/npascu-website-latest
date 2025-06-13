@@ -228,5 +228,13 @@
     "profileDescription": "Ingeniero Full-Stack | Entusiasta de la tecnología | Más de 9 años de experiencia en fintech, retail, automotriz e industria química",
     "emailLabel": "norbipascu92@gmail.com",
     "phoneLabel": "+41765951562"
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "¿Interesado en trabajar juntos? ¡Envíame un mensaje!",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "send": "Enviar"
   }
 }
