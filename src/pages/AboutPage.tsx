@@ -36,6 +36,8 @@ const AboutPage = () => {
                         src={InstagramImage}
                         className="rounded-xl shadow-lg"
                         style={{height: "15em"}}
+                        width="1124"
+                        height="1406"
                         alt={t("about.imageAlt")}
                     />
                 </div>

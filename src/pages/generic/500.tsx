@@ -13,6 +13,8 @@ const InternalServerError = () => {
                 src="/500-image.png"
                 alt="500 Illustration"
                 className="mt-8 max-w-xs"
+                width="256"
+                height="256"
             />
         </div>
     );

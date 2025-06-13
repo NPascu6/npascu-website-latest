@@ -32,6 +32,8 @@ const GithubProfileCard: React.FC = () => {
                         src={_githubAvatarUrl}
                         alt={t("githubProfile.avatarAlt")}
                         className="w-full h-full object-cover"
+                        width="460"
+                        height="460"
                     />
                 </div>
 
