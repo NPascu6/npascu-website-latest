@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const ContactPage: React.FC = () => {
     const { t } = useTranslation();
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -24,10 +26,16 @@ const ContactPage: React.FC = () => {
     return (
         <div
             style={{ height: "calc(100vh - 5.5rem)", overflow: "auto" }}
-            className={`flex items-center justify-center transition-colors ${
+            className={`relative flex items-center justify-center transition-colors ${
                 isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
             }`}
         >
+            <button
+                onClick={() => navigate("/")}
+                className="absolute left-2 top-2 px-2 py-1 bg-green-800 text-white hover:bg-green-900 transition-colors rounded text-sm border border-gray-600"
+            >
+                Back
+            </button>
             <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4 p-4 shadow-xl bg-white dark:bg-gray-800">
                 <h2 className="text-2xl font-bold text-center">{t("contact.title")}</h2>
                 <p className="text-sm text-center mb-2">{t("contact.subtitle")}</p>
