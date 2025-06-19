@@ -13,6 +13,7 @@ const InstallPWAButton = lazy(() => import("./components/app/InstallPWAButton"))
 const RoutesSwitch = lazy(() => import("./router/Router"));
 const BottomBar = lazy(() => import("./components/app/BottomBar"));
 const Toaster = lazy(() => import("./components/common/Toaster"));
+const ScrollToTopButton = lazy(() => import("./components/common/ScrollToTopButton"));
 
 const App: React.FC = () => {
     const dispatch = useDispatch();
@@ -101,6 +102,11 @@ const App: React.FC = () => {
             {/* PWA Install Button */}
             <Suspense fallback={<Loading/>}>
                 <InstallPWAButton/>
+            </Suspense>
+
+            {/* Scroll to Top Button */}
+            <Suspense fallback={null}>
+                <ScrollToTopButton/>
             </Suspense>
         </div>
     );
