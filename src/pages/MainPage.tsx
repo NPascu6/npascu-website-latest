@@ -24,7 +24,7 @@ const EducationCard = lazy(() => import("../components/main-page/EducationAndTra
 const YoutubeVideoLink = lazy(() => import("../components/main-page/YoutubeVideoLink"));
 const CollapsibleSection = lazy(() => import("../components/common/CollapsableSection"));
 const HighlightedRepos = lazy(() => import("../components/main-page/HighlightedRepos"));
-const ImageSlider = lazy(() => import("../components/common/ImageSlider"));
+const ImageGrid = lazy(() => import("../components/common/ImageGrid"));
 
 const AmarisCard = lazy(() =>
     import("../components/main-page/ExperienceCards").then((mod) => ({
@@ -310,7 +310,7 @@ const MainPage = () => {
                     <CollapsibleSection title={t("sampleScreens")}>
                         {!!workImages?.length && (
                             <Suspense fallback={<Loading/>}>
-                                <ImageSlider images={workImages}/>
+                                <ImageGrid images={workImages}/>
                             </Suspense>
                         )}
                     </CollapsibleSection>
