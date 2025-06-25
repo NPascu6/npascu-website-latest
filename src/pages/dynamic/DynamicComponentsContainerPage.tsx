@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {useSwipeable} from "react-swipeable";
 import DynamicTableContainer from "./dynamic-components/DynamicTableContainer";
 import FormList from "./dynamic-components/FormListContainer";
 import ChartContainer from "./dynamic-components/ChartContainer";
@@ -9,14 +10,31 @@ import {useNavigate} from "react-router-dom";
 
 const DynamicComponentsContainerPage = () => {
     const [activeTab, setActiveTab] = useState("form");
+    const tabs = ["form", "table", "chart"] as const;
+
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: () =>
+            setActiveTab((prev) => {
+                const nextIndex = (tabs.indexOf(prev) + 1) % tabs.length;
+                return tabs[nextIndex];
+            }),
+        onSwipedRight: () =>
+            setActiveTab((prev) => {
+                const nextIndex = (tabs.indexOf(prev) - 1 + tabs.length) % tabs.length;
+                return tabs[nextIndex];
+            }),
+        trackMouse: true,
+    });
     const isDarkTheme = useSelector((state: RootState) => state.app.isDarkTheme);
     const navigate = useNavigate();
     return (
         <div
+            {...swipeHandlers}
             style={{
                 height: "calc(100vh - 6rem)",
                 overflow: "auto",
                 display: "flex",
+                touchAction: "none",
             }}
             className={` flex flex-col justify-start items-center transition-colors ${
                 isDarkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
