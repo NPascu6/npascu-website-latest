@@ -9,7 +9,7 @@ import CloseIcon from "../../assets/icons/CloseIcon";
 import {useNavigate} from "react-router-dom";
 
 const DynamicComponentsContainerPage = () => {
-    const [activeTab, setActiveTab] = useState("form");
+    const [activeTab, setActiveTab] = useState<"form" | "table" | "chart">("form");
     const tabs = ["form", "table", "chart"] as const;
 
     const swipeHandlers = useSwipeable({
