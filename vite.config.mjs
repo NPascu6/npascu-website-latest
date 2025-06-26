@@ -63,6 +63,26 @@ export default defineConfig({
         }),
         VitePWA({
             registerType: 'autoUpdate',
+            outDir: 'build',
+            includeAssets: [
+                'favicon.ico',
+                'robots.txt',
+                'favicon-16x16.png',
+                'favicon-32x32.png',
+            ],
+            workbox: {
+                globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+                runtimeCaching: [
+                    {
+                        urlPattern: /\.\/(.*)/,
+                        handler: 'StaleWhileRevalidate',
+                        options: {
+                            cacheName: 'runtime-cache',
+                            expiration: { maxEntries: 50, maxAgeSeconds: 86400 },
+                        },
+                    },
+                ],
+            },
             manifest: {
                 short_name: "Pascu.io",
                 name: "Norbert Pascu's Portfolio",
