@@ -17,9 +17,12 @@ export const workImages = [
     import('../assets/work-photos/portal2.png'),
     import('../assets/work-photos/portal3.png'),
     import('../assets/work-photos/portal4.png'),
-    import('../assets/work-photos/my-lenses5.png'),
-    import('../assets/work-photos/my-lenses6.png'),
+    import('../assets/work-photos/TradingApp0.png'),
+    import('../assets/work-photos/TradingApp1.png'),
     import('../assets/work-photos/TradingApp2.png'),
+    import('../assets/work-photos/TradingApp3.png'),
     import('../assets/work-photos/TradingApp4.png'),
+    import('../assets/work-photos/TradingApp5.png'),
+    import('../assets/work-photos/TradingApp6.png'),
 
 ];
