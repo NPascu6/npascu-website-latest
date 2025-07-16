@@ -97,15 +97,6 @@ const SideBar: React.FC<SideBarProps> = ({isDrawerOpen, closeSidebar}) => {
                                         ℹ️ About Me
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link
-                                        to="/contact"
-                                        className="flex items-center text-lg  transition"
-                                        onClick={closeSidebar}
-                                    >
-                                        📬 Contact
-                                    </Link>
-                                </li>
                             </ul>
                         </nav>
                     </motion.div>
