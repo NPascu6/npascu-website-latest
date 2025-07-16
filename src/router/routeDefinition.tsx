@@ -11,7 +11,6 @@ const DynamicComponentsContainerPage = lazy(() =>
     import("../pages/dynamic/DynamicComponentsContainerPage")
 );
 const AboutPage = lazy(() => import("../pages/AboutPage"));
-const ContactPage = lazy(() => import("../pages/ContactPage"));
 
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
     <Suspense fallback={<Loading/>}>
@@ -46,11 +45,6 @@ export const routeDefinition: RouteDefinition[] = [
         path: "/dynamic-components",
         exact: true,
         element: withSuspense(DynamicComponentsContainerPage),
-    },
-    {
-        path: "/contact",
-        exact: true,
-        element: withSuspense(ContactPage),
     },
     {
         path: "/about",
