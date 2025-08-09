@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 import LazyImage from "./LazyImage";
 
@@ -8,14 +8,40 @@ const ChevronRight = React.lazy(
     () => import("../../assets/icons/ChevronRight")
 );
 
-const FullScreenImage = ({
-                             handlePrevClick,
-                             handleNextClick,
-                             toggleFullScreen,
-                             selectedImage,
-                             onTouchStart,
-                             onTouchEnd,
-                         }: any) => {
+interface FullScreenImageProps {
+    handlePrevClick?: () => void;
+    handleNextClick?: () => void;
+    toggleFullScreen: () => void;
+    selectedImage: string;
+    onTouchStart?: React.TouchEventHandler;
+    onTouchEnd?: React.TouchEventHandler;
+}
+
+const FullScreenImage: React.FC<FullScreenImageProps> = ({
+                         handlePrevClick,
+                         handleNextClick,
+                         toggleFullScreen,
+                         selectedImage,
+                         onTouchStart,
+                         onTouchEnd,
+                     }) => {
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "ArrowLeft" && handlePrevClick) {
+                handlePrevClick();
+            }
+            if (e.key === "ArrowRight" && handleNextClick) {
+                handleNextClick();
+            }
+            if (e.key === "Escape") {
+                toggleFullScreen();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [handlePrevClick, handleNextClick, toggleFullScreen]);
     return (
         <div
             id="full-screen-photo"
@@ -64,4 +90,4 @@ const FullScreenImage = ({
     );
 };
 
-export default FullScreenImage;
+export default React.memo(FullScreenImage);
