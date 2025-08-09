@@ -22,7 +22,7 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
     const touchStartX = useRef(null);
     const touchEndX = useRef(null);
 
-    const handlePrevClick = (e: any) => {
+    const handlePrevClick = (e?: any) => {
         e?.stopPropagation();
         e?.preventDefault();
         setCurrentImageIndex((prevIndex) =>
@@ -30,7 +30,7 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
         );
     };
 
-    const handleNextClick = (e: any) => {
+    const handleNextClick = (e?: any) => {
         e?.stopPropagation();
         e?.preventDefault();
         setCurrentImageIndex((prevIndex) =>
@@ -58,28 +58,17 @@ const ImageSlider = ({images, autoSlideTimeout = 4000}: ImageSliderProps) => {
     };
 
     useEffect(() => {
-        const handleNextClickScoped = (e: any) => {
-            e?.stopPropagation();
-            e?.preventDefault();
+        const autoSlideInterval = setInterval(() => {
+            if (isFullScreen) return;
             setCurrentImageIndex((prevIndex) =>
                 prevIndex < images.length - 1 ? prevIndex + 1 : 0
             );
-        };
-
-        const clickEvent = new MouseEvent("click", {
-            view: window,
-            bubbles: false,
-            cancelable: true,
-        });
-        const autoSlideInterval = setInterval(() => {
-            if (isFullScreen) return;
-            handleNextClickScoped(clickEvent); // Simulate a click on the next span
         }, autoSlideTimeout);
 
         return () => {
             clearInterval(autoSlideInterval);
         };
-    }, [currentImageIndex, autoSlideTimeout, images, isFullScreen]);
+    }, [autoSlideTimeout, images, isFullScreen]);
 
     return (
         <div className="flex card items-center shadow-xl justify-center min-w-full align-center mt-2">
