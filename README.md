@@ -1,62 +1,77 @@
-## npascu-website-latest
+# npascu-website-latest
 
-https://pascu.io
+Personal website for [Norbert Pascu](https://pascu.io). This repository contains a modern React and TypeScript application powered by Vite and Tailwind CSS. It serves as a boilerplate for building web apps with state management, routing, translations and API integrations.
 
-## Title
+## Table of Contents
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [API Services](#api-services)
+- [Browser Support](#browser-support)
+- [Key Dependencies](#key-dependencies)
 
-Norbert Pascu's website
+## Getting Started
+1. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
+2. Run the development server:
+   ```bash
+   npm start
+   ```
+3. Build for production:
+   ```bash
+   npm run build
+   ```
+4. Run tests:
+   ```bash
+   npm test
+   ```
 
-**Version:** 1.0.0
+## Available Scripts
+- `npm start` – start the Vite development server.
+- `npm run build` – type-check and build the app for production.
+- `npm run preview` – preview the production build locally.
+- `npm test` – run unit tests with Vitest.
+- `npm run test:watch` – watch mode for tests.
+- `npm run test:coverage` – generate a test coverage report.
 
-This project is marked as private and serves as a boilerplate for a modern web application built with React, Redux, and
-TypeScript. It includes various essential libraries and tools to kickstart your development process.
+## Project Structure
+```
+src/
+  components/        # Reusable UI components
+  pages/             # Route views
+  services/          # REST API wrappers (GitHub, email)
+  store/             # Redux Toolkit store
+  hooks/             # Custom hooks
+  i18n.ts            # Internationalisation setup
+  router/            # Application routes
+```
 
-### Available Scripts
+## API Services
+API calls are centralised under `src/services`.
 
-- `npm start`: Start the development server.
-- `npm run build`: Build the application for production.
-- `npm test`: Run tests using the Vitest testing framework. Make sure to
-  install dependencies first with `npm install` or `yarn`.
-- `npm run eject`: Eject from Create React App for advanced configuration.
+- `AppService` communicates with the [GitHub REST API](https://docs.github.com/en/rest). Set `REACT_APP_SECRET` in your environment to authorise requests.
+- `EmailService` posts contact form data to an endpoint defined by `VITE_EMAIL_API`.
 
-### Usage
+Both services extend `RestService`, which wraps `axios` for `get`, `post`, `patch` and `delete` helpers.
 
-This project is a great starting point for building modern web applications with a focus on React, Redux, and
-TypeScript. Feel free to customize and expand it to meet your specific project requirements.
+## Browser Support
+- **Production** – modern browsers with >0.2% global usage.
+- **Development** – last Chrome, Firefox and Safari versions.
 
+## Key Dependencies
+- [React](https://react.dev/) & [React DOM](https://react.dev/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [TanStack Query](https://tanstack.com/query/latest)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vite](https://vitejs.dev/)
+- [Vitest](https://vitest.dev/)
+- [i18next](https://www.i18next.com/)
+- [axios](https://axios-http.com/)
 
-### Browser Support
-
-- **Production**: Targeting modern browsers with a global usage share of more than 0.2%.
-- **Development**: Supported on the last 1 version of Chrome, Firefox, and Safari.
-
-### Dependencies
-
-- **@apollo/client** (v3.8.6): A powerful state management and data-fetching library for React applications.
-- **@reduxjs/toolkit** (v1.9.7): A toolset for efficient Redux development.
- - **@testing-library/jest-dom** (v5.17.0): Utilities for testing DOM elements with Vitest.
-- **@testing-library/react** (v13.4.0): A library for testing React components.
-- **@testing-library/user-event** (v13.5.0): A utility library for simulating user events.
- - **@types/jest** (v27.5.2): TypeScript definitions for Jest (used by jest-dom).
-- **@types/node** (v16.18.59): TypeScript definitions for Node.js.
-- **@types/react** (v18.2.31): TypeScript definitions for React.
-- **@types/react-dom** (v18.2.14): TypeScript definitions for React DOM.
-- **axios** (v1.5.1): A popular JavaScript library for making HTTP requests.
-- **dayjs** (v1.11.10): A fast and feature-rich JavaScript date library.
-- **react** (v18.2.0): A JavaScript library for building user interfaces.
-- **react-dom** (v18.2.0): React's package for working with the DOM.
-- **react-redux** (v8.1.3): The official React bindings for Redux.
-- **react-router-dom** (v6.17.0): A library for handling routing in React applications.
-- **react-scripts** (v5.0.1): The default scripts for Create React App.
-- **typescript** (v4.9.5): A powerful and optional static type checker for JavaScript.
-- **web-vitals** (v2.1.4): A library for measuring and reporting real user performance.
-
-### Development Dependencies
-
-- **@babel/plugin-proposal-private-property-in-object** (v7.21.11): A Babel plugin for private properties in JavaScript
-  objects.
-- **tailwindcss** (v3.3.3): A highly customizable, low-level CSS framework.
-
-Please refer to the official documentation of each dependency for more information and guidance.
+---
 
 Happy coding!
