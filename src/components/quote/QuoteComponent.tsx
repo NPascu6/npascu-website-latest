@@ -213,7 +213,12 @@ const QuotesComponent: React.FC = () => {
                 } else {
                     updated = true;
                 }
-                const direction = prevData?.direction || "neutral";
+                let direction: "up" | "down" | "neutral" = "neutral";
+                if (prevData) {
+                    if (randomizedQuote.c > prevData.quote.c) direction = "up";
+                    else if (randomizedQuote.c < prevData.quote.c) direction = "down";
+                    else direction = prevData.direction || "neutral";
+                }
                 const newData: QuoteData = {
                     quote: randomizedQuote,
                     updated,
@@ -565,7 +570,7 @@ const QuotesComponent: React.FC = () => {
                 </div>
             ) : (
                 <ul
-                    className="grid grid-cols-1 sm:grid-flow-col sm:grid-rows-3 sm:[grid-auto-columns:1fr] gap-3 list-none p-0 overflow-y-auto h-[600px] sm:h-auto"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 list-none p-0 overflow-y-auto max-h-[600px]"
                 >
                     {Object.entries(quotes)
                         .filter(([symbol]) => selectedSymbols.includes(symbol))
@@ -615,9 +620,9 @@ const QuotesComponent: React.FC = () => {
                                             <FaArrowDown className="ml-2" color="#ff3333"/>
                                         )}
                                     </div>
-                                    <div className="grid grid-cols-2 gap-2">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1 w-full">
                                         <button
-                                            className="rounded bg-green-700 py-1 px-2 text-sm text-white"
+                                            className="w-full rounded bg-green-700 p-1 text-xs text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleOpenOrderBook(symbol);
@@ -626,7 +631,7 @@ const QuotesComponent: React.FC = () => {
                                             Order Book
                                         </button>
                                         <button
-                                            className="rounded bg-blue-700 py-1 px-2 text-sm text-white"
+                                            className="w-full rounded bg-blue-700 p-1 text-xs text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleOpenDepthChart(symbol);
@@ -635,7 +640,7 @@ const QuotesComponent: React.FC = () => {
                                             Depth Chart
                                         </button>
                                         <button
-                                            className="rounded bg-purple-700 py-1 px-2 text-sm text-white"
+                                            className="w-full rounded bg-purple-700 p-1 text-xs text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleOpenPriceHistory(symbol);
@@ -644,7 +649,7 @@ const QuotesComponent: React.FC = () => {
                                             Price History
                                         </button>
                                         <button
-                                            className="rounded bg-yellow-700 py-1 px-2 text-sm text-white"
+                                            className="w-full rounded bg-yellow-700 p-1 text-xs text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 handleOpenVolumeHistory(symbol);
@@ -653,7 +658,7 @@ const QuotesComponent: React.FC = () => {
                                             Volume History
                                         </button>
                                         <button
-                                            className="rounded bg-gray-700 py-1 px-2 text-sm text-white"
+                                            className="w-full rounded bg-gray-700 p-1 text-xs text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 openChartDashboard(symbol);
