@@ -677,17 +677,17 @@ const QuotesComponent: React.FC = () => {
             )}
 
             <CommonDialog
-                title={""}
+                title={selectedSymbolForOrderBook || ""}
                 onClose={() => setIsOrderBookOpen(false)}
                 isOpen={isOrderBookOpen}
             >
-                <OrderBook
-                    selectedSymbolForOrderBook={selectedSymbolForOrderBook}
-                    isDarkTheme={isDarkTheme}
-                    closeOrderBookPopup={closeOrderBookPopup}
-                    orderBooks={orderBooks}
-                    quotes={quotes}
-                />
+                {selectedSymbolForOrderBook && (
+                    <OrderBook
+                        symbol={selectedSymbolForOrderBook}
+                        depth={50}
+                        isDarkTheme={isDarkTheme}
+                    />
+                )}
             </CommonDialog>
 
             <CommonDialog
