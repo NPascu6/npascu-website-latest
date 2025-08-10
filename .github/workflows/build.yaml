@@ -1,0 +1,36 @@
+name: "🧪 Build and Test"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "🧪 Test and build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Run tests
+        run: yarn test
+
+      - name: "🔨 Build Project"
+        env:
+          VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
+        run: yarn run build-production
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build
