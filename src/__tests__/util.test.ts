@@ -23,6 +23,10 @@ describe('dateFormater', () => {
     const iso = '2024-01-02T03:04:00.000Z';
     expect(dateFormater(iso)).toBe('2024-01-02 03:04');
   });
+
+  it('returns N/A when date is empty', () => {
+    expect(dateFormater('')).toBe('N/A');
+  });
 });
 
   describe('parseCSV', () => {
