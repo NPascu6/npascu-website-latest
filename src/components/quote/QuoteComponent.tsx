@@ -149,13 +149,40 @@ const QuotesComponent: React.FC = () => {
         // 1) Setup the SignalR connection
         const connection = new signalR.HubConnectionBuilder()
             .withUrl(import.meta.env.VITE_API_KEY)
-            .withAutomaticReconnect()
+            .withAutomaticReconnect({
+                nextRetryDelayInMilliseconds: (context) => {
+                    // If we hit a rate limit, wait longer before reconnecting
+                    if (
+                        context.retryReason &&
+                        (context.retryReason as any).statusCode === 429
+                    ) {
+                        return 60_000; // 1 minute
+                    }
+
+                    // Otherwise use a gentle exponential backoff
+                    const delays = [0, 2000, 10_000, 30_000, 60_000];
+                    return delays[context.previousRetryCount] ?? 60_000;
+                },
+            })
             .build();
 
-        connection
-            .start()
-            .then(() => console.log("Connected to quotes hub."))
-            .catch((err) => console.error("Error connecting to quotes hub:", err));
+        const start = () =>
+            connection
+                .start()
+                .then(() => console.log("Connected to quotes hub."))
+                .catch((err: any) => {
+                    console.error("Error connecting to quotes hub:", err);
+
+                    // Respect rate limits by backing off if we see a 429
+                    const message = err?.message || "";
+                    const delay =
+                        err?.statusCode === 429 || message.includes("429")
+                            ? 60_000
+                            : 5_000;
+                    setTimeout(start, delay);
+                });
+
+        start();
 
         // 2) "ReceiveQuote"
         connection.on("ReceiveQuote", (symbol: string, newQuote: FinnhubQuote) => {
