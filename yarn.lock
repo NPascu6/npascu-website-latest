@@ -2087,6 +2087,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.83.1":
+  version: 5.83.1
+  resolution: "@tanstack/query-core@npm:5.83.1"
+  checksum: 10c0/3eeacf678fcf9803585f1be74979548a33c7f659b8d5f33c1e3b3834ef3b9f3401070b2e2d38bbaa9c6e5a3c359baaa3828078e38007b7c99fb8c9f1e3911142
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.51.7":
+  version: 5.84.2
+  resolution: "@tanstack/react-query@npm:5.84.2"
+  dependencies:
+    "@tanstack/query-core": "npm:5.83.1"
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 10c0/491914f8c61c5bb83e1eece53b33552d0d490ba9f122add35ae3078f10f675a6b0786c2e1d5940ccb9acf490d28c525d56893576c237090c22bfc70ef2ee0f3f
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^8.5.0":
   version: 8.20.1
   resolution: "@testing-library/dom@npm:8.20.1"
@@ -7622,6 +7640,7 @@ __metadata:
   dependencies:
     "@microsoft/signalr": "npm:^8.0.7"
     "@reduxjs/toolkit": "npm:^2.8.2"
+    "@tanstack/react-query": "npm:^5.51.7"
     "@testing-library/jest-dom": "npm:5.17.0"
     "@testing-library/react": "npm:13.4.0"
     "@types/react": "npm:^19.0.0"
@@ -7659,6 +7678,7 @@ __metadata:
     vite-plugin-pwa: "npm:^0.6.5"
     vite-tsconfig-paths: "npm:^4.3.2"
     vitest: "npm:^3.0.6"
+    zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
 
@@ -11256,5 +11276,12 @@ __metadata:
     buffer-crc32: "npm:~0.2.3"
     fd-slicer: "npm:~1.1.0"
   checksum: 10c0/f265002af7541b9ec3589a27f5fb8f11cf348b53cc15e2751272e3c062cd73f3e715bc72d43257de71bbaecae446c3f1b14af7559e8ab0261625375541816422
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.23.8":
+  version: 3.25.76
+  resolution: "zod@npm:3.25.76"
+  checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
   languageName: node
   linkType: hard
