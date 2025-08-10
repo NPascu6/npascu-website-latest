@@ -37,7 +37,9 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
   useEffect(() => {
     if (!symbol) return;
     let cancelled = false;
-    const base = import.meta.env.VITE_API_BASE;
+    // Use the same base URL as the rest of the app so the websocket and REST
+    // requests point to the backend API.
+    const base = import.meta.env.VITE_API_BASE_URL;
 
     async function seed() {
       try {
@@ -86,15 +88,32 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
       }
     });
 
-    conn.on('tradeTick', (t: Trade) => {
-      setState(prev => ({
-        ...prev,
-        trades: [t, ...prev.trades].slice(0, 100),
-      }));
+    // Backend emits trade ticks via the "ReceiveTrade" event and provides the
+    // raw Finnhub trade structure.  Map it into our Trade interface and derive
+    // the side based on the previous trade price so the UI can colour buys and
+    // sells correctly.
+    conn.on('ReceiveTrade', (_sym: string, t: {p: number; v: number; t: number}) => {
+      setState(prev => {
+        const last = prev.trades[0];
+        const side: 'buy' | 'sell' = last && last.price > t.p ? 'sell' : 'buy';
+        const trade: Trade = {price: t.p, size: t.v, side, ts: t.t};
+        return {
+          ...prev,
+          trades: [trade, ...prev.trades].slice(0, 100),
+        };
+      });
     });
 
-    conn.on('snapshot', (q: Quote) => {
-      setState(prev => ({...prev, quote: q}));
+    // Quote updates are sent as "ReceiveQuote" events.  Convert the Finnhub
+    // quote format into the simplified Quote used by the hook.
+    conn.on('ReceiveQuote', (_sym: string, q: {c: number; dp?: number}) => {
+      const quote: Quote = {
+        bid: q.c,
+        ask: q.c,
+        last: q.c,
+        percent: q.dp,
+      };
+      setState(prev => ({...prev, quote}));
     });
 
     conn.onreconnecting(() => setState(prev => ({...prev, status: 'reconnecting'})));
