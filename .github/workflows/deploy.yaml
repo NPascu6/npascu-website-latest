@@ -21,6 +21,7 @@ jobs:
           name: build
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: build
 
       - name: "📂 Sync files pascu.io"
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
