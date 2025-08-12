@@ -62,8 +62,9 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
     }
     seed();
 
+    const marketHubUrl = new URL('hubs/market', base).toString();
     const conn = new HubConnectionBuilder()
-      .withUrl(`${base}/hubs/market`)
+      .withUrl(marketHubUrl)
       .withAutomaticReconnect()
       .build();
     connRef.current = conn;
@@ -117,11 +118,11 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
       setState(prev => ({...prev, quote}));
     });
 
-    conn.onreconnecting(() => setState(prev => ({...prev, status: 'reconnecting'})));
+    conn.onreconnecting(() =>
+      setState(prev => ({...prev, status: 'reconnecting'})),
+    );
     conn.onreconnected(() => {
       setState(prev => ({...prev, status: 'connected'}));
-      // SignalR hub method names are typically PascalCase, so ensure we invoke
-      // the correct server method when resubscribing after a reconnect.
       conn.invoke('Subscribe', symbol).catch(() => {});
     });
     conn.onclose(() => setState(prev => ({...prev, status: 'disconnected'})));
@@ -131,7 +132,6 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
       .then(() => {
         if (cancelled) return;
         setState(prev => ({...prev, status: 'connected'}));
-        // Subscribe to the server stream once the connection is established.
         conn.invoke('Subscribe', symbol).catch(() => {});
       })
       .catch(err => console.error('connection error', err));
@@ -140,7 +140,6 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
       cancelled = true;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (connRef.current) {
-        // Unsubscribe using the server's expected method casing before closing.
         connRef.current.invoke('Unsubscribe', symbol).catch(() => {});
         connRef.current.stop().catch(() => {});
       }

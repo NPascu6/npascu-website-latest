@@ -181,9 +181,6 @@ const QuotesComponent: React.FC = () => {
                 .start()
                 .then(() => {
                     console.log("Connected to quotes hub.");
-                    selectedSymbolsRef.current.forEach(sym =>
-                        connection.invoke('Subscribe', sym).catch(() => {})
-                    );
                 })
                 .catch((err: any) => {
                     console.error("Error connecting to quotes hub:", err);
@@ -200,13 +197,12 @@ const QuotesComponent: React.FC = () => {
         start();
 
         connection.onreconnected(() => {
-            selectedSymbolsRef.current.forEach(sym =>
-                connection.invoke('Subscribe', sym).catch(() => {})
-            );
+            console.log("Reconnected to quotes hub.");
         });
 
         // 2) "ReceiveQuote"
         connection.on("ReceiveQuote", (symbol: string, newQuote: FinnhubQuote) => {
+            if (!selectedSymbolsRef.current.includes(symbol)) return;
             lastRealUpdateRef.current = Date.now();
 
             const applyRandomPercentage = (value: number) => {
@@ -277,6 +273,7 @@ const QuotesComponent: React.FC = () => {
         connection.on(
             "ReceiveTrade",
             (symbol: string, incomingTrade: FinnhubTrade) => {
+                if (!selectedSymbolsRef.current.includes(symbol)) return;
                 lastRealUpdateRef.current = Date.now();
 
                 const currentQuote = quotes[symbol]?.quote;
@@ -385,24 +382,6 @@ const QuotesComponent: React.FC = () => {
 
     useEffect(() => {
         selectedSymbolsRef.current = selectedSymbols;
-        if (
-            connectionRef.current &&
-            connectionRef.current.state === signalR.HubConnectionState.Connected
-        ) {
-            selectedSymbols.forEach(sym =>
-                connectionRef.current!.invoke('Subscribe', sym).catch(() => {})
-            );
-        }
-        return () => {
-            if (
-                connectionRef.current &&
-                connectionRef.current.state === signalR.HubConnectionState.Connected
-            ) {
-                selectedSymbols.forEach(sym =>
-                    connectionRef.current!.invoke('Unsubscribe', sym).catch(() => {})
-                );
-            }
-        };
     }, [selectedSymbols]);
 
     // (Optional) If your API feed is slow, you can do an "offline simulation" approach
