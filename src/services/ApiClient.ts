@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import { API_BASE_URL } from '../config';
 
 class ApiClient {
   private client: AxiosInstance;
@@ -33,5 +34,5 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient(import.meta.env.VITE_API_KEY);
+export const apiClient = new ApiClient(API_BASE_URL);
 export default ApiClient;

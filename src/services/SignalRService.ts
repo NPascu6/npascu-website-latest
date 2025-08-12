@@ -1,13 +1,12 @@
 import * as signalR from '@microsoft/signalr';
 import { FinnhubQuoteDto } from '../models/market';
-
-const baseUrl = import.meta.env.VITE_API_KEY || '';
+import { API_BASE_URL } from '../config';
 
 export const connectQuotesHub = (
   onQuote: (symbol: string, quote: FinnhubQuoteDto) => void
 ) => {
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${baseUrl}/quotesHub`)
+    .withUrl(`${API_BASE_URL}/quotesHub`)
     .withAutomaticReconnect()
     .build();
 
@@ -19,7 +18,7 @@ export const connectMarketHub = (
   onUpdate: (symbol: string, data: unknown) => void
 ) => {
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${baseUrl}/hubs/market`)
+    .withUrl(`${API_BASE_URL}/hubs/market`)
     .withAutomaticReconnect()
     .build();
 

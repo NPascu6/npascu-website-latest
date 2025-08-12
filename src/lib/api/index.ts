@@ -1,8 +1,7 @@
 import { createApiClient } from './client';
+import { API_BASE_URL } from '../../config';
 
-const baseUrl = import.meta.env.VITE_API_KEY as string;
-
-export const apiClient = createApiClient(baseUrl);
+export const apiClient = createApiClient(API_BASE_URL);
 
 export * from './schema';
 export * from './client';
