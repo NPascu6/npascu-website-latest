@@ -153,8 +153,9 @@ const QuotesComponent: React.FC = () => {
 
     useEffect(() => {
         // 1) Setup the SignalR connection
+        const quotesHubUrl = new URL('quotesHub', API_BASE_URL).toString();
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${API_BASE_URL}/quotesHub`)
+            .withUrl(quotesHubUrl)
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: (context) => {
                     // If we hit a rate limit, wait longer before reconnecting
