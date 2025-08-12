@@ -122,6 +122,8 @@ const QuotesComponent: React.FC = () => {
 
     // We'll track last time from real feed. If your feed is slow, you can do "offline simulation" too
     const lastRealUpdateRef = useRef<number>(Date.now());
+    const connectionRef = useRef<signalR.HubConnection | null>(null);
+    const selectedSymbolsRef = useRef<string[]>([]);
 
     useEffect(() => {
         setSelectedSymbols(availableSymbols);
@@ -172,11 +174,17 @@ const QuotesComponent: React.FC = () => {
                 },
             })
             .build();
+        connectionRef.current = connection;
 
         const start = () =>
             connection
                 .start()
-                .then(() => console.log("Connected to quotes hub."))
+                .then(() => {
+                    console.log("Connected to quotes hub.");
+                    selectedSymbolsRef.current.forEach(sym =>
+                        connection.invoke('Subscribe', sym).catch(() => {})
+                    );
+                })
                 .catch((err: any) => {
                     console.error("Error connecting to quotes hub:", err);
 
@@ -190,6 +198,12 @@ const QuotesComponent: React.FC = () => {
                 });
 
         start();
+
+        connection.onreconnected(() => {
+            selectedSymbolsRef.current.forEach(sym =>
+                connection.invoke('Subscribe', sym).catch(() => {})
+            );
+        });
 
         // 2) "ReceiveQuote"
         connection.on("ReceiveQuote", (symbol: string, newQuote: FinnhubQuote) => {
@@ -368,6 +382,28 @@ const QuotesComponent: React.FC = () => {
                 .catch((err) => console.error("Error stopping connection:", err));
         };
     }, []);
+
+    useEffect(() => {
+        selectedSymbolsRef.current = selectedSymbols;
+        if (
+            connectionRef.current &&
+            connectionRef.current.state === signalR.HubConnectionState.Connected
+        ) {
+            selectedSymbols.forEach(sym =>
+                connectionRef.current!.invoke('Subscribe', sym).catch(() => {})
+            );
+        }
+        return () => {
+            if (
+                connectionRef.current &&
+                connectionRef.current.state === signalR.HubConnectionState.Connected
+            ) {
+                selectedSymbols.forEach(sym =>
+                    connectionRef.current!.invoke('Unsubscribe', sym).catch(() => {})
+                );
+            }
+        };
+    }, [selectedSymbols]);
 
     // (Optional) If your API feed is slow, you can do an "offline simulation" approach
     // every X seconds to produce trades or randomize quotes
