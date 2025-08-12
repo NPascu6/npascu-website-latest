@@ -114,6 +114,11 @@ const QuotesComponent: React.FC = () => {
     // for one symbol doesn't affect the others
     const patternIndicesRef = useRef<{ [symbol: string]: number }>({});
 
+    // Track blink timeouts so each quote tile resets independently
+    const blinkTimeoutsRef = useRef<
+        Record<string, ReturnType<typeof setTimeout>>
+    >({});
+
     // We'll track last time from real feed. If your feed is slow, you can do "offline simulation" too
     const lastRealUpdateRef = useRef<number>(Date.now());
 
@@ -227,7 +232,10 @@ const QuotesComponent: React.FC = () => {
 
                 if (updated) {
                     // blink the tile for blinkDuration ms
-                    setTimeout(() => {
+                    if (blinkTimeoutsRef.current[symbol]) {
+                        clearTimeout(blinkTimeoutsRef.current[symbol]);
+                    }
+                    blinkTimeoutsRef.current[symbol] = setTimeout(() => {
                         setQuotes((current) => {
                             const data = current[symbol];
                             if (data && data.updated) {
@@ -235,6 +243,7 @@ const QuotesComponent: React.FC = () => {
                             }
                             return current;
                         });
+                        delete blinkTimeoutsRef.current[symbol];
                     }, blinkDuration);
                 }
                 return {...prev, [symbol]: newData};
@@ -351,6 +360,7 @@ const QuotesComponent: React.FC = () => {
         );
 
         return () => {
+            Object.values(blinkTimeoutsRef.current).forEach(clearTimeout);
             connection
                 .stop()
                 .catch((err) => console.error("Error stopping connection:", err));
