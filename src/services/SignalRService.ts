@@ -1,7 +1,7 @@
 import * as signalR from '@microsoft/signalr';
 import { FinnhubQuoteDto } from '../models/market';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const baseUrl = import.meta.env.VITE_API_KEY || '';
 
 export const connectQuotesHub = (
   onQuote: (symbol: string, quote: FinnhubQuoteDto) => void

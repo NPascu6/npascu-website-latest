@@ -153,7 +153,7 @@ const QuotesComponent: React.FC = () => {
     useEffect(() => {
         // 1) Setup the SignalR connection
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(import.meta.env.VITE_API_KEY)
+            .withUrl(`${import.meta.env.VITE_API_KEY}/quotesHub`)
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: (context) => {
                     // If we hit a rate limit, wait longer before reconnecting

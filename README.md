@@ -55,6 +55,7 @@ API calls are centralised under `src/services`.
 
 - `AppService` communicates with the [GitHub REST API](https://docs.github.com/en/rest). Set `REACT_APP_SECRET` in your environment to authorise requests.
 - `EmailService` posts contact form data to an endpoint defined by `VITE_EMAIL_API`.
+- The backend base URL for API and websocket calls is configured via the `VITE_API_KEY` environment variable.
 
 Both services extend `RestService`, which wraps `axios` for `get`, `post`, `patch` and `delete` helpers.
 
