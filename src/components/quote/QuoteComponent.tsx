@@ -12,6 +12,7 @@ import CommonDialog from "../common/CommonDialog";
 import PriceHistoryChart from "./PriceHistoryChart";
 import VolumeHistoryChart from "./VolumeHistoryChart";
 import DynamicCharts from "./DynamicCharts";
+import { API_BASE_URL } from "../../config";
 
 // --- Interfaces ---
 export interface FinnhubQuote {
@@ -153,7 +154,7 @@ const QuotesComponent: React.FC = () => {
     useEffect(() => {
         // 1) Setup the SignalR connection
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl(`${import.meta.env.VITE_API_KEY}/quotesHub`)
+            .withUrl(`${API_BASE_URL}/quotesHub`)
             .withAutomaticReconnect({
                 nextRetryDelayInMilliseconds: (context) => {
                     // If we hit a rate limit, wait longer before reconnecting

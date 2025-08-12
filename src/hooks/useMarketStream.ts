@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {HubConnection, HubConnectionBuilder} from '@microsoft/signalr';
 import {applyOrderBookUpdate, OrderBook, BookUpdate} from '../lib/stream/orderBook';
+import { API_BASE_URL } from '../config';
 
 export interface Trade {
   price: number;
@@ -39,7 +40,7 @@ export function useMarketStream(symbol?: string, depth = 10): MarketState {
     let cancelled = false;
     // Use the same base URL as the rest of the app so the websocket and REST
     // requests point to the backend API.
-    const base = import.meta.env.VITE_API_KEY;
+    const base = API_BASE_URL;
 
     async function seed() {
       try {
