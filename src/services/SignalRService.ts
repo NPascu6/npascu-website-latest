@@ -5,8 +5,9 @@ import { API_BASE_URL } from '../config';
 export const connectQuotesHub = (
   onQuote: (symbol: string, quote: FinnhubQuoteDto) => void
 ) => {
+  const quotesHubUrl = new URL('quotesHub', API_BASE_URL).toString();
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${API_BASE_URL}/quotesHub`)
+    .withUrl(quotesHubUrl)
     .withAutomaticReconnect()
     .build();
 
@@ -17,8 +18,9 @@ export const connectQuotesHub = (
 export const connectMarketHub = (
   onUpdate: (symbol: string, data: unknown) => void
 ) => {
+  const marketHubUrl = new URL('hubs/market', API_BASE_URL).toString();
   const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${API_BASE_URL}/hubs/market`)
+    .withUrl(marketHubUrl)
     .withAutomaticReconnect()
     .build();
 
