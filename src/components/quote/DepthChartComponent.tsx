@@ -70,7 +70,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     if (trades.length === 0) {
         if (inline) {
             return (
-                <div className="h-96 w-full flex items-center justify-center">
+                <div className="h-full w-full flex items-center justify-center">
                     <p>No data available to draw chart.</p>
                 </div>
             );
@@ -127,24 +127,30 @@ const DepthChart: React.FC<DepthChartProps> = ({
             sum += trade.v;
             return {x: trade.p, y: sum};
         });
+        const lastBid = cumulativeBuys[cumulativeBuys.length - 1]?.y || 0;
         sum = 0;
         const cumulativeSells = asks.map((trade) => {
             sum += trade.v;
             return {x: trade.p, y: sum};
         });
 
-        // Use at least two points per side for Chart.js stepped lines
-        if (cumulativeBuys.length === 1) {
-            cumulativeBuys.push({x: bids[bids.length - 1].p - 0.0001, y: sum});
-        } else if (cumulativeBuys.length === 0) {
-            cumulativeBuys.push({x: effectiveMidPrice - 0.0001, y: 0});
-            cumulativeBuys.push({x: effectiveMidPrice - 0.0002, y: 0});
+        // Anchor datasets at the mid price so bid/ask areas don't overlap
+        if (cumulativeBuys.length === 0) {
+            cumulativeBuys.push(
+                {x: effectiveMidPrice - 0.0001, y: 0},
+                {x: effectiveMidPrice, y: 0}
+            );
+        } else {
+            cumulativeBuys.push({x: effectiveMidPrice, y: lastBid});
         }
-        if (cumulativeSells.length === 1) {
-            cumulativeSells.push({x: asks[asks.length - 1].p + 0.0001, y: sum});
-        } else if (cumulativeSells.length === 0) {
-            cumulativeSells.push({x: effectiveMidPrice + 0.0001, y: 0});
-            cumulativeSells.push({x: effectiveMidPrice + 0.0002, y: 0});
+
+        if (cumulativeSells.length === 0) {
+            cumulativeSells.push(
+                {x: effectiveMidPrice, y: 0},
+                {x: effectiveMidPrice + 0.0001, y: 0}
+            );
+        } else {
+            cumulativeSells.unshift({x: effectiveMidPrice, y: 0});
         }
 
         // Determine max cumulative volume for scaling.
@@ -185,7 +191,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 },
                 fill: true,
                 pointRadius: 0,
-                stepped: true,
+                stepped: 'after',
                 tension: 0,
                 order: 1,
             },
@@ -209,7 +215,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 },
                 fill: true,
                 pointRadius: 0,
-                stepped: true,
+                stepped: 'before',
                 tension: 0,
                 order: 1,
             },
@@ -283,7 +289,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     // 6) Render the popup & chart.
     if (inline) {
         return (
-            <div className="h-96 w-full">
+            <div className="h-full w-full">
                 <Line data={chartData} options={chartOptions} />
             </div>
         );
