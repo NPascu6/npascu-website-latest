@@ -711,6 +711,12 @@ const QuotesComponent: React.FC = () => {
                 {selectedSymbolForOrderBook && (
                     <OrderBook
                         symbol={selectedSymbolForOrderBook}
+                        trades={
+                            orderBooks[selectedSymbolForOrderBook] || []
+                        }
+                        midPrice={
+                            quotes[selectedSymbolForOrderBook]?.quote.c || 0
+                        }
                         depth={50}
                         isDarkTheme={isDarkTheme}
                     />

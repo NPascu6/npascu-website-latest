@@ -1,15 +1,54 @@
-import React from 'react';
-import {useMarketStream} from '../../hooks/useMarketStream';
+import React, {useMemo} from 'react';
+import {FinnhubTrade} from './types';
 
 interface Props {
   symbol: string;
-  depth: number;
+  trades: FinnhubTrade[];
+  midPrice: number;
+  depth?: number;
   isDarkTheme: boolean;
 }
 
-const OrderBook: React.FC<Props> = ({symbol, depth, isDarkTheme}) => {
-  const {book, status} = useMarketStream(symbol, depth);
+interface Level {
+  price: number;
+  size: number;
+}
 
+const buildBook = (
+  trades: FinnhubTrade[],
+  midPrice: number,
+  depth: number,
+): {bids: Level[]; asks: Level[]} => {
+  const bids = new Map<number, number>();
+  const asks = new Map<number, number>();
+  for (const t of trades) {
+    const side = t.side ?? (t.p >= midPrice ? 'ask' : 'bid');
+    const map = side === 'bid' ? bids : asks;
+    map.set(t.p, (map.get(t.p) || 0) + t.v);
+  }
+  const bidLevels: Level[] = Array.from(bids.entries())
+    .sort((a, b) => b[0] - a[0])
+    .slice(0, depth)
+    .map(([price, size]) => ({price, size}));
+  const askLevels: Level[] = Array.from(asks.entries())
+    .sort((a, b) => a[0] - b[0])
+    .slice(0, depth)
+    .map(([price, size]) => ({price, size}));
+  return {bids: bidLevels, asks: askLevels};
+};
+
+const OrderBook: React.FC<Props> = ({
+  symbol,
+  trades,
+  midPrice,
+  depth = 50,
+  isDarkTheme,
+}) => {
+  const book = useMemo(() => buildBook(trades, midPrice, depth), [
+    trades,
+    midPrice,
+    depth,
+  ]);
   const bidDecimals = 4;
   const askDecimals = 4;
   const maxVol = Math.max(
@@ -33,9 +72,6 @@ const OrderBook: React.FC<Props> = ({symbol, depth, isDarkTheme}) => {
 
   return (
     <div>
-      {status !== 'connected' && (
-        <div className="text-xs text-yellow-500 mb-2">Live • {status}</div>
-      )}
       <div className="relative h-[60vh] w-full">
         <div className="absolute inset-x-0 top-0 bottom-1/2 overflow-y-auto flex flex-col-reverse">
           {book.asks.slice().reverse().map((l, i) => (
