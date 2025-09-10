@@ -10,6 +10,7 @@ import {
     Title,
     Tooltip,
 } from "chart.js";
+import type {ChartData} from "chart.js";
 import {Line} from "react-chartjs-2";
 
 // Register Chart.js components
@@ -169,7 +170,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
     }, [trades, effectiveMidPrice]);
 
     // 4) Build the Chart.js data.
-    const chartData = {
+    const chartData: ChartData<"line", {x: number; y: number}[], unknown> = {
         datasets: [
             {
                 label: "Bids",
@@ -191,7 +192,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 },
                 fill: true,
                 pointRadius: 0,
-                stepped: 'after',
+                stepped: "after" as const,
                 tension: 0,
                 order: 1,
             },
@@ -215,7 +216,7 @@ const DepthChart: React.FC<DepthChartProps> = ({
                 },
                 fill: true,
                 pointRadius: 0,
-                stepped: 'before',
+                stepped: "before" as const,
                 tension: 0,
                 order: 1,
             },
